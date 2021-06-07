@@ -20,6 +20,7 @@
 package org.elasticsearch.action.delete;
 
 import org.elasticsearch.action.ActionWriteResponse;
+import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
 
@@ -32,25 +33,24 @@ import java.io.IOException;
  * @see org.elasticsearch.client.Client#delete(DeleteRequest)
  */
 public class DeleteResponse extends ActionWriteResponse {
-
     private String index;
     private String id;
     private String type;
     private long version;
     private boolean found;
-
+    @SuppressForbidden(reason = "Exception#printStackTrace()")
     public DeleteResponse() {
-
+        System.out.println("===DeleteResponse===43===");
     }
-
+    @SuppressForbidden(reason = "Exception#printStackTrace()")
     public DeleteResponse(String index, String type, String id, long version, boolean found) {
         this.index = index;
         this.id = id;
         this.type = type;
         this.version = version;
         this.found = found;
+        System.out.println("===DeleteResponse===52===");
     }
-
     /**
      * The index the document was deleted from.
      */

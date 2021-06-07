@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import org.elasticsearch.action.admin.cluster.node.liveness.TransportLivenessAction;
 import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.common.Strings;
+import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.collect.MapBuilder;
 import org.elasticsearch.common.component.AbstractLifecycleComponent;
 import org.elasticsearch.common.inject.Inject;
@@ -269,9 +270,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
                                                                           TransportResponseHandler<T> handler) throws TransportException {
         return submitRequest(node, action, request, TransportRequestOptions.EMPTY, handler);
     }
-
-    public <T extends TransportResponse> TransportFuture<T> submitRequest(DiscoveryNode node, String action, TransportRequest request,
-                                                                          TransportRequestOptions options, TransportResponseHandler<T> handler) throws TransportException {
+    public <T extends TransportResponse> TransportFuture<T> submitRequest(DiscoveryNode node, String action, TransportRequest request, TransportRequestOptions options, TransportResponseHandler<T> handler) throws TransportException {
         PlainTransportFuture<T> futureHandler = new PlainTransportFuture<>(handler);
         sendRequest(node, action, request, options, futureHandler);
         return futureHandler;
@@ -281,7 +280,6 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
                                                           final TransportResponseHandler<T> handler) {
         sendRequest(node, action, request, TransportRequestOptions.EMPTY, handler);
     }
-
     public <T extends TransportResponse> void sendRequest(final DiscoveryNode node, final String action, final TransportRequest request,
                                                           final TransportRequestOptions options, TransportResponseHandler<T> handler) {
         if (node == null) {
@@ -330,9 +328,10 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
             }
         }
     }
-
+    @SuppressForbidden(reason = "Exception#printStackTrace()")
     private void sendLocalRequest(long requestId, final String action, final TransportRequest request) {
         final DirectResponseChannel channel = new DirectResponseChannel(logger, localNode, action, requestId, adapter, threadPool);
+        System.out.println("===sendLocalRequest===334==="+requestId+"==="+action+"==="+request.getClass().getName()+"-"+request.hashCode());
         try {
             final RequestHandlerRegistry reg = adapter.getRequestHandler(action);
             if (reg == null) {
@@ -344,12 +343,13 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
                 reg.getHandler().messageReceived(request, channel);
             } else {
                 threadPool.executor(executor).execute(new AbstractRunnable() {
+                    @SuppressForbidden(reason = "Exception#printStackTrace()")
                     @Override
                     protected void doRun() throws Exception {
                         //noinspection unchecked
+                        System.out.println("===doRun===350==="+request.getClass().getName()+"-"+request.hashCode()+"==="+reg.getHandler().getClass().getName()+"-"+reg.getHandler().hashCode());
                         reg.getHandler().messageReceived(request, channel);
                     }
-
                     @Override
                     public boolean isForceExecution() {
                         return reg.isForceExecution();

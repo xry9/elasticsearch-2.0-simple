@@ -72,7 +72,6 @@ public class TransportShardMultiTermsVectorAction extends TransportSingleShardAc
         return clusterService.operationRouting()
                 .getShards(state, request.concreteIndex(), request.request().shardId(), request.request().preference());
     }
-
     @Override
     protected MultiTermVectorsShardResponse shardOperation(MultiTermVectorsShardRequest request, ShardId shardId) {
         MultiTermVectorsShardResponse response = new MultiTermVectorsShardResponse();
@@ -81,6 +80,7 @@ public class TransportShardMultiTermsVectorAction extends TransportSingleShardAc
             try {
                 IndexService indexService = indicesService.indexServiceSafe(request.index());
                 IndexShard indexShard = indexService.shardSafe(shardId.id());
+                logger.info("===shardOperation===83===");
                 TermVectorsResponse termVectorsResponse = indexShard.termVectorsService().getTermVectors(termVectorsRequest, shardId.getIndex());
                 termVectorsResponse.updateTookInMillis(termVectorsRequest.startTime());
                 response.add(request.locations.get(i), termVectorsResponse);

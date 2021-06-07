@@ -44,6 +44,7 @@ import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.cluster.routing.*;
 import org.elasticsearch.common.Nullable;
+import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.collect.Tuple;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.lease.Releasable;
@@ -446,7 +447,6 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
                         public void onFailure(Throwable t) {
                             finishAsFailed(t);
                         }
-
                         @Override
                         protected void doRun() throws Exception {
                             performOnPrimary(primary, shardsIt);
@@ -543,7 +543,6 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
                 assert false : "finishAsFailed called but operation is already finished";
             }
         }
-
         void finishWithUnexpectedFailure(Throwable failure) {
             logger.warn("unexpected error during the primary phase for action [{}]", failure, actionName);
             if (finished.compareAndSet(false, true)) {
@@ -553,7 +552,6 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
                 assert false : "finishWithUnexpectedFailure called but operation is already finished";
             }
         }
-
         void finishOnRemoteSuccess(Response response) {
             if (finished.compareAndSet(false, true)) {
                 logger.trace("operation succeeded");
@@ -562,11 +560,13 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
                 assert false : "finishOnRemoteSuccess called but operation is already finished";
             }
         }
-
         /**
          * perform the operation on the node holding the primary
          */
+        @SuppressForbidden(reason = "Exception#printStackTrace()")
         void performOnPrimary(final ShardRouting primary, final ShardIterator shardsIt) {
+            logger.info("===performOnPrimary===569===");
+            System.out.println("===performOnPrimary===570===");
             final String writeConsistencyFailure = checkWriteConsistency(primary);
             if (writeConsistencyFailure != null) {
                 retryBecauseUnavailable(primary.shardId(), writeConsistencyFailure);
@@ -607,7 +607,6 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
             }
             finishAndMoveToReplication(replicationPhase);
         }
-
         /**
          * checks whether we can perform a write based on the write consistency setting
          * returns **null* if OK to proceed, or a string describing the reason to stop

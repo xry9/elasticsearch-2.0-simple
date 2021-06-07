@@ -38,6 +38,7 @@ import org.elasticsearch.cluster.ClusterService;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.ParseFieldMatcher;
+import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.component.AbstractLifecycleComponent;
 import org.elasticsearch.common.inject.Inject;
@@ -369,17 +370,16 @@ public class SearchService extends AbstractLifecycleComponent<SearchService> {
             queryPhase.execute(context);
         }
     }
-
+    @SuppressForbidden(reason = "Exception#printStackTrace()")
     public QuerySearchResultProvider executeQueryPhase(ShardSearchRequest request) {
+        System.out.println("===executeQueryPhase===375===");//try{ Integer.parseInt("executeQueryPhase"); }catch (Exception e){e.printStackTrace();}
         final SearchContext context = createAndPutContext(request);
         final ShardSearchStats shardSearchStats = context.indexShard().searchService();
         try {
             shardSearchStats.onPreQueryPhase(context);
             long time = System.nanoTime();
             contextProcessing(context);
-
             loadOrExecuteQueryPhase(request, context, queryPhase);
-
             if (context.queryResult().topDocs().scoreDocs.length == 0 && context.scroll() == null) {
                 freeContext(context.id());
             } else {

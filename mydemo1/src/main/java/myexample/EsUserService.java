@@ -35,7 +35,7 @@ public interface  EsUserService extends EsEntityService<User> {
      * @return
      * @since JDK 1.6
      */
-//    public Page<User> getPageModel(User user, int curretPage, int pageSize);
+    public Page<User> getPageModel(User user, int curretPage, int pageSize);
 
     /**
      * 

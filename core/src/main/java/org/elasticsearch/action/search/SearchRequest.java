@@ -28,6 +28,7 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.ParseFieldMatcher;
 import org.elasticsearch.common.Strings;
+import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.io.stream.StreamInput;
@@ -86,14 +87,13 @@ public class SearchRequest extends ActionRequest<SearchRequest> implements Indic
     public static final IndicesOptions DEFAULT_INDICES_OPTIONS = IndicesOptions.strictExpandOpenAndForbidClosed();
 
     private IndicesOptions indicesOptions = DEFAULT_INDICES_OPTIONS;
-
     public SearchRequest() {
     }
-
     /**
      * Copy constructor that creates a new search request that is a copy of the one provided as an argument.
      * The new request will inherit though headers and context from the original request that caused it.
      */
+    @SuppressForbidden(reason = "System#out")
     public SearchRequest(SearchRequest searchRequest, ActionRequest originalRequest) {
         super(originalRequest);
         this.searchType = searchRequest.searchType;
@@ -108,8 +108,8 @@ public class SearchRequest extends ActionRequest<SearchRequest> implements Indic
         this.scroll = searchRequest.scroll;
         this.types = searchRequest.types;
         this.indicesOptions = searchRequest.indicesOptions;
+        System.out.println("===SearchRequest===111===");
     }
-
     /**
      * Constructs a new search request starting from the provided request, meaning that it will
      * inherit its headers and context

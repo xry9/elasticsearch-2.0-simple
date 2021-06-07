@@ -25,8 +25,10 @@ import org.apache.lucene.index.TermsEnum;
 import org.elasticsearch.action.ActionRequestValidationException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.support.broadcast.BroadcastRequest;
+import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -45,12 +47,11 @@ public class DfsOnlyRequest extends BroadcastRequest<DfsOnlyRequest> {
     long nowInMillis;
 
     DfsOnlyRequest() {
-
     }
-
+    @SuppressForbidden(reason = "System#out")
     public DfsOnlyRequest(Fields termVectorsFields, String[] indices, String[] types, Set<String> selectedFields) throws IOException {
         super(indices);
-
+        System.out.println("===DfsOnlyRequest===54===");
         // build a search request with a query of all the terms
         final BoolQueryBuilder boolBuilder = boolQuery();
         for (String fieldName : termVectorsFields) {
