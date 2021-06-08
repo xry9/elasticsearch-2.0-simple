@@ -13,11 +13,11 @@
         </fileSet>
     </fileSets>
     <!-- plugin descriptor -->
-    <files>
-        <file>
-            <source>${elasticsearch.tools.directory}/plugin-metadata/plugin-descriptor.properties</source>
-            <outputDirectory></outputDirectory>
-            <filtered>true</filtered>
-        </file>
-    </files>
+<!--    <files>-->
+<!--        <file>-->
+<!--            <source>${elasticsearch.tools.directory}/plugin-metadata/plugin-descriptor.properties</source>-->
+<!--            <outputDirectory></outputDirectory>-->
+<!--            <filtered>true</filtered>-->
+<!--        </file>-->
+<!--    </files>-->
 </assembly>

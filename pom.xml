@@ -51,10 +51,10 @@
         <elasticsearch.s3.repository>s3://download.elasticsearch.org/elasticsearch/staging/</elasticsearch.s3.repository>
 
         <!-- Build resources properties -->
-        <elasticsearch.tools.directory>${project.build.directory}/dev-tools</elasticsearch.tools.directory>
-        <elasticsearch.license.header>${elasticsearch.tools.directory}/license-check/elasticsearch_license_header.txt</elasticsearch.license.header>
-        <elasticsearch.license.headerDefinition>${elasticsearch.tools.directory}/license-check/license_header_definition.xml</elasticsearch.license.headerDefinition>
-        <elasticsearch.integ.antfile.default>${elasticsearch.tools.directory}/ant/integration-tests.xml</elasticsearch.integ.antfile.default>
+<!--        <elasticsearch.tools.directory>${project.build.directory}/dev-tools</elasticsearch.tools.directory>-->
+<!--        <elasticsearch.license.header>${elasticsearch.tools.directory}/license-check/elasticsearch_license_header.txt</elasticsearch.license.header>-->
+<!--        <elasticsearch.license.headerDefinition>${elasticsearch.tools.directory}/license-check/license_header_definition.xml</elasticsearch.license.headerDefinition>-->
+<!--        <elasticsearch.integ.antfile.default>${elasticsearch.tools.directory}/ant/integration-tests.xml</elasticsearch.integ.antfile.default>-->
         <elasticsearch.integ.antfile>${elasticsearch.integ.antfile.default}</elasticsearch.integ.antfile>
 
         <!-- Properties for the license checker -->
@@ -141,11 +141,11 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.elasticsearch</groupId>
-                <artifactId>dev-tools</artifactId>
-                <version>${elasticsearch.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.elasticsearch</groupId>-->
+<!--                <artifactId>dev-tools</artifactId>-->
+<!--                <version>${elasticsearch.version}</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>com.carrotsearch.randomizedtesting</groupId>
@@ -810,88 +810,88 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-remote-resources-plugin</artifactId>
-                    <version>1.5</version>
-                    <configuration>
-                        <resourceBundles>
-                            <resourceBundle>org.elasticsearch:dev-tools:${elasticsearch.version}</resourceBundle>
-                            <resourceBundle>org.elasticsearch:rest-api-spec:${elasticsearch.version}</resourceBundle>
-                        </resourceBundles>
-                        <outputDirectory>${elasticsearch.tools.directory}</outputDirectory>
-                        <!-- don't include dev-tools in artifacts -->
-                        <attachToMain>false</attachToMain>
-                        <attachToTest>false</attachToTest>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>process</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>de.thetaphi</groupId>
-                    <artifactId>forbiddenapis</artifactId>
-                    <version>1.8</version>
+<!--                <plugin>-->
+<!--                    <groupId>org.apache.maven.plugins</groupId>-->
+<!--                    <artifactId>maven-remote-resources-plugin</artifactId>-->
+<!--                    <version>1.5</version>-->
+<!--                    <configuration>-->
+<!--                        <resourceBundles>-->
+<!--                            <resourceBundle>org.elasticsearch:dev-tools:${elasticsearch.version}</resourceBundle>-->
+<!--                            <resourceBundle>org.elasticsearch:rest-api-spec:${elasticsearch.version}</resourceBundle>-->
+<!--                        </resourceBundles>-->
+<!--                        <outputDirectory>${elasticsearch.tools.directory}</outputDirectory>-->
+<!--                        &lt;!&ndash; don't include dev-tools in artifacts &ndash;&gt;-->
+<!--                        <attachToMain>false</attachToMain>-->
+<!--                        <attachToTest>false</attachToTest>-->
+<!--                    </configuration>-->
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <goals>-->
+<!--                                <goal>process</goal>-->
+<!--                            </goals>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
+<!--                </plugin>-->
+<!--                <plugin>-->
+<!--                    <groupId>de.thetaphi</groupId>-->
+<!--                    <artifactId>forbiddenapis</artifactId>-->
+<!--                    <version>1.8</version>-->
 
-                    <executions>
-                        <execution>
-                            <id>check-forbidden-apis</id>
-                                <configuration>
-                                     <targetVersion>${maven.compiler.target}</targetVersion>
-                                     <!-- disallow undocumented classes like sun.misc.Unsafe: -->
-                                     <internalRuntimeForbidden>true</internalRuntimeForbidden>
-                                     <!-- if the used Java version is too new, don't fail, just do nothing: -->
-                                     <failOnUnsupportedJava>false</failOnUnsupportedJava>
-                                     <bundledSignatures>
-                                         <!-- This will automatically choose the right signatures based on 'targetVersion': -->
-                                         <bundledSignature>jdk-unsafe</bundledSignature>
-                                         <bundledSignature>jdk-deprecated</bundledSignature>
-                                         <bundledSignature>jdk-system-out</bundledSignature>
-                                     </bundledSignatures>
-                                     <signaturesFiles>
-                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/core-signatures.txt</signaturesFile>
-                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>
-                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/third-party-signatures.txt</signaturesFile>
-                                     </signaturesFiles>
-                                     <signatures>${forbidden.signatures}</signatures>
-                                     <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
-                                 </configuration>
-                             <phase>compile</phase>
-                             <goals>
-                                 <goal>check</goal>
-                             </goals>
-                         </execution>
-                         <execution>
-                             <id>check-forbidden-test-apis</id>
-                             <configuration>
-                                 <targetVersion>${maven.compiler.target}</targetVersion>
-                                 <!-- disallow undocumented classes like sun.misc.Unsafe: -->
-                                 <internalRuntimeForbidden>true</internalRuntimeForbidden>
-                                 <!-- if the used Java version is too new, don't fail, just do nothing: -->
-                                 <failOnUnsupportedJava>false</failOnUnsupportedJava>
-                                 <bundledSignatures>
-                                     <!-- This will automatically choose the right signatures based on 'targetVersion': -->
-                                     <bundledSignature>jdk-unsafe</bundledSignature>
-                                     <bundledSignature>jdk-deprecated</bundledSignature>
-                                 </bundledSignatures>
-                                 <signaturesFiles>
-                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/test-signatures.txt</signaturesFile>
-                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>
-                                 </signaturesFiles>
-                                 <signatures>${forbidden.test.signatures}</signatures>
-                                 <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
-                             </configuration>
-                             <phase>test-compile</phase>
-                             <goals>
-                                 <goal>testCheck</goal>
-                             </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <id>check-forbidden-apis</id>-->
+<!--                                <configuration>-->
+<!--                                     <targetVersion>${maven.compiler.target}</targetVersion>-->
+<!--                                     &lt;!&ndash; disallow undocumented classes like sun.misc.Unsafe: &ndash;&gt;-->
+<!--                                     <internalRuntimeForbidden>true</internalRuntimeForbidden>-->
+<!--                                     &lt;!&ndash; if the used Java version is too new, don't fail, just do nothing: &ndash;&gt;-->
+<!--                                     <failOnUnsupportedJava>false</failOnUnsupportedJava>-->
+<!--                                     <bundledSignatures>-->
+<!--                                         &lt;!&ndash; This will automatically choose the right signatures based on 'targetVersion': &ndash;&gt;-->
+<!--                                         <bundledSignature>jdk-unsafe</bundledSignature>-->
+<!--                                         <bundledSignature>jdk-deprecated</bundledSignature>-->
+<!--                                         <bundledSignature>jdk-system-out</bundledSignature>-->
+<!--                                     </bundledSignatures>-->
+<!--                                     <signaturesFiles>-->
+<!--                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/core-signatures.txt</signaturesFile>-->
+<!--                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>-->
+<!--                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/third-party-signatures.txt</signaturesFile>-->
+<!--                                     </signaturesFiles>-->
+<!--                                     <signatures>${forbidden.signatures}</signatures>-->
+<!--                                     <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>-->
+<!--                                 </configuration>-->
+<!--                             <phase>compile</phase>-->
+<!--                             <goals>-->
+<!--                                 <goal>check</goal>-->
+<!--                             </goals>-->
+<!--                         </execution>-->
+<!--                         <execution>-->
+<!--                             <id>check-forbidden-test-apis</id>-->
+<!--                             <configuration>-->
+<!--                                 <targetVersion>${maven.compiler.target}</targetVersion>-->
+<!--                                 &lt;!&ndash; disallow undocumented classes like sun.misc.Unsafe: &ndash;&gt;-->
+<!--                                 <internalRuntimeForbidden>true</internalRuntimeForbidden>-->
+<!--                                 &lt;!&ndash; if the used Java version is too new, don't fail, just do nothing: &ndash;&gt;-->
+<!--                                 <failOnUnsupportedJava>false</failOnUnsupportedJava>-->
+<!--                                 <bundledSignatures>-->
+<!--                                     &lt;!&ndash; This will automatically choose the right signatures based on 'targetVersion': &ndash;&gt;-->
+<!--                                     <bundledSignature>jdk-unsafe</bundledSignature>-->
+<!--                                     <bundledSignature>jdk-deprecated</bundledSignature>-->
+<!--                                 </bundledSignatures>-->
+<!--                                 <signaturesFiles>-->
+<!--                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/test-signatures.txt</signaturesFile>-->
+<!--                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>-->
+<!--                                 </signaturesFiles>-->
+<!--                                 <signatures>${forbidden.test.signatures}</signatures>-->
+<!--                                 <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>-->
+<!--                             </configuration>-->
+<!--                             <phase>test-compile</phase>-->
+<!--                             <goals>-->
+<!--                                 <goal>testCheck</goal>-->
+<!--                             </goals>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
+<!--                </plugin>-->
                 <plugin>
                     <!-- We just declare which plugin version to use. Each project can have then its own settings -->
                     <groupId>org.apache.maven.plugins</groupId>
@@ -914,9 +914,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.4</version>
-                    <configuration>
-                        <siteDirectory>${elasticsearch.tools.directory}/site</siteDirectory>
-                    </configuration>
+<!--                    <configuration>-->
+<!--                        <siteDirectory>${elasticsearch.tools.directory}/site</siteDirectory>-->
+<!--                    </configuration>-->
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -1072,12 +1072,12 @@ org.eclipse.jdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UT
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>3.5</version>
-                    <configuration>
-                        <rulesets>
-                            <ruleset>${elasticsearch.tools.directory}/pmd/custom.xml</ruleset>
-                        </rulesets>
-                        <targetJdk>${maven.compiler.target}</targetJdk>
-                     </configuration>
+<!--                    <configuration>-->
+<!--                        <rulesets>-->
+<!--                            <ruleset>${elasticsearch.tools.directory}/pmd/custom.xml</ruleset>-->
+<!--                        </rulesets>-->
+<!--                        <targetJdk>${maven.compiler.target}</targetJdk>-->
+<!--                     </configuration>-->
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -1235,14 +1235,14 @@ org.eclipse.jdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UT
                                 <target>
                                     <echo taskName="license check">Running license check</echo>
                                     <!-- don't run on windows, because everyone hates it -->
-                                    <exec failonerror="true" executable="perl" osfamily="unix"
-                                          dir="${elasticsearch.tools.directory}/license-check">
-                                        <arg value="check_license_and_sha.pl"/>
-                                        <arg value="--check"/>
-                                        <arg value="${project.licenses.dir}"/>
-                                        <arg value="${project.licenses.check_target}"/>
-                                        <arg value="${project.build.finalName}"/>
-                                    </exec>
+<!--                                    <exec failonerror="true" executable="perl" osfamily="unix"-->
+<!--                                          dir="${elasticsearch.tools.directory}/license-check">-->
+<!--                                        <arg value="check_license_and_sha.pl"/>-->
+<!--                                        <arg value="&#45;&#45;check"/>-->
+<!--                                        <arg value="${project.licenses.dir}"/>-->
+<!--                                        <arg value="${project.licenses.check_target}"/>-->
+<!--                                        <arg value="${project.build.finalName}"/>-->
+<!--                                    </exec>-->
                                 </target>
                             </configuration>
                         </execution>
@@ -1494,8 +1494,8 @@ org.eclipse.jdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UT
         </profile>
     </profiles>
     <modules>
-        <module>dev-tools</module>
-        <module>rest-api-spec</module>
+<!--        <module>dev-tools</module>-->
+<!--        <module>rest-api-spec</module>-->
         <module>core</module>
         <module>distribution</module>
         <module>plugins</module>

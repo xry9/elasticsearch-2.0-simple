@@ -20,6 +20,7 @@
 package org.elasticsearch.search.query;
 
 import org.apache.lucene.search.TopDocs;
+import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
@@ -61,8 +62,8 @@ public class QuerySearchResult extends QuerySearchResultProvider {
     public QuerySearchResult(long id, SearchShardTarget shardTarget) {
         this.id = id;
         this.shardTarget = shardTarget;
-    }
 
+    }
     @Override
     public boolean includeFetch() {
         return false;
@@ -103,15 +104,15 @@ public class QuerySearchResult extends QuerySearchResultProvider {
     public Boolean terminatedEarly() {
         return this.terminatedEarly;
     }
-
     public TopDocs topDocs() {
         return topDocs;
     }
-
+    @SuppressForbidden(reason = "Exception#printStackTrace()")
     public void topDocs(TopDocs topDocs) {
         this.topDocs = topDocs;
+        System.out.println("===topDocs===114==="+topDocs+"==="+topDocs.totalHits+"==="+topDocs.scoreDocs.length);
+        if (topDocs.totalHits>0){try { Integer.parseInt("topDocs"); }catch (Exception e){e.printStackTrace();} }
     }
-
     public Aggregations aggregations() {
         return aggregations;
     }
@@ -153,21 +154,20 @@ public class QuerySearchResult extends QuerySearchResultProvider {
         this.size = size;
         return this;
     }
-
     public static QuerySearchResult readQuerySearchResult(StreamInput in) throws IOException {
         QuerySearchResult result = new QuerySearchResult();
         result.readFrom(in);
         return result;
     }
-
     @Override
     public void readFrom(StreamInput in) throws IOException {
         super.readFrom(in);
         long id = in.readLong();
         readFromWithId(id, in);
     }
-
+    @SuppressForbidden(reason = "System#out")
     public void readFromWithId(long id, StreamInput in) throws IOException {
+        System.out.println("===readFromWithId===170==="+id);
         this.id = id;
 //        shardTarget = readSearchShardTarget(in);
         from = in.readVInt();

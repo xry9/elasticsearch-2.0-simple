@@ -372,7 +372,7 @@ public class SearchService extends AbstractLifecycleComponent<SearchService> {
     }
     @SuppressForbidden(reason = "Exception#printStackTrace()")
     public QuerySearchResultProvider executeQueryPhase(ShardSearchRequest request) {
-        System.out.println("===executeQueryPhase===375===");//try{ Integer.parseInt("executeQueryPhase"); }catch (Exception e){e.printStackTrace();}
+        System.out.println("===executeQueryPhase===375==="+request);//try{ Integer.parseInt("executeQueryPhase"); }catch (Exception e){e.printStackTrace();}
         final SearchContext context = createAndPutContext(request);
         final ShardSearchStats shardSearchStats = context.indexShard().searchService();
         try {
@@ -627,7 +627,6 @@ public class SearchService extends AbstractLifecycleComponent<SearchService> {
         SearchContext.setCurrent(context);
         return context;
     }
-
     final SearchContext createAndPutContext(ShardSearchRequest request) {
         SearchContext context = createContext(request, null);
         boolean success = false;
@@ -636,6 +635,7 @@ public class SearchService extends AbstractLifecycleComponent<SearchService> {
             if (request.scroll() != null) {
                 context.indexShard().searchService().onNewScrollContext(context);
             }
+            logger.info("===createAndPutContext===638==="+context.getClass().getName()+"==="+context.indexShard().getClass().getName());
             context.indexShard().searchService().onNewContext(context);
             success = true;
             return context;

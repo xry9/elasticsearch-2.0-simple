@@ -26,6 +26,7 @@ import org.apache.lucene.util.BytesRef;
 import org.elasticsearch.ElasticsearchParseException;
 import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.Strings;
+import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.compress.CompressorFactory;
@@ -93,32 +94,31 @@ public class InternalSearchHit implements SearchHit {
 
     private Map<String, Object> sourceAsMap;
     private byte[] sourceAsBytes;
-
     private Map<String, InternalSearchHits> innerHits;
-
+    @SuppressForbidden(reason = "System#out")
     private InternalSearchHit() {
-
+        System.out.println("===InternalSearchHit===100===");
     }
-
+    @SuppressForbidden(reason = "System#out")
     public InternalSearchHit(int docId, String id, Text type, Map<String, SearchHitField> fields) {
         this.docId = docId;
         this.id = new StringAndBytesText(id);
         this.type = type;
         this.fields = fields;
+        System.out.println("===InternalSearchHit===108==="+(fields!=null?fields:"null"));
     }
-
+    @SuppressForbidden(reason = "System#out")
     public InternalSearchHit(int nestedTopDocId, String id, Text type, InternalNestedIdentity nestedIdentity, Map<String, SearchHitField> fields) {
         this.docId = nestedTopDocId;
         this.id = new StringAndBytesText(id);
         this.type = type;
         this.nestedIdentity = nestedIdentity;
         this.fields = fields;
+        System.out.println("===InternalSearchHit===117===");
     }
-
     public int docId() {
         return this.docId;
     }
-
     public void shardTarget(SearchShardTarget shardTarget) {
         this.shard = shardTarget;
         if (innerHits != null) {
@@ -558,7 +558,7 @@ public class InternalSearchHit implements SearchHit {
     public void readFrom(StreamInput in) throws IOException {
         readFrom(in, InternalSearchHits.streamContext().streamShardTarget(ShardTargetType.STREAM));
     }
-
+    @SuppressForbidden(reason = "System#out")
     public void readFrom(StreamInput in, InternalSearchHits.StreamContext context) throws IOException {
         score = in.readFloat();
         id = in.readText();
@@ -608,7 +608,7 @@ public class InternalSearchHit implements SearchHit {
             }
             fields = builder.build();
         }
-
+        System.out.println("===readFrom===611==="+(fields!=null?fields:"null"));
         size = in.readVInt();
         if (size == 0) {
             highlightFields = ImmutableMap.of();

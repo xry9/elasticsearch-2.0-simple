@@ -23,17 +23,17 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <!-- This plugin bundles a config so it can't use the standard
-                     assembly for plugins. -->
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/assemblies/plugin.xml</descriptor>
-                    </descriptors>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-assembly-plugin</artifactId>-->
+<!--                &lt;!&ndash; This plugin bundles a config so it can't use the standard-->
+<!--                     assembly for plugins. &ndash;&gt;-->
+<!--                <configuration>-->
+<!--                    <descriptors>-->
+<!--                        <descriptor>src/main/assemblies/plugin.xml</descriptor>-->
+<!--                    </descriptors>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

@@ -242,19 +242,19 @@
                     <include>**/*.*</include>
                 </includes>
             </testResource>
-            <testResource>
-                <directory>${elasticsearch.tools.directory}/rest-api-spec</directory>
-                <targetPath>rest-api-spec</targetPath>
-                <includes>
-                    <include>api/*.json</include>
-                    <include>test/**/*.yaml</include>
-                </includes>
-            </testResource>
+<!--            <testResource>-->
+<!--                <directory>${elasticsearch.tools.directory}/rest-api-spec</directory>-->
+<!--                <targetPath>rest-api-spec</targetPath>-->
+<!--                <includes>-->
+<!--                    <include>api/*.json</include>-->
+<!--                    <include>test/**/*.yaml</include>-->
+<!--                </includes>-->
+<!--            </testResource>-->
              <!-- shared test resources like log4j.properties -->
-            <testResource>
-                <directory>${elasticsearch.tools.directory}/shared-test-resources</directory>
-                <filtering>false</filtering>
-            </testResource>
+<!--            <testResource>-->
+<!--                <directory>${elasticsearch.tools.directory}/shared-test-resources</directory>-->
+<!--                <filtering>false</filtering>-->
+<!--            </testResource>-->
         </testResources>
 
         <plugins>

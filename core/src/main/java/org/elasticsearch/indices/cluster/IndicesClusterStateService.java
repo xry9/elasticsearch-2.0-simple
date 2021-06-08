@@ -133,10 +133,10 @@ public class IndicesClusterStateService extends AbstractLifecycleComponent<Indic
 
     @Override
     public void clusterChanged(final ClusterChangedEvent event) {
+        logger.info("===clusterChanged===136===");//try { Integer.parseInt("clusterChanged"); }catch (Exception e){logger.error("===", e);}
         if (!indicesService.changesAllowed()) {
             return;
         }
-
         if (!lifecycle.started()) {
             return;
         }

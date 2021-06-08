@@ -21,6 +21,7 @@ package org.elasticsearch.common.util.concurrent;
 import com.google.common.collect.Lists;
 
 import org.elasticsearch.common.Priority;
+import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.unit.TimeValue;
 
 import java.util.List;
@@ -166,17 +167,16 @@ public class PrioritizedEsThreadPoolExecutor extends EsThreadPoolExecutor {
         // these two variables are protected by 'this'
         private ScheduledFuture<?> timeoutFuture;
         private boolean started = false;
-
         TieBreakingPrioritizedRunnable(PrioritizedRunnable runnable, long insertionOrder) {
             this(runnable, runnable.priority(), insertionOrder);
         }
-
+        @SuppressForbidden(reason = "Exception#printStackTrace()")
         TieBreakingPrioritizedRunnable(Runnable runnable, Priority priority, long insertionOrder) {
             super(priority);
             this.runnable = runnable;
             this.insertionOrder = insertionOrder;
+            System.out.println("===TieBreakingPrioritizedRunnable===178===");//try { Integer.parseInt("TieBreakingPrioritizedRunnable"); }catch (Exception e){e.printStackTrace();}
         }
-
         @Override
         public void run() {
             synchronized (this) {

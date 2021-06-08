@@ -24,14 +24,14 @@ public class TransportClientTest {
      * 日志类
      */
 //    private static Logger logger = LogManager.getLogger(TransportClientTest.class.getName());
-
+//    https://blog.csdn.net/qiyongkang520/article/details/50225213?locationNum=8&fps=1
 // http://localhost:9200/_cat/indices?v
     public static void main(String[] args) {
         EsClientPool pool = null;
         EsClient esclient = null;
         try {
             //初始化一个pool
-            pool = new EsClientPool("elasticsearch", "127.0.0.1", "9300", 20);
+            pool = new EsClientPool("elasticsearch", "127.0.0.1", "9500", 20);
 //            logger.info("初始化一个es pool成功：{}", pool);
 
             //获取一个客户端
