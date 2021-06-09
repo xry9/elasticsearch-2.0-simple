@@ -1,4 +1,4 @@
-package myexample;
+package com.xry9.elasticsearch;
 
 //import com.qiyongkang.es.model.User;
 //import com.qiyongkang.es.service.EsUserService;

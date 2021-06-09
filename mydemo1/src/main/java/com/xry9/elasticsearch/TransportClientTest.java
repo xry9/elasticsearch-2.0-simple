@@ -1,4 +1,4 @@
-package myexample;
+package com.xry9.elasticsearch;
 
 //import com.qiyongkang.es.util.DateUtil;
 //import com.qiyongkang.es.util.Page;
@@ -6,10 +6,7 @@ package myexample;
 //import org.apache.logging.log4j.Logger;
 import org.elasticsearch.common.settings.Settings;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * ClassName:TransportClientTest <br/>
@@ -49,7 +46,7 @@ public class TransportClientTest {
 
             /***************索引********************/
             //创建一个索引
-//            createIndex(esclient, "usermanage2");
+//            createIndex(esclient, "usermanage");
 
             //删除一个索引
 //            deleteIndex(esclient, "usermanage1");
@@ -76,7 +73,7 @@ public class TransportClientTest {
 //
             /***************添加********************/
             //单个添加
-//            esUserService.singleInsert(new User(8L, "qiyongkang3", 1, 1, DateUtil.strToYMDHMSDate("2015-11-1 11:11:11")));
+            esUserService.singleInsert(new User(1L, "qiyongkang", 1, 1, DateUtil.strToYMDHMSDate("2015-11-1 11:11:11")));
 //
 //            //批量添加
 //            Date date = DateUtil.strToYMDHMSDate("2015-11-1 11:11:11");
@@ -135,7 +132,7 @@ public class TransportClientTest {
 ////            logger.info("********user list***********");
 
             //根据id查实体
-            User entityById = esUserService.getEntityById(6);
+            User entityById = esUserService.getEntityById(1);
             System.out.println(entityById);
 //
 //            /***************删除********************/

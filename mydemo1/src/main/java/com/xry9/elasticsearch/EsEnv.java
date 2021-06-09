@@ -1,4 +1,4 @@
-package myexample;
+package com.xry9.elasticsearch;
 
 public class EsEnv {
     /**

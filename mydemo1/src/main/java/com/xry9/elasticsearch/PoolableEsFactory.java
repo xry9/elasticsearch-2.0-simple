@@ -1,4 +1,4 @@
-package myexample;
+package com.xry9.elasticsearch;
 
 import org.apache.commons.pool.BasePoolableObjectFactory;
 //import org.apache.logging.log4j.LogManager;

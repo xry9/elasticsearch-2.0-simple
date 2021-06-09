@@ -1,4 +1,4 @@
-package myexample;
+package com.xry9.elasticsearch;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.xcontent.XContentBuilder;

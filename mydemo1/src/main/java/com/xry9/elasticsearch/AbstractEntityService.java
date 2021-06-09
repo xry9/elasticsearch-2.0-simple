@@ -1,4 +1,4 @@
-package myexample;
+package com.xry9.elasticsearch;
 
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;

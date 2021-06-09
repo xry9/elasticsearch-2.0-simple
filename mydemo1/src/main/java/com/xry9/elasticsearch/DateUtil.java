@@ -1,4 +1,4 @@
-package myexample;
+package com.xry9.elasticsearch;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

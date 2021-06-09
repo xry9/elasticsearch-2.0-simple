@@ -98,7 +98,7 @@ public class Environment {
         } else {
             throw new IllegalStateException("path.home is not configured");
         }
-
+        //System.out.println("===Environment===101==="+homeFile+"==="+(settings.get("path.conf") != null));
         if (settings.get("path.conf") != null) {
             configFile = PathUtils.get(cleanPath(settings.get("path.conf")));
         } else {

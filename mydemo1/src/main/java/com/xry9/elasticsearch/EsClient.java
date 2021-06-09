@@ -1,4 +1,4 @@
-package myexample;
+package com.xry9.elasticsearch;
 
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
