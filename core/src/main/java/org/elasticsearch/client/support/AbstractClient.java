@@ -283,14 +283,14 @@ import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.*;
 import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.component.AbstractComponent;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.threadpool.ThreadPool;
-
 /**
- *
  */
 public abstract class AbstractClient extends AbstractComponent implements Client {
-
+    public static ESLogger logger = Loggers.getLogger(AbstractClient.class);
     private final ThreadPool threadPool;
     private final Admin admin;
 
@@ -334,9 +334,9 @@ public abstract class AbstractClient extends AbstractComponent implements Client
     public final <Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> ActionFuture<Response> execute(Action<Request, Response, RequestBuilder> action, Request request) {
         PlainActionFuture<Response> actionFuture = PlainActionFuture.newFuture();
         execute(action, request, actionFuture);
+
         return actionFuture;
     }
-
     /**
      * This is the single execution point of *all* clients.
      */
@@ -832,9 +832,9 @@ public abstract class AbstractClient extends AbstractComponent implements Client
 
         @Override
         public <Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> void execute(Action<Request, Response, RequestBuilder> action, Request request, ActionListener<Response> listener) {
+            logger.info("===execute===835==="+client.getClass().getName()+"==="+action);
             client.execute(action, request, listener);
         }
-
         @Override
         public <Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> RequestBuilder prepareExecute(Action<Request, Response, RequestBuilder> action) {
             return client.prepareExecute(action);

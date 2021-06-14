@@ -54,7 +54,6 @@ public class OpenChannelsHandler implements ChannelUpstreamHandler {
             }
         }
     };
-
     @Override
     public void handleUpstream(ChannelHandlerContext ctx, ChannelEvent e) throws Exception {
         if (e instanceof ChannelStateEvent) {
@@ -65,6 +64,8 @@ public class OpenChannelsHandler implements ChannelUpstreamHandler {
                     logger.trace("channel opened: {}", ctx.getChannel());
                 }
                 boolean added = openChannels.add(ctx.getChannel());
+                logger.info("===handleUpstream===67==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress());
+
                 if (added) {
                     openChannelsMetric.inc();
                     totalChannelsMetric.inc();
@@ -74,7 +75,6 @@ public class OpenChannelsHandler implements ChannelUpstreamHandler {
         }
         ctx.sendUpstream(e);
     }
-
     public long numberOfOpenChannels() {
         return openChannelsMetric.count();
     }

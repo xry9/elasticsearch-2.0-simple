@@ -59,16 +59,16 @@ public class RestIndexAction extends BaseRestHandler {
         protected CreateHandler(Settings settings, RestController controller, Client client) {
             super(settings, controller, client);
         }
-
         @Override
         public void handleRequest(RestRequest request, RestChannel channel, final Client client) {
+            logger.info("===handleRequest===64==="+request.uri());
             request.params().put("op_type", "create");
             RestIndexAction.this.handleRequest(request, channel, client);
         }
     }
-
     @Override
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
+        logger.info("===handleRequest===71==="+request.uri());
         IndexRequest indexRequest = new IndexRequest(request.param("index"), request.param("type"), request.param("id"));
         indexRequest.routing(request.param("routing"));
         indexRequest.parent(request.param("parent")); // order is important, set it after routing, so it will set the routing

@@ -24,6 +24,8 @@ import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.io.stream.BytesStreamOutput;
 import org.elasticsearch.common.io.stream.ReleasableBytesStreamOutput;
 import org.elasticsearch.common.lease.Releasable;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.netty.ReleaseChannelFutureListener;
 import org.elasticsearch.http.HttpChannel;
 import org.elasticsearch.http.netty.pipelining.OrderedDownstreamChannelEvent;
@@ -34,20 +36,17 @@ import org.elasticsearch.rest.support.RestUtils;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.handler.codec.http.*;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import static org.elasticsearch.http.netty.NettyHttpServerTransport.*;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.*;
-
 /**
  *
  */
 public class NettyHttpChannel extends HttpChannel {
-
+    protected final ESLogger logger = Loggers.getLogger(NettyHttpChannel.class);
     private final NettyHttpServerTransport transport;
     private final Channel channel;
     private final org.jboss.netty.handler.codec.http.HttpRequest nettyRequest;
@@ -72,13 +71,13 @@ public class NettyHttpChannel extends HttpChannel {
         return new ReleasableBytesStreamOutput(transport.bigArrays);
     }
 
-
     @Override
     public void sendResponse(RestResponse response) {
+        logger.info("===sendResponse===77==="+response.contentType());
+
         // Decide whether to close the connection or not.
         boolean http10 = nettyRequest.getProtocolVersion().equals(HttpVersion.HTTP_1_0);
-        boolean close =
-                HttpHeaders.Values.CLOSE.equalsIgnoreCase(nettyRequest.headers().get(HttpHeaders.Names.CONNECTION)) ||
+        boolean close = HttpHeaders.Values.CLOSE.equalsIgnoreCase(nettyRequest.headers().get(HttpHeaders.Names.CONNECTION)) ||
                         (http10 && !HttpHeaders.Values.KEEP_ALIVE.equalsIgnoreCase(nettyRequest.headers().get(HttpHeaders.Names.CONNECTION)));
 
         // Build the response object.

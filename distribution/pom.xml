@@ -158,11 +158,11 @@
 
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <!-- checks integration test scratch area (where we extract the distribution) -->
-                </plugin>
+<!--                <plugin>-->
+<!--                    <groupId>org.apache.maven.plugins</groupId>-->
+<!--                    <artifactId>maven-antrun-plugin</artifactId>-->
+<!--                    &lt;!&ndash; checks integration test scratch area (where we extract the distribution) &ndash;&gt;-->
+<!--                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>

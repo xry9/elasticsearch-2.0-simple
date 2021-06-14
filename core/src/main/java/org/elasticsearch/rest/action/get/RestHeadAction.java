@@ -43,9 +43,9 @@ public class RestHeadAction extends BaseRestHandler {
         controller.registerHandler(HEAD, "/{index}/{type}/{id}", this);
         controller.registerHandler(HEAD, "/{index}/{type}/{id}/_source", this);
     }
-
     @Override
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
+        System.out.println("===handleRequest===48===");
         final GetRequest getRequest = new GetRequest(request.param("index"), request.param("type"), request.param("id"));
         getRequest.operationThreaded(true);
         getRequest.refresh(request.paramAsBoolean("refresh", getRequest.refresh()));

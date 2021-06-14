@@ -74,8 +74,8 @@ public abstract class TransportMasterNodeAction<Request extends MasterNodeReques
     protected abstract ClusterBlockException checkBlock(Request request, ClusterState state);
 
     protected void processBeforeDelegationToMaster(Request request, ClusterState state) {
-
     }
+
 
     @Override
     protected void doExecute(final Request request, ActionListener<Response> listener) {
@@ -83,12 +83,13 @@ public abstract class TransportMasterNodeAction<Request extends MasterNodeReques
         if ((listener instanceof ThreadedActionListener) == false) {
             listener = new ThreadedActionListener<>(logger, threadPool, ThreadPool.Names.LISTENER, listener);
         }
+        logger.info("===doExecute===86==="+this.getClass().getName());
         innerExecute(request, listener, new ClusterStateObserver(clusterService, request.masterNodeTimeout(), logger), false);
     }
-
     private void innerExecute(final Request request, final ActionListener<Response> listener, final ClusterStateObserver observer, final boolean retrying) {
         final ClusterState clusterState = observer.observedState();
         final DiscoveryNodes nodes = clusterState.nodes();
+        //logger.info("===innerExecute===92==="+nodes.localNodeMaster()+"==="+localExecute(request));
         if (nodes.localNodeMaster() || localExecute(request)) {
             // check for block, if blocked, retry, else, execute locally
             final ClusterBlockException blockException = checkBlock(request, clusterState);
@@ -104,7 +105,6 @@ public abstract class TransportMasterNodeAction<Request extends MasterNodeReques
                             public void onNewClusterState(ClusterState state) {
                                 innerExecute(request, listener, observer, false);
                             }
-
                             @Override
                             public void onClusterServiceClose() {
                                 listener.onFailure(blockException);
@@ -122,7 +122,6 @@ public abstract class TransportMasterNodeAction<Request extends MasterNodeReques
                             }
                         }
                 );
-
             } else {
                 threadPool.executor(executor).execute(new ActionRunnable(listener) {
                     @Override
@@ -132,6 +131,7 @@ public abstract class TransportMasterNodeAction<Request extends MasterNodeReques
                 });
             }
         } else {
+            logger.info("===innerExecute===135==="+(nodes.masterNode() == null));
             if (nodes.masterNode() == null) {
                 if (retrying) {
                     listener.onFailure(new MasterNotDiscoveredException());
@@ -178,9 +178,9 @@ public abstract class TransportMasterNodeAction<Request extends MasterNodeReques
 
                 @Override
                 public void handleResponse(Response response) {
+                    logger.info("===handleResponse===181==="+listener.getClass().getName());
                     listener.onResponse(response);
                 }
-
                 @Override
                 public String executor() {
                     return ThreadPool.Names.SAME;

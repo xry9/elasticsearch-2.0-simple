@@ -137,8 +137,8 @@ public class SearchServiceTransportAction extends AbstractComponent {
             }
         });
     }
-
     public void sendExecuteQuery(DiscoveryNode node, final ShardSearchTransportRequest request, final ActionListener<QuerySearchResultProvider> listener) {
+        logger.info("===sendExecuteQuery===141==="+listener.getClass().getName());
         transportService.sendRequest(node, QUERY_ACTION_NAME, request, new ActionListenerResponseHandler<QuerySearchResultProvider>(listener) {
             @Override
             public QuerySearchResult newInstance() {
@@ -390,10 +390,10 @@ public class SearchServiceTransportAction extends AbstractComponent {
         @Override
         public void messageReceived(ShardSearchTransportRequest request, TransportChannel channel) throws Exception {
             QueryFetchSearchResult result = searchService.executeFetchPhase(request);
+            logger.info("===messageReceived===393==="+request.indices()+"==="+request.index()+"==="+result.queryResult());
             channel.sendResponse(result);
         }
     }
-
     class SearchQueryQueryFetchTransportHandler implements TransportRequestHandler<QuerySearchRequest> {
         @Override
         public void messageReceived(QuerySearchRequest request, TransportChannel channel) throws Exception {

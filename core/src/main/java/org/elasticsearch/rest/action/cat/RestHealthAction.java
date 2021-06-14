@@ -51,11 +51,11 @@ public class RestHealthAction extends AbstractCatAction {
     protected void documentation(StringBuilder sb) {
         sb.append("/_cat/health\n");
     }
-
     @Override
     public void doRequest(final RestRequest request, final RestChannel channel, final Client client) {
         ClusterHealthRequest clusterHealthRequest = new ClusterHealthRequest();
 
+        logger.info("===request===58==="+request.path()+"==="+request.rawPath()+"==="+request.uri()+"==="+client.admin().cluster().getClass().getName()+"==="+client.getClass().getName());
         client.admin().cluster().health(clusterHealthRequest, new RestResponseListener<ClusterHealthResponse>(channel) {
             @Override
             public RestResponse buildResponse(final ClusterHealthResponse health) throws Exception {

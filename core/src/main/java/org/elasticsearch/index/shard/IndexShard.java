@@ -587,9 +587,9 @@ public class IndexShard extends AbstractIndexShardComponent {
 
     public Engine.GetResult get(Engine.Get get) {
         readAllowed();
+        logger.info("===get===590==="+engine().getClass().getName());
         return engine().get(get);
     }
-
     public void refresh(String source) {
         verifyNotClosed();
         if (logger.isTraceEnabled()) {

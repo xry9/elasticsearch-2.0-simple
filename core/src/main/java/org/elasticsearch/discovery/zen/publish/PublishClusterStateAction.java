@@ -273,8 +273,8 @@ public class PublishClusterStateAction extends AbstractComponent {
                 }
                 lastSeenClusterState.status(ClusterState.ClusterStateStatus.RECEIVED);
             }
-
             try {
+                logger.info("===messageReceived===277==="+lastSeenClusterState);
                 listener.onNewClusterState(lastSeenClusterState, new NewClusterStateListener.NewStateProcessed() {
                     @Override
                     public void onNewClusterStateProcessed() {

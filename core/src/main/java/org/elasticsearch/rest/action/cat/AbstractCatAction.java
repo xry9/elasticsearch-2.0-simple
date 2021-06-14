@@ -42,9 +42,9 @@ public abstract class AbstractCatAction extends BaseRestHandler {
     protected abstract void documentation(StringBuilder sb);
 
     protected abstract Table getTableWithHeader(final RestRequest request);
-
     @Override
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) throws Exception {
+        System.out.println("===handleRequest===47==="+request);
         boolean helpWanted = request.paramAsBoolean("help", false);
         if (helpWanted) {
             Table table = getTableWithHeader(request);

@@ -115,6 +115,7 @@ public class Versions {
         if (leaves.isEmpty()) {
             return null;
         }
+
         // iterate backwards to optimize for the frequently updated documents
         // which are likely to be in the last segments
         for (int i = leaves.size() - 1; i >= 0; i--) {
@@ -128,7 +129,6 @@ public class Versions {
         }
         return null;
     }
-
     /**
      * Load the version for the uid from the reader, returning<ul>
      * <li>{@link #NOT_FOUND} if no matching doc exists,

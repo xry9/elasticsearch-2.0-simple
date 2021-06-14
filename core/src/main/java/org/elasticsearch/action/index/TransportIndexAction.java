@@ -84,11 +84,11 @@ public class TransportIndexAction extends TransportReplicationAction<IndexReques
         this.allowIdGeneration = settings.getAsBoolean("action.allow_id_generation", true);
         this.clusterService = clusterService;
     }
-
     @Override
     protected void doExecute(final IndexRequest request, final ActionListener<IndexResponse> listener) {
         // if we don't have a master, we don't have metadata, that's fine, let it find a master using create index API
         ClusterState state = clusterService.state();
+        logger.info("===doExecute===91==="+this.getClass().getName()+"==="+(autoCreateIndex.shouldAutoCreate(request.index(), state)));
         if (autoCreateIndex.shouldAutoCreate(request.index(), state)) {
             CreateIndexRequest createIndexRequest = new CreateIndexRequest(request);
             createIndexRequest.index(request.index());
@@ -166,7 +166,7 @@ public class TransportIndexAction extends TransportReplicationAction<IndexReques
 
         IndexService indexService = indicesService.indexServiceSafe(shardRequest.shardId.getIndex());
         IndexShard indexShard = indexService.shardSafe(shardRequest.shardId.id());
-
+        logger.info("===shardOperationOnPrimary===169==="+shardRequest.shardId.id());
         final WriteResult<IndexResponse> result = executeIndexRequestOnPrimary(null, request, indexShard);
         final IndexResponse response = result.response;
         final Translog.Location location = result.location;

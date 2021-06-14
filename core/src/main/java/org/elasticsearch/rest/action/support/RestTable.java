@@ -16,14 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.elasticsearch.rest.action.support;
-
 import org.elasticsearch.common.Booleans;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.Table;
 import org.elasticsearch.common.io.UTF8StreamWriter;
 import org.elasticsearch.common.io.stream.BytesStreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.regex.Regex;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.SizeValue;
@@ -34,14 +34,14 @@ import org.elasticsearch.rest.*;
 
 import java.io.IOException;
 import java.util.*;
-
 /**
  */
 public class RestTable {
-
+    static final ESLogger logger = Loggers.getLogger(RestTable.class);
     public static RestResponse buildResponse(Table table, RestChannel channel) throws Exception {
         RestRequest request = channel.request();
         XContentType xContentType = XContentType.fromRestContentType(request.param("format", request.header("Content-Type")));
+        logger.info("===buildResponse===44==="+request.param("format", request.header("Content-Type"))+"==="+request.header("Content-Type"));
         if (xContentType != null) {
             return buildXContentBuilder(table, channel);
         }
@@ -69,7 +69,7 @@ public class RestTable {
     public static RestResponse buildTextPlainResponse(Table table, RestChannel channel) throws IOException {
         RestRequest request = channel.request();
         boolean verbose = request.paramAsBoolean("v", false);
-
+        logger.info("===buildTextPlainResponse===72==="+verbose);
         List<DisplayHeader> headers = buildDisplayHeaders(table, request);
         int[] width = buildWidths(table, request, verbose, headers);
 

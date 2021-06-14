@@ -47,7 +47,6 @@ public class NodeClient extends AbstractClient {
     public void close() {
         // nothing really to do
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public <Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> void doExecute(Action<Request, Response, RequestBuilder> action, Request request, ActionListener<Response> listener) {
@@ -55,6 +54,7 @@ public class NodeClient extends AbstractClient {
         if (transportAction == null) {
             throw new IllegalStateException("failed to find action [" + action + "] to execute");
         }
+        logger.info("===doExecute===57==="+transportAction.getClass().getName());
         transportAction.execute(request, listener);
     }
 }

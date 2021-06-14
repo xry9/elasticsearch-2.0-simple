@@ -113,6 +113,7 @@ public class RestController extends AbstractLifecycleComponent<RestController> {
      * Registers a rest handler to be execute when the provided method and path match the request.
      */
     public void registerHandler(RestRequest.Method method, String path, RestHandler handler) {
+        System.out.println("===registerHandler===116==="+method+"==="+path+"==="+handler.getClass().getName());
         switch (method) {
             case GET:
                 getHandlers.insert(path, handler);
@@ -136,7 +137,6 @@ public class RestController extends AbstractLifecycleComponent<RestController> {
                 throw new IllegalArgumentException("Can't handle [" + method + "] for path [" + path + "]");
         }
     }
-
     /**
      * Returns a filter chain (if needed) to execute. If this method returns null, simply execute
      * as usual.
@@ -200,10 +200,10 @@ public class RestController extends AbstractLifecycleComponent<RestController> {
 
         return true;
     }
-
     void executeHandler(RestRequest request, RestChannel channel) throws Exception {
         final RestHandler handler = getHandler(request);
         if (handler != null) {
+            System.out.println("===executeHandler===206==="+handler.getClass().getName());
             handler.handleRequest(request, channel);
         } else {
             if (request.method() == RestRequest.Method.OPTIONS) {

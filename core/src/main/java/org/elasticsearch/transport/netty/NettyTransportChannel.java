@@ -27,6 +27,8 @@ import org.elasticsearch.common.io.stream.BytesStreamOutput;
 import org.elasticsearch.common.io.stream.ReleasableBytesStreamOutput;
 import org.elasticsearch.common.io.stream.StreamOutput;
 import org.elasticsearch.common.lease.Releasables;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.netty.ReleaseChannelFutureListener;
 import org.elasticsearch.transport.*;
 import org.elasticsearch.transport.support.TransportStatus;
@@ -36,12 +38,10 @@ import org.jboss.netty.channel.ChannelFuture;
 
 import java.io.IOException;
 import java.io.NotSerializableException;
-
 /**
- *
  */
 public class NettyTransportChannel implements TransportChannel {
-
+    protected final ESLogger logger = Loggers.getLogger(NettyTransportChannel.class);
     private final NettyTransport transport;
     private final TransportServiceAdapter transportServiceAdapter;
     private final Version version;
@@ -74,13 +74,13 @@ public class NettyTransportChannel implements TransportChannel {
     public void sendResponse(TransportResponse response) throws IOException {
         sendResponse(response, TransportResponseOptions.EMPTY);
     }
-
     @Override
     public void sendResponse(TransportResponse response, TransportResponseOptions options) throws IOException {
         if (transport.compress) {
             options.withCompress(true);
         }
 
+        logger.info("===sendResponse===83==="+response);
         byte status = 0;
         status = TransportStatus.setResponse(status);
 
@@ -114,6 +114,7 @@ public class NettyTransportChannel implements TransportChannel {
 
     @Override
     public void sendResponse(Throwable error) throws IOException {
+
         BytesStreamOutput stream = new BytesStreamOutput();
         stream.skip(NettyHeader.HEADER_SIZE);
         RemoteTransportException tx = new RemoteTransportException(transport.nodeName(), transport.wrapAddress(channel.getLocalAddress()), action, error);
@@ -121,7 +122,6 @@ public class NettyTransportChannel implements TransportChannel {
         byte status = 0;
         status = TransportStatus.setResponse(status);
         status = TransportStatus.setError(status);
-
         BytesReference bytes = stream.bytes();
         ChannelBuffer buffer = bytes.toChannelBuffer();
         NettyHeader.writeHeader(buffer, requestId, status, version);

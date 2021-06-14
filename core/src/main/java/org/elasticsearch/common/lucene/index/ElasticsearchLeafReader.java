@@ -19,6 +19,8 @@
 package org.elasticsearch.common.lucene.index;
 
 import org.apache.lucene.index.*;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.index.shard.ShardId;
 
 /**
@@ -26,20 +28,18 @@ import org.elasticsearch.index.shard.ShardId;
  * Elasticsearch internal per shard / index information like the shard ID.
  */
 public final class ElasticsearchLeafReader extends FilterLeafReader {
-
+    protected final ESLogger logger = Loggers.getLogger(ElasticsearchLeafReader.class);;
     private final ShardId shardId;
-
     /**
      * <p>Construct a FilterLeafReader based on the specified base reader.
      * <p>Note that base reader is closed if this FilterLeafReader is closed.</p>
-     *
      * @param in specified base reader.
      */
     public ElasticsearchLeafReader(LeafReader in, ShardId shardId) {
         super(in);
         this.shardId = shardId;
+        logger.info("===ElasticsearchLeafReader===41===="+shardId+"==="+in.getClass().getName());//try { Integer.parseInt("ElasticsearchLeafReader"); }catch (Exception e){logger.error("===", e);}
     }
-
     /**
      * Returns the shard id this segment belongs to.
      */

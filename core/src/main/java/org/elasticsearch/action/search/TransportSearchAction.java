@@ -72,9 +72,9 @@ public class TransportSearchAction extends HandledTransportAction<SearchRequest,
         this.countAction = countAction;
         this.optimizeSingleShard = this.settings.getAsBoolean("action.search.optimize_single_shard", true);
     }
-
     @Override
     protected void doExecute(SearchRequest searchRequest, ActionListener<SearchResponse> listener) {
+        logger.info("===doExecute===77===="+searchRequest.searchType()+"==="+(optimizeSingleShard && searchRequest.searchType() != SCAN && searchRequest.searchType() != COUNT));
         // optimize search type for cases where there is only one shard group to search on
         if (optimizeSingleShard && searchRequest.searchType() != SCAN && searchRequest.searchType() != COUNT) {
             try {

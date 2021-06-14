@@ -57,16 +57,16 @@ public abstract class TransportAction<Request extends ActionRequest, Response ex
         execute(request, future);
         return future;
     }
-
     public final void execute(Request request, ActionListener<Response> listener) {
         ActionRequestValidationException validationException = request.validate();
+        logger.info("===execute===62==="+(validationException != null)+"==="+(filters.length == 0)+"==="+request.getClass().getName()+"==="+request);//try { Integer.parseInt("execute"); }catch (Exception e){logger.error("===", e);}
         if (validationException != null) {
             listener.onFailure(validationException);
             return;
         }
-
         if (filters.length == 0) {
             try {
+                logger.info("===execute===69==="+this.getClass().getName());
                 doExecute(request, listener);
             } catch(Throwable t) {
                 logger.trace("Error during transport action execution.", t);

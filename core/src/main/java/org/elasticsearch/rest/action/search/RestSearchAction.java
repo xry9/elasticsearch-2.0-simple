@@ -18,7 +18,6 @@
  */
 
 package org.elasticsearch.rest.action.search;
-
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -28,6 +27,8 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.ParseFieldMatcher;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.BaseRestHandler;
 import org.elasticsearch.rest.RestChannel;
@@ -41,7 +42,6 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.source.FetchSourceContext;
 import org.elasticsearch.search.internal.SearchContext;
 import org.elasticsearch.search.sort.SortOrder;
-
 import static org.elasticsearch.common.unit.TimeValue.parseTimeValue;
 import static org.elasticsearch.rest.RestRequest.Method.GET;
 import static org.elasticsearch.rest.RestRequest.Method.POST;
@@ -51,7 +51,7 @@ import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
  *
  */
 public class RestSearchAction extends BaseRestHandler {
-
+    public static ESLogger logger = Loggers.getLogger(RestSearchAction.class);
     @Inject
     public RestSearchAction(Settings settings, RestController controller, Client client) {
         super(settings, controller, client);
@@ -81,9 +81,9 @@ public class RestSearchAction extends BaseRestHandler {
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
         SearchRequest searchRequest;
         searchRequest = RestSearchAction.parseSearchRequest(request, parseFieldMatcher);
+        logger.info("===handleRequest===84==="+request.uri()+"==="+client.getClass().getName());
         client.search(searchRequest, new RestStatusToXContentListener<SearchResponse>(channel));
     }
-
     public static SearchRequest parseSearchRequest(RestRequest request, ParseFieldMatcher parseFieldMatcher) {
         String[] indices = Strings.splitStringByCommaToArray(request.param("index"));
         SearchRequest searchRequest = new SearchRequest(indices);

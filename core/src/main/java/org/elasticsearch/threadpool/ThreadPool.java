@@ -100,7 +100,7 @@ public class ThreadPool extends AbstractComponent {
 
     public ThreadPool(Settings settings) {
         super(settings);
-
+        logger.info("===ThreadPool===103===");
         assert settings.get("name") != null : "ThreadPool's settings should contain a name";
 
         Map<String, Settings> groupSettings = settings.getGroups(THREADPOOL_GROUP);
@@ -242,16 +242,16 @@ public class ThreadPool extends AbstractComponent {
     }
 
     public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, TimeValue interval) {
+        //logger.info("===schedule===245==="+command.getClass().getName()+"-"+command.hashCode());
         return scheduler.scheduleWithFixedDelay(new LoggingRunnable(command), interval.millis(), interval.millis(), TimeUnit.MILLISECONDS);
     }
-
     public ScheduledFuture<?> schedule(TimeValue delay, String name, Runnable command) {
         if (!Names.SAME.equals(name)) {
             command = new ThreadedRunnable(command, executor(name));
         }
+        logger.info("===schedule===252==="+this.hashCode()+"==="+command.getClass().getName()+"-"+command.hashCode());
         return scheduler.schedule(new LoggingRunnable(command), delay.millis(), TimeUnit.MILLISECONDS);
     }
-
     public void shutdown() {
         estimatedTimeThread.running = false;
         estimatedTimeThread.interrupt();
@@ -495,8 +495,8 @@ public class ThreadPool extends AbstractComponent {
 
         LoggingRunnable(Runnable runnable) {
             this.runnable = runnable;
+            logger.info("===LoggingRunnable===498==="+runnable.getClass().getName()+"-"+runnable.hashCode());
         }
-
         @Override
         public void run() {
             try {
@@ -537,8 +537,8 @@ public class ThreadPool extends AbstractComponent {
         @Override
         public void run() {
             executor.execute(runnable);
+            logger.info("===run===539==="+runnable.getClass().getName());
         }
-
         @Override
         public int hashCode() {
             return runnable.hashCode();

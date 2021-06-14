@@ -51,8 +51,8 @@ public class TransportClusterHealthAction extends TransportMasterNodeReadAction<
         super(settings, ClusterHealthAction.NAME, transportService, clusterService, threadPool, actionFilters, indexNameExpressionResolver, ClusterHealthRequest.class);
         this.clusterName = clusterName;
         this.gatewayAllocator = gatewayAllocator;
+        logger.info("===TransportClusterHealthAction===54===");
     }
-
     @Override
     protected String executor() {
         // this should be executing quickly no need to fork off
@@ -68,9 +68,9 @@ public class TransportClusterHealthAction extends TransportMasterNodeReadAction<
     protected ClusterHealthResponse newResponse() {
         return new ClusterHealthResponse();
     }
-
     @Override
     protected void masterOperation(final ClusterHealthRequest request, final ClusterState unusedState, final ActionListener<ClusterHealthResponse> listener) {
+        logger.info("===masterOperation===73==="+(request.waitForEvents() != null));
         if (request.waitForEvents() != null) {
             final long endTimeMS = TimeValue.nsecToMSec(System.nanoTime()) + request.timeout().millis();
             clusterService.submitStateUpdateTask("cluster_health (wait_for_events [" + request.waitForEvents() + "])", request.waitForEvents(), new ProcessedClusterStateUpdateTask() {
@@ -109,7 +109,6 @@ public class TransportClusterHealthAction extends TransportMasterNodeReadAction<
         }
 
     }
-
     private void executeHealth(final ClusterHealthRequest request, final ActionListener<ClusterHealthResponse> listener) {
         int waitFor = 5;
         if (request.waitForStatus() == null) {
@@ -131,6 +130,7 @@ public class TransportClusterHealthAction extends TransportMasterNodeReadAction<
         assert waitFor >= 0;
         final ClusterStateObserver observer = new ClusterStateObserver(clusterService, logger);
         final ClusterState state = observer.observedState();
+        logger.info("===executeHealth===133==="+(waitFor == 0 || request.timeout().millis() == 0)+"==="+observer.getClass().getName()+"==="+listener.getClass().getName());
         if (waitFor == 0 || request.timeout().millis() == 0) {
             listener.onResponse(getResponse(request, state, waitFor, request.timeout().millis() == 0));
             return;
@@ -173,8 +173,8 @@ public class TransportClusterHealthAction extends TransportMasterNodeReadAction<
                 gatewayAllocator.getNumberOfInFlightFetch(), clusterService.getMaxTaskWaitTime());
         return prepareResponse(request, response, clusterState, waitFor);
     }
-
     private ClusterHealthResponse getResponse(final ClusterHealthRequest request, ClusterState clusterState, final int waitFor, boolean timedOut) {
+        logger.info("===getResponse===177===");
         ClusterHealthResponse response = clusterHealth(request, clusterState, clusterService.numberOfPendingTasks(),
                 gatewayAllocator.getNumberOfInFlightFetch(), clusterService.getMaxTaskWaitTime());
         boolean valid = prepareResponse(request, response, clusterState, waitFor);
@@ -265,7 +265,7 @@ public class TransportClusterHealthAction extends TransportMasterNodeReadAction<
         if (logger.isTraceEnabled()) {
             logger.trace("Calculating health based on state version [{}]", clusterState.version());
         }
-
+        logger.info("===clusterHealth===268===");
         String[] concreteIndices;
         try {
             concreteIndices = indexNameExpressionResolver.concreteIndices(clusterState, request);

@@ -185,7 +185,6 @@ public class StoreRecoveryService extends AbstractIndexShardComponent implements
             }
         });
     }
-
     /**
      * Recovers the state of the shard from the store.
      */
@@ -198,6 +197,7 @@ public class StoreRecoveryService extends AbstractIndexShardComponent implements
         store.incRef();
         try {
             try {
+                logger.info("===recoverFromStore===200==="+store.directory());
                 store.failIfCorrupted();
                 try {
                     si = store.readLastCommittedSegmentsInfo();

@@ -64,9 +64,10 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
         transportServiceAdapter.sent(e.getWrittenAmount());
         super.writeComplete(ctx, e);
     }
-
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+        logger.info("===messageReceived===69==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress());try { Integer.parseInt("messageReceived"); }catch (Exception ex){logger.error("===", ex);}
+
         Transports.assertTransportThread();
         Object m = e.getMessage();
         if (!(m instanceof ChannelBuffer)) {
@@ -76,7 +77,6 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
         ChannelBuffer buffer = (ChannelBuffer) m;
         int size = buffer.getInt(buffer.readerIndex() - 4);
         transportServiceAdapter.received(size + 6);
-
         // we have additional bytes to read, outside of the header
         boolean hasMessageBytesToRead = (size - (NettyHeader.HEADER_SIZE - 6)) != 0;
 
@@ -109,10 +109,10 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
                 streamIn = compressor.streamInput(streamIn);
             }
             streamIn.setVersion(version);
-
+            logger.info("===messageReceived===112==="+(TransportStatus.isRequest(status)));
             if (TransportStatus.isRequest(status)) {
                 String action = handleRequest(ctx.getChannel(), streamIn, requestId, version);
-
+                logger.info("===messageReceived===115==="+action);
                 // Chek the entire message has been read
                 final int nextByte = streamIn.read();
                 // calling read() is useful to make sure the message is fully read, even if there some kind of EOS marker
@@ -127,17 +127,17 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
                     throw new IllegalStateException("Message read past expected size (request) for requestId [" + requestId + "], action ["
                             + action + "], readerIndex [" + buffer.readerIndex() + "] vs expected [" + expectedIndexReader + "]; resetting");
                 }
-
             } else {
                 TransportResponseHandler<?> handler = transportServiceAdapter.onResponseReceived(requestId);
+                logger.info("===messageReceived===132==="+handler.getClass().getName());
                 // ignore if its null, the adapter logs it
                 if (handler != null) {
                     if (TransportStatus.isError(status)) {
                         handlerResponseError(streamIn, handler);
                     } else {
+                        //logger.info("===messageReceived===138==="+handler.getClass().getName());
                         handleResponse(ctx.getChannel(), streamIn, handler);
                     }
-
                     // Chek the entire message has been read
                     final int nextByte = streamIn.read();
                     // calling read() is useful to make sure the message is fully read, even if there is an EOS marker
@@ -168,7 +168,6 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
             }
         }
     }
-
     protected void handleResponse(Channel channel, StreamInput buffer, final TransportResponseHandler handler) {
         final TransportResponse response = handler.newInstance();
         response.remoteAddress(new InetSocketTransportAddress((InetSocketAddress) channel.getRemoteAddress()));
@@ -180,6 +179,7 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
             return;
         }
         try {
+            logger.info("===handleResponse===182==="+(ThreadPool.Names.SAME.equals(handler.executor()))+"==="+handler.getClass().getName());
             if (ThreadPool.Names.SAME.equals(handler.executor())) {
                 //noinspection unchecked
                 handler.handleResponse(response);
@@ -239,6 +239,7 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
             final TransportRequest request = reg.newRequest();
             request.remoteAddress(new InetSocketTransportAddress((InetSocketAddress) channel.getRemoteAddress()));
             request.readFrom(buffer);
+
             if (ThreadPool.Names.SAME.equals(reg.getExecutor())) {
                 //noinspection unchecked
                 reg.getHandler().messageReceived(request, transportChannel);
@@ -255,7 +256,6 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
         }
         return action;
     }
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         transport.exceptionCaught(ctx, e);

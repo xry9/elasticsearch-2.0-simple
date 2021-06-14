@@ -266,13 +266,13 @@ public class InternalEngine extends Engine {
         }
         return null;
     }
-
     private SearcherManager createSearcherManager() throws EngineException {
         boolean success = false;
         SearcherManager searcherManager = null;
         try {
             try {
                 final DirectoryReader directoryReader = ElasticsearchDirectoryReader.wrap(DirectoryReader.open(indexWriter, true), shardId);
+                logger.info("===createSearcherManager===275==="+directoryReader.directory());
                 searcherManager = new SearcherManager(directoryReader, searcherFactory);
                 lastCommittedSegmentInfos = readLastCommittedSegmentInfos(searcherManager, store);
                 success = true;
@@ -302,11 +302,11 @@ public class InternalEngine extends Engine {
             // ignore
         }
     }
-
     @Override
     public GetResult get(Get get) throws EngineException {
         try (ReleasableLock lock = readLock.acquire()) {
             ensureOpen();
+
             if (get.realtime()) {
                 VersionValue versionValue = versionMap.getUnderLock(get.uid().bytes());
                 if (versionValue != null) {
@@ -318,17 +318,17 @@ public class InternalEngine extends Engine {
                         throw new VersionConflictEngineException(shardId, uid.type(), uid.id(), versionValue.version(), get.version());
                     }
                     Translog.Operation op = translog.read(versionValue.translogLocation());
+                    logger.info("===get===321==="+(op != null?op.getClass().getName():"null"));
                     if (op != null) {
                         return new GetResult(true, versionValue.version(), op.getSource());
                     }
                 }
             }
-
+            logger.info("===get===327===");
             // no version, get the version from the index, we know that we refresh on flush
             return getFromSearcher(get);
         }
     }
-
     @Override
     public void create(Create create) throws EngineException {
         try (ReleasableLock lock = readLock.acquire()) {
@@ -426,9 +426,9 @@ public class InternalEngine extends Engine {
             } else {
                 indexWriter.addDocument(create.docs().get(0));
             }
+            logger.info("===indexWriter===429===");//try { Integer.parseInt("indexWriter"); }catch (Exception e){logger.error("===", e);}
         }
         Translog.Location translogLocation = translog.add(new Translog.Create(create));
-
         versionMap.putUnderLock(create.uid().bytes(), new VersionValue(updatedVersion, translogLocation));
         create.setTranslogLocation(translogLocation);
         indexingService.postCreateUnderLock(create);
@@ -506,7 +506,6 @@ public class InternalEngine extends Engine {
                 }
             }
             updatedVersion = index.versionType().updateVersion(currentVersion, expectedVersion);
-
             final boolean created;
             index.updateVersion(updatedVersion);
             if (currentVersion == Versions.NOT_FOUND) {
@@ -517,6 +516,7 @@ public class InternalEngine extends Engine {
                 } else {
                     indexWriter.addDocument(index.docs().get(0));
                 }
+                logger.info("===indexWriter===5199===");
             } else {
                 if (versionValue != null) {
                     created = versionValue.delete(); // we have a delete which is not GC'ed...

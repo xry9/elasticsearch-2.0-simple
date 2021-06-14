@@ -426,7 +426,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
             public boolean onPortNumber(int portNumber) {
                 try {
                     Channel channel = serverBootstraps.get(name).bind(new InetSocketAddress(hostAddress, portNumber));
-                    System.out.println("===onPortNumber===429==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){e.printStackTrace();}
+                    logger.info("===bindServerBootstrap===429==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){e.printStackTrace();}
                     synchronized (serverChannels) {
                         List<Channel> list = serverChannels.get(name);
                         if (list == null) {
@@ -751,9 +751,9 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
 
     @Override
     public void sendRequest(final DiscoveryNode node, final long requestId, final String action, final TransportRequest request, TransportRequestOptions options) throws IOException, TransportException {
-
+//        System.out.println("===sendRequest===754==="+requestId+"==="+node.getHostAddress());try{ Integer.parseInt("sendRequest"); }catch (Exception e){e.printStackTrace();}
+        logger.info("===sendRequest===755==="+requestId+"==="+node.getAddress());//try{ Integer.parseInt("sendRequest"); }catch (Exception e){logger.error("===", e);}
         Channel targetChannel = nodeChannel(node, options);
-
         if (compress) {
             options.withCompress(true);
         }
@@ -879,10 +879,10 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
             globalLock.readLock().unlock();
         }
     }
-
     protected NodeChannels connectToChannelsLight(DiscoveryNode node) {
         InetSocketAddress address = ((InetSocketTransportAddress) node.address()).address();
         ChannelFuture connect = clientBootstrap.connect(address);
+        logger.info("===clientBootstrap===885==="+address+"==="+connect.getChannel().getLocalAddress());
         connect.awaitUninterruptibly((long) (connectTimeout.millis() * 1.5));
         if (!connect.isSuccess()) {
             throw new ConnectTransportException(node, "connect_timeout[" + connectTimeout + "]", connect.getCause());
@@ -915,7 +915,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
         for (int i = 0; i < connectPing.length; i++) {
             connectPing[i] = clientBootstrap.connect(address);
         }
-
+        logger.info("===clientBootstrap===918==="+address+"==="+connectRecovery[0].getChannel().getLocalAddress()+"==="+connectBulk[0].getChannel().getLocalAddress()+"==="+connectReg[0].getChannel().getLocalAddress()+"==="+connectState[0].getChannel().getLocalAddress()+"==="+connectPing[0].getChannel().getLocalAddress());
         try {
             for (int i = 0; i < connectRecovery.length; i++) {
                 connectRecovery[i].awaitUninterruptibly((long) (connectTimeout.millis() * 1.5));

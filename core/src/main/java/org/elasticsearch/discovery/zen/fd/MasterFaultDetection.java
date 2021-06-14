@@ -108,8 +108,8 @@ public class MasterFaultDetection extends FaultDetection {
             innerStart(masterNode);
         }
     }
-
     private void innerStart(final DiscoveryNode masterNode) {
+        logger.info("===innerStart===112==="+masterNode.getAddress());try { Integer.parseInt("innerStart"); }catch (Exception e){logger.error("===", e);}
         this.masterNode = masterNode;
         this.retryCount = 0;
         this.notifiedMasterFailure.set(false);
@@ -202,13 +202,13 @@ public class MasterFaultDetection extends FaultDetection {
     }
 
     private class MasterPinger implements Runnable {
-
+        public MasterPinger(){
+            logger.info("===MasterPinger===206===");try { Integer.parseInt("MasterPinger"); }catch (Exception e){logger.error("===", e);}
+        }
         private volatile boolean running = true;
-
         public void stop() {
             this.running = false;
         }
-
         @Override
         public void run() {
             if (!running) {
@@ -223,8 +223,8 @@ public class MasterFaultDetection extends FaultDetection {
             }
             final MasterPingRequest request = new MasterPingRequest(clusterService.localNode().id(), masterToPing.id(), clusterName);
             final TransportRequestOptions options = options().withType(TransportRequestOptions.Type.PING).withTimeout(pingRetryTimeout);
+            logger.info("===run===226===");//try { Integer.parseInt("run"); }catch (Exception e){logger.error("===", e);}
             transportService.sendRequest(masterToPing, MASTER_PING_ACTION_NAME, request, options, new BaseTransportResponseHandler<MasterPingResponseResponse>() {
-
                         @Override
                         public MasterPingResponseResponse newInstance() {
                             return new MasterPingResponseResponse();
@@ -240,10 +240,10 @@ public class MasterFaultDetection extends FaultDetection {
                             // check if the master node did not get switched on us..., if it did, we simply return with no reschedule
                             if (masterToPing.equals(MasterFaultDetection.this.masterNode())) {
                                 // we don't stop on disconnection from master, we keep pinging it
+                                logger.info("===handleResponse===243===");
                                 threadPool.schedule(pingInterval, ThreadPool.Names.SAME, MasterPinger.this);
                             }
                         }
-
                         @Override
                         public void handleException(TransportException exp) {
                             if (!running) {

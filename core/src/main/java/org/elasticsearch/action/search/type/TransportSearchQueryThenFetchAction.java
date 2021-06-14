@@ -45,6 +45,7 @@ import org.elasticsearch.search.query.QuerySearchResultProvider;
 import org.elasticsearch.threadpool.ThreadPool;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -107,8 +108,8 @@ public class TransportSearchQueryThenFetchAction extends TransportSearchTypeActi
                 executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
             }
         }
-
         void executeFetch(final int shardIndex, final SearchShardTarget shardTarget, final AtomicInteger counter, final ShardFetchSearchRequest fetchSearchRequest, DiscoveryNode node) {
+            logger.info("===executeFetch===111==="+shardIndex+"==="+shardTarget+"==="+ Arrays.toString(fetchSearchRequest.indices())+"==="+node);
             searchService.sendExecuteFetch(node, fetchSearchRequest, new ActionListener<FetchSearchResult>() {
                 @Override
                 public void onResponse(FetchSearchResult result) {
@@ -141,8 +142,8 @@ public class TransportSearchQueryThenFetchAction extends TransportSearchTypeActi
                 finishHim();
             }
         }
-
         private void finishHim() {
+
             threadPool.executor(ThreadPool.Names.SEARCH).execute(new ActionRunnable<SearchResponse>(listener) {
                 @Override
                 public void doRun() throws IOException {

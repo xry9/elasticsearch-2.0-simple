@@ -280,8 +280,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
                                                           final TransportResponseHandler<T> handler) {
         sendRequest(node, action, request, TransportRequestOptions.EMPTY, handler);
     }
-    public <T extends TransportResponse> void sendRequest(final DiscoveryNode node, final String action, final TransportRequest request,
-                                                          final TransportRequestOptions options, TransportResponseHandler<T> handler) {
+    public <T extends TransportResponse> void sendRequest(final DiscoveryNode node, final String action, final TransportRequest request, final TransportRequestOptions options, TransportResponseHandler<T> handler) {
         if (node == null) {
             throw new IllegalStateException("can't send request to a null node");
         }
@@ -308,6 +307,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
                 sendLocalRequest(requestId, action, request);
             } else {
                 transport.sendRequest(node, requestId, action, request, options);
+
             }
         } catch (final Throwable e) {
             // usually happen either because we failed to connect to the node

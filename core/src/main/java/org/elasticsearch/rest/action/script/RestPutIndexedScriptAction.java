@@ -56,7 +56,6 @@ public class RestPutIndexedScriptAction extends BaseRestHandler {
             controller.registerHandler(POST, "/_scripts/{lang}/{id}/_create", new CreateHandler(settings, controller, client));
         }
     }
-
     final class CreateHandler extends BaseRestHandler {
         protected CreateHandler(Settings settings, RestController controller, Client client) {
             super(settings, controller, client);
@@ -64,6 +63,7 @@ public class RestPutIndexedScriptAction extends BaseRestHandler {
 
         @Override
         public void handleRequest(RestRequest request, RestChannel channel, final Client client) {
+            logger.info("===handleRequest===66===");
             request.params().put("op_type", "create");
             RestPutIndexedScriptAction.this.handleRequest(request, channel, client);
         }
@@ -72,9 +72,9 @@ public class RestPutIndexedScriptAction extends BaseRestHandler {
     protected String getScriptLang(RestRequest request) {
         return request.param("lang");
     }
-
     @Override
     public void handleRequest(final RestRequest request, final RestChannel channel, Client client) {
+        logger.info("===handleRequest===77===");
         PutIndexedScriptRequest putRequest = new PutIndexedScriptRequest(getScriptLang(request), request.param("id"));
         putRequest.version(request.paramAsLong("version", putRequest.version()));
         putRequest.versionType(VersionType.fromString(request.param("version_type"), putRequest.versionType()));

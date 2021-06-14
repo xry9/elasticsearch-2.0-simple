@@ -271,9 +271,9 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
     public void submitStateUpdateTask(final String source, final ClusterStateUpdateTask updateTask) {
         submitStateUpdateTask(source, Priority.NORMAL, updateTask);
     }
-
     @Override
     public void submitStateUpdateTask(final String source, Priority priority, final ClusterStateUpdateTask updateTask) {
+        logger.info("===submitStateUpdateTask===276==="+source);//try { Integer.parseInt("submitStateUpdateTask===276"); }catch (Exception e){logger.error("===", e);}
         if (!lifecycle.started()) {
             return;
         }
@@ -367,8 +367,8 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
         UpdateTask(String source, Priority priority, ClusterStateUpdateTask updateTask) {
             super(priority, source);
             this.updateTask = updateTask;
+            logger.info("===UpdateTask===370===");
         }
-
         @Override
         public void run() {
             if (!lifecycle.started()) {

@@ -115,9 +115,9 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
 
         this.defaultWriteConsistencyLevel = WriteConsistencyLevel.fromString(settings.get("action.write_consistency", "quorum"));
     }
-
     @Override
     protected void doExecute(Request request, ActionListener<Response> listener) {
+        logger.info("===doExecute===120==="+request.getClass().getName()+"-"+request.hashCode());
         new PrimaryPhase(request, listener).run();
     }
 
@@ -566,7 +566,7 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
         @SuppressForbidden(reason = "Exception#printStackTrace()")
         void performOnPrimary(final ShardRouting primary, final ShardIterator shardsIt) {
             logger.info("===performOnPrimary===569===");
-            System.out.println("===performOnPrimary===570===");
+
             final String writeConsistencyFailure = checkWriteConsistency(primary);
             if (writeConsistencyFailure != null) {
                 retryBecauseUnavailable(primary.shardId(), writeConsistencyFailure);

@@ -133,8 +133,8 @@ public abstract class TransportSearchTypeAction extends TransportAction<SearchRe
 
             firstResults = new AtomicArray<>(shardsIts.size());
         }
-
         public void start() {
+
             if (expectedSuccessfulOps == 0) {
                 // no search shards to search on, bail with empty response (it happens with search across _all with no indices around and consistent with broadcast operations)
                 listener.onResponse(new SearchResponse(InternalSearchResponse.empty(), null, 0, 0, buildTookInMillis(), ShardSearchFailure.EMPTY_ARRAY));
@@ -166,9 +166,9 @@ public abstract class TransportSearchTypeAction extends TransportAction<SearchRe
                     sendExecuteFirstPhase(node, internalSearchRequest(shard, shardsIts.size(), request, filteringAliases, startTime()), new ActionListener<FirstResult>() {
                         @Override
                         public void onResponse(FirstResult result) {
+                            logger.info("===onResponse===169==="+result);
                             onFirstPhaseResult(shardIndex, shard, result, shardIt);
                         }
-
                         @Override
                         public void onFailure(Throwable t) {
                             onFirstPhaseResult(shardIndex, shard, node.id(), shardIt, t);
@@ -177,10 +177,10 @@ public abstract class TransportSearchTypeAction extends TransportAction<SearchRe
                 }
             }
         }
-
         void onFirstPhaseResult(int shardIndex, ShardRouting shard, FirstResult result, ShardIterator shardIt) {
             result.shardTarget(new SearchShardTarget(shard.currentNodeId(), shard.index(), shard.id()));
             processFirstPhaseResult(shardIndex, result);
+            logger.info("===onFirstPhaseResult===183==="+shard.currentNodeId()+"==="+shard.index()+"==="+shard.id());
             // we need to increment successful ops first before we compare the exit condition otherwise if we
             // are fast we could concurrently update totalOps but then preempt one of the threads which can
             // cause the successor to read a wrong value from successfulOps if second phase is very fast ie. count etc.

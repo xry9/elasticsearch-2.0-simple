@@ -19,20 +19,20 @@
 
 package org.elasticsearch.http.netty;
 
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.http.netty.pipelining.OrderedUpstreamMessageEvent;
 import org.elasticsearch.rest.support.RestUtils;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 
 import java.util.regex.Pattern;
-
-
 /**
  *
  */
 @ChannelHandler.Sharable
 public class HttpRequestHandler extends SimpleChannelUpstreamHandler {
-
+    protected final ESLogger logger = Loggers.getLogger(HttpRequestHandler.class);
     private final NettyHttpServerTransport serverTransport;
     private final Pattern corsPattern;
     private final boolean httpPipeliningEnabled;
@@ -56,6 +56,7 @@ public class HttpRequestHandler extends SimpleChannelUpstreamHandler {
             request = (HttpRequest) e.getMessage();
         }
 
+        logger.info("===messageReceived===58==="+e+"==="+request.getUri());//try { Integer.parseInt("messageReceived"); }catch (Exception ex){ex.printStackTrace();}
         // the netty HTTP handling always copy over the buffer to its own buffer, either in NioWorker internally
         // when reading, or using a cumalation buffer
         NettyHttpRequest httpRequest = new NettyHttpRequest(request, e.getChannel());
@@ -66,7 +67,6 @@ public class HttpRequestHandler extends SimpleChannelUpstreamHandler {
         }
         super.messageReceived(ctx, e);
     }
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         serverTransport.exceptionCaught(ctx, e);

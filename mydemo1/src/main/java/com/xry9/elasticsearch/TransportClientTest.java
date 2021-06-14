@@ -70,10 +70,10 @@ public class TransportClientTest {
 //            /***************Mapping********************/
 //            //创建MappingJson
 //            esUserService.createMappingJson();
-//
+
             /***************添加********************/
             //单个添加
-            esUserService.singleInsert(new User(1L, "qiyongkang", 1, 1, DateUtil.strToYMDHMSDate("2015-11-1 11:11:11")));
+            esUserService.singleInsert(new User(26L, "qiyongkang", 12, 0, DateUtil.strToYMDHMSDate("2021-11-1 11:11:11")));
 //
 //            //批量添加
 //            Date date = DateUtil.strToYMDHMSDate("2015-11-1 11:11:11");
@@ -95,13 +95,12 @@ public class TransportClientTest {
 //            esUserService.batchInsert(userList);
 //
 //            /***************更新********************/
-//            //单个更新
+            //单个更新
 //            User user = new User();
-//            user.setId(1L);
-//            user.setBirthday(DateUtil.strToYMDHMSDate("1992-10-11 11:11:11"));
-//            user.setAge(23);
-//            user.setSex(0);
-//
+//            user.setId(3L);
+//            user.setBirthday(DateUtil.strToYMDHMSDate("1990-10-11 11:11:11"));
+//            user.setAge(25);
+//            user.setSex(1);
 //            esUserService.singleUpdate(user);
 //
 //            //批量更新
