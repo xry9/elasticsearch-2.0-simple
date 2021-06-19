@@ -75,8 +75,8 @@ public class DiscoveryNode implements Streamable, ToXContent {
         String client = settings.get("node.client");
         return Booleans.isExplicitTrue(client);
     }
-
     public static boolean masterNode(Settings settings) {
+
         String master = settings.get("node.master");
         if (master == null) {
             return !clientNode(settings);

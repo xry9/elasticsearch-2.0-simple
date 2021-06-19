@@ -31,14 +31,14 @@ import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.regex.Regex;
 import org.elasticsearch.common.transport.TransportAddress;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
@@ -46,7 +46,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * access, modify merge / diff discovery nodes.
  */
 public class DiscoveryNodes extends AbstractDiffable<DiscoveryNodes> implements Iterable<DiscoveryNode> {
-
+    static ESLogger logger = Loggers.getLogger(DiscoveryNodes.class);
     public static final DiscoveryNodes EMPTY_NODES = builder().build();
     public static final DiscoveryNodes PROTO = EMPTY_NODES;
 
@@ -58,11 +58,11 @@ public class DiscoveryNodes extends AbstractDiffable<DiscoveryNodes> implements 
     private final String localNodeId;
     private final Version minNodeVersion;
     private final Version minNonClientNodeVersion;
-
     private DiscoveryNodes(ImmutableOpenMap<String, DiscoveryNode> nodes, ImmutableOpenMap<String, DiscoveryNode> dataNodes, ImmutableOpenMap<String, DiscoveryNode> masterNodes, String masterNodeId, String localNodeId, Version minNodeVersion, Version minNonClientNodeVersion) {
         this.nodes = nodes;
         this.dataNodes = dataNodes;
         this.masterNodes = masterNodes;
+        //logger.info("===DiscoveryNodes===65==="+masterNodeId+"==="+localNodeId+"==="+masterNodes);try { Integer.parseInt("DiscoveryNodes"); }catch (Exception e){logger.error("===", e);}
         this.masterNodeId = masterNodeId;
         this.localNodeId = localNodeId;
         this.minNodeVersion = minNodeVersion;
@@ -624,13 +624,12 @@ public class DiscoveryNodes extends AbstractDiffable<DiscoveryNodes> implements 
         public Builder() {
             nodes = ImmutableOpenMap.builder();
         }
-
         public Builder(DiscoveryNodes nodes) {
             this.masterNodeId = nodes.masterNodeId();
             this.localNodeId = nodes.localNodeId();
             this.nodes = ImmutableOpenMap.builder(nodes.nodes());
+            logger.info("===Builder===631==="+this.hashCode()+"==="+masterNodeId+"==="+localNodeId);
         }
-
         public Builder put(DiscoveryNode node) {
             nodes.put(node.id(), node);
             return this;
@@ -640,9 +639,10 @@ public class DiscoveryNodes extends AbstractDiffable<DiscoveryNodes> implements 
             nodes.remove(nodeId);
             return this;
         }
-
         public Builder masterNodeId(String masterNodeId) {
+
             this.masterNodeId = masterNodeId;
+            logger.info("===masterNodeId===645==="+this.hashCode()+"==="+masterNodeId);//try { Integer.parseInt("masterNodeId"); }catch (Exception e){logger.error("===", e);}
             return this;
         }
 

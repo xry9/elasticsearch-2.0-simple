@@ -47,7 +47,7 @@ public class BoundTransportAddress implements Streamable {
         }
         this.boundAddresses = boundAddresses;
         this.publishAddress = publishAddress;
-        System.out.println("===BoundTransportAddress===50==="+Arrays.toString(boundAddresses)+"==="+publishAddress);
+        //System.out.println("===BoundTransportAddress===50==="+Arrays.toString(boundAddresses)+"==="+publishAddress);
         //try { Integer.parseInt("BoundTransportAddress"); }catch (Exception e){e.printStackTrace();}
     }
 
@@ -85,7 +85,7 @@ public class BoundTransportAddress implements Streamable {
     @SuppressForbidden(reason = "System#out")
     @Override
     public String toString() {
-        System.out.println("===toString===87==="+publishAddress+"==="+ Arrays.toString(boundAddresses));
+        //System.out.println("===toString===87==="+publishAddress+"==="+ Arrays.toString(boundAddresses));
         StringBuilder builder = new StringBuilder("publish_address {");
         builder.append(publishAddress);
         builder.append("}, bound_addresses ");

@@ -182,7 +182,7 @@ public class ClusterStateObserver {
                     ObservedState state = new ObservedState(event.state());
                     logger.trace("observer: accepting cluster state change ({})", state);
                     lastObservedState.set(state);
-                    logger.info("===lastObservedState===185==="+state);
+                    //logger.info("===lastObservedState===185==="+state);
                     context.listener.onNewClusterState(state.clusterState);
                 } else {
                     logger.trace("observer: predicate approved change but observing context has changed - ignoring (new cluster state version [{}])", event.state().version());

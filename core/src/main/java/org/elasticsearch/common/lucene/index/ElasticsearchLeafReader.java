@@ -38,7 +38,7 @@ public final class ElasticsearchLeafReader extends FilterLeafReader {
     public ElasticsearchLeafReader(LeafReader in, ShardId shardId) {
         super(in);
         this.shardId = shardId;
-        logger.info("===ElasticsearchLeafReader===41===="+shardId+"==="+in.getClass().getName());//try { Integer.parseInt("ElasticsearchLeafReader"); }catch (Exception e){logger.error("===", e);}
+        //logger.info("===ElasticsearchLeafReader===41===="+shardId+"==="+in.getClass().getName());//try { Integer.parseInt("ElasticsearchLeafReader"); }catch (Exception e){logger.error("===", e);}
     }
     /**
      * Returns the shard id this segment belongs to.

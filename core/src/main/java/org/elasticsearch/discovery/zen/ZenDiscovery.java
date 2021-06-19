@@ -216,7 +216,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
         joinThreadControl.start();
         pingService.start();
         this.nodeJoinController = new NodeJoinController(clusterService, routingService, discoverySettings, settings);
-
+        //logger.info("===submitStateUpdateTask===219==="+clusterService.getClass().getName());try { Integer.parseInt("submitStateUpdateTask"); }catch (Exception e){logger.error("===", e);}
         // start the join thread from a cluster state update. See {@link JoinThreadControl} for details.
         clusterService.submitStateUpdateTask("initial_join", new ClusterStateNonMasterUpdateTask() {
             @Override
@@ -322,8 +322,8 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
         }
         nodesFD.updateNodesAndPing(clusterChangedEvent.state());
         publishClusterState.publish(clusterChangedEvent, ackListener);
+        //logger.info("===publish===325==="+clusterChangedEvent.source()+"==="+clusterChangedEvent.state()+"==="+clusterChangedEvent.previousState());
     }
-
     /**
      * returns true if zen discovery is started and there is a currently a background thread active for (re)joining
      * the cluster used for testing.
@@ -356,6 +356,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                     new NodeJoinController.ElectionCallback() {
                         @Override
                         public void onElectedAsMaster(ClusterState state) {
+                            //logger.info("===onElectedAsMaster===359==="+state);
                             joinThreadControl.markThreadAsDone(currentThread);
                             // we only starts nodesFD if we are master (it may be that we received a cluster state while pinging)
                             nodesFD.updateNodesAndPing(state); // start the nodes FD
@@ -363,7 +364,6 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                             long count = clusterJoinsCounter.incrementAndGet();
                             logger.trace("cluster joins counter set to [{}] (elected as master)", count);
                         }
-
                         @Override
                         public void onFailure(Throwable t) {
                             logger.trace("failed while waiting for nodes to join, rejoining", t);
@@ -378,9 +378,9 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
 
             // send join request
             final boolean success = joinElectedMaster(masterNode);
-
             // finalize join through the cluster state update thread
             final DiscoveryNode finalMasterNode = masterNode;
+            //logger.info("===submitStateUpdateTask===383==="+clusterService.getClass().getName());
             clusterService.submitStateUpdateTask("finalize_join (" + masterNode + ")", new ClusterStateNonMasterUpdateTask() {
                 @Override
                 public ClusterState execute(ClusterState currentState) throws Exception {
@@ -707,7 +707,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
 
                 assert newClusterState.nodes().masterNode() != null : "received a cluster state without a master";
                 assert !newClusterState.blocks().hasGlobalBlock(discoverySettings.getNoMasterBlock()) : "received a cluster state with a master block";
-
+                //logger.info("===submitStateUpdateTask===710==="+clusterService.getClass().getName());
                 clusterService.submitStateUpdateTask("zen-disco-receive(from master [" + newClusterState.nodes().masterNode() + "])", Priority.URGENT, new ProcessedClusterStateNonMasterUpdateTask() {
                     @Override
                     public ClusterState execute(ClusterState currentState) {
@@ -882,10 +882,10 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
             nodeJoinController.handleJoinRequest(node, callback);
         }
     }
-
     private DiscoveryNode findMaster() {
         logger.trace("starting to ping");
         ZenPing.PingResponse[] fullPingResponses = pingService.pingAndWait(pingTimeout);
+        //logger.info("===findMaster===888==="+(fullPingResponses == null));
         if (fullPingResponses == null) {
             logger.trace("No full ping responses");
             return null;
@@ -938,7 +938,6 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                 }
             }
         }
-
         // nodes discovered during pinging
         Set<DiscoveryNode> activeNodes = Sets.newHashSet();
         // nodes discovered who has previously been part of the cluster and do not ping for the very first time
@@ -957,13 +956,14 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                 joinedOnceActiveNodes.add(pingResponse.node());
             }
         }
-
+        //logger.info("===findMaster===959==="+pingResponses+"==="+activeNodes+"==="+pingMasters);
         if (pingMasters.isEmpty()) {
             if (electMaster.hasEnoughMasterNodes(activeNodes)) {
                 // we give preference to nodes who have previously already joined the cluster. Those will
                 // have a cluster state in memory, including an up to date routing table (which is not persistent to disk
                 // by the gateway)
                 DiscoveryNode master = electMaster.electMaster(joinedOnceActiveNodes);
+                //logger.info("===findMaster===966==="+(master != null)+"==="+localNode+"==="+activeNodes);
                 if (master != null) {
                     return master;
                 }
@@ -974,7 +974,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                 return null;
             }
         } else {
-
+            //logger.info("===findMaster===977==="+localNode+"==="+pingMasters);
             assert !pingMasters.contains(localNode) : "local node should never be elected as master when other nodes indicate an active master";
             // lets tie break between discovered nodes
             return electMaster.electMaster(pingMasters);
@@ -1219,16 +1219,15 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
         public boolean joinThreadActive(Thread joinThread) {
             return running.get() && joinThread.equals(currentJoinThread.get());
         }
-
         /** cleans any running joining thread and calls {@link #rejoin} */
         public ClusterState stopRunningThreadAndRejoin(ClusterState clusterState, String reason) {
             assertClusterStateThread();
             currentJoinThread.set(null);
             return rejoin(clusterState, reason);
         }
-
         /** starts a new joining thread if there is no currently active one and join thread controlling is started */
         public void startNewThreadIfNotRunning() {
+            //logger.info("===startNewThreadIfNotRunning===1230===");try { Integer.parseInt("startNewThreadIfNotRunning"); }catch (Exception e){logger.error("===", e);}
             assertClusterStateThread();
             if (joinThreadActive()) {
                 return;
@@ -1242,6 +1241,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                     }
                     while (running.get() && joinThreadActive(currentThread)) {
                         try {
+                            //logger.info("===startNewThreadIfNotRunning===1244===");
                             innerJoinCluster();
                             return;
                         } catch (Exception e) {

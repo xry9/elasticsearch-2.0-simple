@@ -25,13 +25,13 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.util.concurrent.EsRejectedExecutionException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+
+
+
 
 public class ZenPingService extends AbstractLifecycleComponent<ZenPing> implements ZenPing {
 
@@ -77,13 +77,13 @@ public class ZenPingService extends AbstractLifecycleComponent<ZenPing> implemen
             zenPing.close();
         }
     }
-
     public PingResponse[] pingAndWait(TimeValue timeout) {
         final AtomicReference<PingResponse[]> response = new AtomicReference<>();
         final CountDownLatch latch = new CountDownLatch(1);
         ping(new PingListener() {
             @Override
             public void onPing(PingResponse[] pings) {
+                //logger.info("===onPing===86==="+ Arrays.toString(pings));try { Integer.parseInt("onPing"); }catch (Exception e){logger.error("===", e);}
                 response.set(pings);
                 latch.countDown();
             }
@@ -96,10 +96,10 @@ public class ZenPingService extends AbstractLifecycleComponent<ZenPing> implemen
             return null;
         }
     }
-
     @Override
     public void ping(PingListener listener, TimeValue timeout) {
         List<? extends ZenPing> zenPings = this.zenPings;
+        //logger.info("===ping===102==="+zenPings);
         CompoundPingListener compoundPingListener = new CompoundPingListener(listener, zenPings);
         for (ZenPing zenPing : zenPings) {
             try {

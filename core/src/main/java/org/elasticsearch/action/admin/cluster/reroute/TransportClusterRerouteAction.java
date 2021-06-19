@@ -68,8 +68,8 @@ public class TransportClusterRerouteAction extends TransportMasterNodeAction<Clu
 
     @Override
     protected void masterOperation(final ClusterRerouteRequest request, final ClusterState state, final ActionListener<ClusterRerouteResponse> listener) {
-        clusterService.submitStateUpdateTask("cluster_reroute (api)", Priority.IMMEDIATE, new AckedClusterStateUpdateTask<ClusterRerouteResponse>(request, listener) {
 
+        clusterService.submitStateUpdateTask("cluster_reroute (api)", Priority.IMMEDIATE, new AckedClusterStateUpdateTask<ClusterRerouteResponse>(request, listener) {
             private volatile ClusterState clusterStateToSend;
             private volatile RoutingExplanations explanations;
 
@@ -88,13 +88,13 @@ public class TransportClusterRerouteAction extends TransportMasterNodeAction<Clu
                 logger.debug("failed to perform [{}]", t, source);
                 super.onFailure(source, t);
             }
-
             @Override
             public ClusterState execute(ClusterState currentState) {
                 RoutingAllocation.Result routingResult = allocationService.reroute(currentState, request.commands, request.explain());
                 ClusterState newState = ClusterState.builder(currentState).routingResult(routingResult).build();
                 clusterStateToSend = newState;
                 explanations = routingResult.explanations();
+                //logger.info("===newState===97==="+(request.dryRun)+"==="+currentState.getNodes()+"==="+newState);
                 if (request.dryRun) {
                     return currentState;
                 }

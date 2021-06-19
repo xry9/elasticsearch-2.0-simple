@@ -26,6 +26,8 @@ import org.elasticsearch.common.component.LifecycleComponent;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
 import org.elasticsearch.common.io.stream.Streamable;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.unit.TimeValue;
 
 import java.io.IOException;
@@ -35,7 +37,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static org.elasticsearch.cluster.ClusterName.readClusterName;
 import static org.elasticsearch.cluster.node.DiscoveryNode.readNode;
-
 /**
  *
  */
@@ -49,9 +50,8 @@ public interface ZenPing extends LifecycleComponent<ZenPing> {
 
         void onPing(PingResponse[] pings);
     }
-
     public static class PingResponse implements Streamable {
-
+        ESLogger logger = Loggers.getLogger(PingResponse.class);
         public static final PingResponse[] EMPTY = new PingResponse[0];
 
         private static final AtomicLong idGenerator = new AtomicLong();
@@ -70,7 +70,6 @@ public interface ZenPing extends LifecycleComponent<ZenPing> {
 
         private PingResponse() {
         }
-
         /**
          * @param node          the node which this ping describes
          * @param master        the current master of the node
@@ -83,8 +82,9 @@ public interface ZenPing extends LifecycleComponent<ZenPing> {
             this.master = master;
             this.clusterName = clusterName;
             this.hasJoinedOnce = hasJoinedOnce;
+            //logger.info("===PingResponse===86==="+id+"==="+node+"==="+master+"==="+clusterName+"==="+hasJoinedOnce);
+            //if (master!=null){try { Integer.parseInt("PingResponse-master"); }catch (Exception e){logger.error("===", e);} }
         }
-
         /**
          * an always increasing unique identifier for this ping response.
          * lower values means older pings.

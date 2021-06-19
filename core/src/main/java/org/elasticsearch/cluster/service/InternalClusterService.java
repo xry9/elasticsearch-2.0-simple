@@ -119,7 +119,7 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
 
         // will be replaced on doStart.
         this.clusterState = ClusterState.builder(clusterName).build();
-
+        //logger.info("===clusterState===122==="+clusterState);
         this.nodeSettingsService.setClusterService(this);
         this.nodeSettingsService.addListener(new ApplySettings());
 
@@ -151,11 +151,11 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
         }
         initialBlocks.removeGlobalBlock(block);
     }
-
     @Override
     protected void doStart() {
         add(localNodeMasterListeners);
         this.clusterState = ClusterState.builder(clusterState).blocks(initialBlocks).build();
+        //logger.info("===clusterState===158==="+clusterState);
         this.updateTasksExecutor = EsExecutors.newSinglePrioritizing(UPDATE_THREAD_NAME, daemonThreadFactory(settings, UPDATE_THREAD_NAME));
         this.reconnectToNodes = threadPool.schedule(reconnectInterval, ThreadPool.Names.GENERIC, new ReconnectToNodes());
         Map<String, String> nodeAttributes = discoveryNodeService.buildAttributes();
@@ -165,9 +165,9 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
         DiscoveryNode localNode = new DiscoveryNode(settings.get("name"), nodeId, publishAddress, nodeAttributes, version);
         DiscoveryNodes.Builder nodeBuilder = DiscoveryNodes.builder().put(localNode).localNodeId(localNode.id());
         this.clusterState = ClusterState.builder(clusterState).nodes(nodeBuilder).blocks(initialBlocks).build();
+        //logger.info("===clusterState===168==="+clusterState);
         this.transportService.setLocalNode(localNode);
     }
-
     @Override
     protected void doStop() {
         FutureUtils.cancel(this.reconnectToNodes);
@@ -273,7 +273,7 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
     }
     @Override
     public void submitStateUpdateTask(final String source, Priority priority, final ClusterStateUpdateTask updateTask) {
-        logger.info("===submitStateUpdateTask===276==="+source);//try { Integer.parseInt("submitStateUpdateTask===276"); }catch (Exception e){logger.error("===", e);}
+        //logger.info("===submitStateUpdateTask===276==="+source);//try { Integer.parseInt("submitStateUpdateTask===276"); }catch (Exception e){logger.error("===", e);}
         if (!lifecycle.started()) {
             return;
         }
@@ -367,7 +367,7 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
         UpdateTask(String source, Priority priority, ClusterStateUpdateTask updateTask) {
             super(priority, source);
             this.updateTask = updateTask;
-            logger.info("===UpdateTask===370===");
+            //logger.info("===UpdateTask===370==="+updateTask.getClass().getName());
         }
         @Override
         public void run() {
@@ -481,13 +481,14 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
                 // if we are the master, publish the new state to all nodes
                 // we publish here before we send a notification to all the listeners, since if it fails
                 // we don't want to notify
+                //logger.info("===run===484==="+newClusterState.nodes().localNodeMaster()+"==="+newClusterState.nodes()+"==="+newClusterState.nodes().masterNodeId());
                 if (newClusterState.nodes().localNodeMaster()) {
                     logger.debug("publishing cluster state version {}", newClusterState.version());
                     discoveryService.publish(clusterChangedEvent, ackListener);
                 }
-
                 // update the current cluster state
                 clusterState = newClusterState;
+                //logger.info("===clusterState===491==="+clusterState);
                 logger.debug("set local cluster state to version {}", newClusterState.version());
                 for (ClusterStateListener listener : preAppliedListeners) {
                     try {
@@ -496,7 +497,6 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
                         logger.warn("failed to notify ClusterStateListener", ex);
                     }
                 }
-
                 for (DiscoveryNode node : nodesDelta.removedNodes()) {
                     try {
                         transportService.disconnectFromNode(node);

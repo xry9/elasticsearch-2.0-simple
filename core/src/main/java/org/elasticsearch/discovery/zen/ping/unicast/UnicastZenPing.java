@@ -452,6 +452,7 @@ public class UnicastZenPing extends AbstractLifecycleComponent<ZenPing> implemen
                                 logger.warn("received ping response {} with no matching handler id [{}]", pingResponse, response.id);
                             }
                         } else {
+                            //logger.info("===handleResponse===456==="+pingResponse);
                             sendPingsHandler.pingCollection().addPing(pingResponse);
                         }
                     }
@@ -459,7 +460,6 @@ public class UnicastZenPing extends AbstractLifecycleComponent<ZenPing> implemen
                     latch.countDown();
                 }
             }
-
             @Override
             public void handleException(TransportException exp) {
                 latch.countDown();

@@ -221,8 +221,8 @@ public class NodeJoinController extends AbstractComponent {
             logger.trace("elected as master task already submitted, ignoring...");
             return;
         }
-
         final String source = "zen-disco-join(elected_as_master, [" + pendingMasterJoins + "] joins received)";
+        //logger.info("===checkPendingJoinsAndElectIfNeeded===225===");try { Integer.parseInt("checkPendingJoinsAndElectIfNeeded"); }catch (Exception e){logger.error("===", e);}
         clusterService.submitStateUpdateTask(source, Priority.IMMEDIATE, new ProcessJoinsTask() {
             @Override
             public ClusterState execute(ClusterState currentState) {
@@ -234,7 +234,7 @@ public class NodeJoinController extends AbstractComponent {
                     logger.trace("join thread elected local node as master, but there is already a master in place: {}", currentState.nodes().masterNode());
                     throw new NotMasterException("Node [" + clusterService.localNode() + "] not master for join request");
                 }
-
+                //logger.info("===checkPendingJoinsAndElectIfNeeded===237==="+currentState.nodes().localNode().id()+"==="+currentState.nodes().size()+"==="+currentState.nodes().masterNodeId());try { Integer.parseInt("checkPendingJoinsAndElectIfNeeded"); }catch (Exception e){logger.error("===", e);}
                 DiscoveryNodes.Builder builder = new DiscoveryNodes.Builder(currentState.nodes()).masterNodeId(currentState.nodes().localNode().id());
                 // update the fact that we are the master...
                 ClusterBlocks clusterBlocks = ClusterBlocks.builder().blocks(currentState.blocks()).removeGlobalBlock(discoverySettings.getNoMasterBlock()).build();

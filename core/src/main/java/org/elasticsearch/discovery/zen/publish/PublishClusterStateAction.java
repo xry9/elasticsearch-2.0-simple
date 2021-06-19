@@ -191,13 +191,13 @@ public class PublishClusterStateAction extends AbstractComponent {
                                            final BlockingClusterStatePublishResponseHandler publishResponseHandler,
                                            final boolean sendDiffs) {
         try {
+            //logger.info("===STATE===STATE===194===");//try{ Integer.parseInt("STATE"); }catch (Exception e){logger.error("===", e);}
             TransportRequestOptions options = TransportRequestOptions.options().withType(TransportRequestOptions.Type.STATE).withCompress(false);
             // no need to put a timeout on the options here, because we want the response to eventually be received
             // and not log an error if it arrives after the timeout
             transportService.sendRequest(node, ACTION_NAME,
                     new BytesTransportRequest(bytes, node.version()),
                     options, // no need to compress, we already compressed the bytes
-
                     new EmptyTransportResponseHandler(ThreadPool.Names.SAME) {
 
                         @Override
@@ -274,7 +274,7 @@ public class PublishClusterStateAction extends AbstractComponent {
                 lastSeenClusterState.status(ClusterState.ClusterStateStatus.RECEIVED);
             }
             try {
-                logger.info("===messageReceived===277==="+lastSeenClusterState);
+                //logger.info("===messageReceived===277==="+lastSeenClusterState);
                 listener.onNewClusterState(lastSeenClusterState, new NewClusterStateListener.NewStateProcessed() {
                     @Override
                     public void onNewClusterStateProcessed() {

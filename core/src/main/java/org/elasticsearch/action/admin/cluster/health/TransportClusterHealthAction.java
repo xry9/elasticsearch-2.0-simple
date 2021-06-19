@@ -51,7 +51,7 @@ public class TransportClusterHealthAction extends TransportMasterNodeReadAction<
         super(settings, ClusterHealthAction.NAME, transportService, clusterService, threadPool, actionFilters, indexNameExpressionResolver, ClusterHealthRequest.class);
         this.clusterName = clusterName;
         this.gatewayAllocator = gatewayAllocator;
-        logger.info("===TransportClusterHealthAction===54===");
+        //logger.info("===TransportClusterHealthAction===54===");
     }
     @Override
     protected String executor() {
@@ -70,7 +70,7 @@ public class TransportClusterHealthAction extends TransportMasterNodeReadAction<
     }
     @Override
     protected void masterOperation(final ClusterHealthRequest request, final ClusterState unusedState, final ActionListener<ClusterHealthResponse> listener) {
-        logger.info("===masterOperation===73==="+(request.waitForEvents() != null));
+        //logger.info("===masterOperation===73==="+(request.waitForEvents() != null));
         if (request.waitForEvents() != null) {
             final long endTimeMS = TimeValue.nsecToMSec(System.nanoTime()) + request.timeout().millis();
             clusterService.submitStateUpdateTask("cluster_health (wait_for_events [" + request.waitForEvents() + "])", request.waitForEvents(), new ProcessedClusterStateUpdateTask() {

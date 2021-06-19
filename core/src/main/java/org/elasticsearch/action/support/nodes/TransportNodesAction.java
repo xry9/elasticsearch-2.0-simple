@@ -113,7 +113,6 @@ public abstract class TransportNodesAction<NodesRequest extends BaseNodesRequest
             }
             this.responses = new AtomicReferenceArray<>(this.nodesIds.length);
         }
-
         private void start() {
             if (nodesIds.length == 0) {
                 // nothing to notify
@@ -144,12 +143,13 @@ public abstract class TransportNodesAction<NodesRequest extends BaseNodesRequest
                         onFailure(idx, nodeId, new NodeShouldNotConnectException(clusterService.localNode(), node));
                     } else {
                         NodeRequest nodeRequest = newNodeRequest(nodeId, request);
+                        //logger.info("===start===146==="+transportRequestOptions.type().name()+"==="+request.getClass().getName());
                         transportService.sendRequest(node, transportNodeAction, nodeRequest, transportRequestOptions, new BaseTransportResponseHandler<NodeResponse>() {
+
                             @Override
                             public NodeResponse newInstance() {
                                 return newNodeResponse();
                             }
-
                             @Override
                             public void handleResponse(NodeResponse response) {
                                 onOperation(idx, response);

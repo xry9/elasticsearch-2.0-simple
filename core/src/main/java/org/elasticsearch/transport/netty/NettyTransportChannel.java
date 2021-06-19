@@ -80,7 +80,7 @@ public class NettyTransportChannel implements TransportChannel {
             options.withCompress(true);
         }
 
-        logger.info("===sendResponse===83==="+response);
+        //logger.info("===sendResponse===83==="+response);
         byte status = 0;
         status = TransportStatus.setResponse(status);
 

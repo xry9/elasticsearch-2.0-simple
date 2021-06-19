@@ -41,6 +41,8 @@ import org.elasticsearch.common.compress.CompressedXContent;
 import org.elasticsearch.common.io.stream.BytesStreamOutput;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -50,13 +52,11 @@ import org.elasticsearch.discovery.Discovery;
 import org.elasticsearch.discovery.DiscoveryService;
 import org.elasticsearch.discovery.local.LocalDiscovery;
 import org.elasticsearch.discovery.zen.publish.PublishClusterStateAction;
-
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 /**
  * Represents the current state of the cluster.
  *
@@ -83,7 +83,7 @@ import java.util.Map;
  * a full version of the cluster state to the node on which this exception was thrown.
  */
 public class ClusterState implements ToXContent, Diffable<ClusterState> {
-
+    ESLogger logger = Loggers.getLogger(ClusterState.class);
     public static final ClusterState PROTO = builder(ClusterName.DEFAULT).build();
 
     public static enum ClusterStateStatus {
@@ -168,7 +168,6 @@ public class ClusterState implements ToXContent, Diffable<ClusterState> {
     public ClusterState(long version, String stateUUID, ClusterState state) {
         this(state.clusterName, version, stateUUID, state.metaData(), state.routingTable(), state.nodes(), state.blocks(), state.customs(), false);
     }
-
     public ClusterState(ClusterName clusterName, long version, String stateUUID, MetaData metaData, RoutingTable routingTable, DiscoveryNodes nodes, ClusterBlocks blocks, ImmutableOpenMap<String, Custom> customs, boolean wasReadFromDiff) {
         this.version = version;
         this.stateUUID = stateUUID;
@@ -176,6 +175,7 @@ public class ClusterState implements ToXContent, Diffable<ClusterState> {
         this.metaData = metaData;
         this.routingTable = routingTable;
         this.nodes = nodes;
+        //logger.info("===ClusterState===178==="+nodes);
         this.blocks = blocks;
         this.customs = customs;
         this.status = ClusterStateStatus.UNKNOWN;

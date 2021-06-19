@@ -111,8 +111,8 @@ public class MembershipAction extends AbstractComponent {
 
         private JoinRequest() {
         }
-
         private JoinRequest(DiscoveryNode node) {
+
             this.node = node;
         }
 

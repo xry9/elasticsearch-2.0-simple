@@ -380,7 +380,7 @@ public class IndexService extends AbstractIndexComponent implements IndexCompone
             IndexShard indexShard = shardInjector.getInstance(IndexShard.class);
             indicesLifecycle.indexShardStateChanged(indexShard, null, "shard created");
             indicesLifecycle.afterIndexShardCreated(indexShard);
-            logger.info("===createShard===383==="+shardId.id());
+            //logger.info("===createShard===383==="+shardId.id());
             shards = newMapBuilder(shards).put(shardId.id(), new IndexShardInjectorPair(indexShard, shardInjector)).immutableMap();
             success = true;
             return indexShard;

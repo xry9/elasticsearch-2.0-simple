@@ -66,7 +66,7 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
     }
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        logger.info("===messageReceived===69==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress());try { Integer.parseInt("messageReceived"); }catch (Exception ex){logger.error("===", ex);}
+        //logger.info("===messageReceived===69==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress());//try { Integer.parseInt("messageReceived"); }catch (Exception ex){logger.error("===", ex);}
 
         Transports.assertTransportThread();
         Object m = e.getMessage();
@@ -109,10 +109,10 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
                 streamIn = compressor.streamInput(streamIn);
             }
             streamIn.setVersion(version);
-            logger.info("===messageReceived===112==="+(TransportStatus.isRequest(status)));
+            //logger.info("===messageReceived===112==="+(TransportStatus.isRequest(status)));
             if (TransportStatus.isRequest(status)) {
                 String action = handleRequest(ctx.getChannel(), streamIn, requestId, version);
-                logger.info("===messageReceived===115==="+action);
+                //logger.info("===messageReceived===115==="+action);
                 // Chek the entire message has been read
                 final int nextByte = streamIn.read();
                 // calling read() is useful to make sure the message is fully read, even if there some kind of EOS marker
@@ -129,7 +129,7 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
                 }
             } else {
                 TransportResponseHandler<?> handler = transportServiceAdapter.onResponseReceived(requestId);
-                logger.info("===messageReceived===132==="+handler.getClass().getName());
+                //logger.info("===messageReceived===132==="+handler.getClass().getName());
                 // ignore if its null, the adapter logs it
                 if (handler != null) {
                     if (TransportStatus.isError(status)) {
@@ -179,7 +179,7 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
             return;
         }
         try {
-            logger.info("===handleResponse===182==="+(ThreadPool.Names.SAME.equals(handler.executor()))+"==="+handler.getClass().getName());
+            //logger.info("===handleResponse===182==="+(ThreadPool.Names.SAME.equals(handler.executor()))+"==="+handler.getClass().getName());
             if (ThreadPool.Names.SAME.equals(handler.executor())) {
                 //noinspection unchecked
                 handler.handleResponse(response);
@@ -225,7 +225,6 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
             });
         }
     }
-
     protected String handleRequest(Channel channel, StreamInput buffer, long requestId, Version version) throws IOException {
         buffer = new NamedWriteableAwareStreamInput(buffer, transport.namedWriteableRegistry);
         final String action = buffer.readString();
@@ -239,11 +238,12 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
             final TransportRequest request = reg.newRequest();
             request.remoteAddress(new InetSocketTransportAddress((InetSocketAddress) channel.getRemoteAddress()));
             request.readFrom(buffer);
-
             if (ThreadPool.Names.SAME.equals(reg.getExecutor())) {
                 //noinspection unchecked
+                //logger.info("===handleRequest===243==="+reg.getHandler().getClass().getName());
                 reg.getHandler().messageReceived(request, transportChannel);
             } else {
+                //logger.info("===handleRequest===246==="+request.getClass().getName());
                 threadPool.executor(reg.getExecutor()).execute(new RequestHandler(reg, request, transportChannel));
             }
         } catch (Throwable e) {

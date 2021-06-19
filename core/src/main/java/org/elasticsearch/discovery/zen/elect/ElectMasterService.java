@@ -132,6 +132,7 @@ public class ElectMasterService extends AbstractComponent {
             return null;
         }
         DiscoveryNode masterNode = sortedNodes.get(0);
+        //logger.info("===electMaster===135==="+(masterNode.getVersion().before(minMasterVersion))+"==="+sortedNodes+"==="+masterNode);
         // Sanity check: maybe we don't end up here, because serialization may have failed.
         if (masterNode.getVersion().before(minMasterVersion)) {
             logger.warn("ignoring master [{}], because the version [{}] is lower than the minimum compatible version [{}]", masterNode, masterNode.getVersion(), minMasterVersion);
@@ -140,7 +141,6 @@ public class ElectMasterService extends AbstractComponent {
             return masterNode;
         }
     }
-
     private List<DiscoveryNode> sortedMasterNodes(Iterable<DiscoveryNode> nodes) {
         List<DiscoveryNode> possibleNodes = Lists.newArrayList(nodes);
         if (possibleNodes.isEmpty()) {

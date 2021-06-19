@@ -331,7 +331,6 @@ public class TransportClientNodesService extends AbstractComponent {
     }
 
     class SimpleNodeSampler extends NodeSampler {
-
         @Override
         protected void doSample() {
             HashSet<DiscoveryNode> newNodes = new HashSet<>();
@@ -348,6 +347,7 @@ public class TransportClientNodesService extends AbstractComponent {
                     }
                 }
                 try {
+                    //logger.info("===STATE===STATE===350===");
                     LivenessResponse livenessResponse = transportService.submitRequest(listedNode, TransportLivenessAction.NAME,
                             headers.applyTo(new LivenessRequest()),
                             TransportRequestOptions.options().withType(TransportRequestOptions.Type.STATE).withTimeout(pingTimeout),
@@ -403,7 +403,6 @@ public class TransportClientNodesService extends AbstractComponent {
                         try {
                             if (!transportService.nodeConnected(listedNode)) {
                                 try {
-
                                     // if its one of the actual nodes we will talk to, not to listed nodes, fully connect
                                     if (nodes.contains(listedNode)) {
                                         logger.trace("connecting to cluster node [{}]", listedNode);
@@ -419,6 +418,7 @@ public class TransportClientNodesService extends AbstractComponent {
                                     return;
                                 }
                             }
+                            //logger.info("===STATE===STATE===421===");
                             transportService.sendRequest(listedNode, ClusterStateAction.NAME,
                                     headers.applyTo(Requests.clusterStateRequest().clear().nodes(true).local(true)),
                                     TransportRequestOptions.options().withType(TransportRequestOptions.Type.STATE).withTimeout(pingTimeout),

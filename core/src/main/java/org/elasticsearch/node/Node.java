@@ -233,7 +233,7 @@ public class Node implements Releasable {
             return this;
         }
         ESLogger logger = Loggers.getLogger(Node.class, settings.get("name"));
-        logger.info("===start===235===");
+        //logger.info("===start===235===");
         logger.info("starting ...");
         // hack around dependency injection problem (for now...)
         injector.getInstance(Discovery.class).setRoutingService(injector.getInstance(RoutingService.class));
@@ -249,7 +249,7 @@ public class Node implements Releasable {
         injector.getInstance(SnapshotsService.class).start();
         injector.getInstance(SnapshotShardsService.class).start();
         injector.getInstance(TransportService.class).start();
-        System.out.println("===start===251==="+this.getClass().getName()+"-"+this.hashCode());
+        //System.out.println("===start===251==="+this.getClass().getName()+"-"+this.hashCode());
         injector.getInstance(ClusterService.class).start();
         injector.getInstance(RoutingService.class).start();
         injector.getInstance(SearchService.class).start();

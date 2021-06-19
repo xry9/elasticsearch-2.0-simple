@@ -175,7 +175,7 @@ public class PrioritizedEsThreadPoolExecutor extends EsThreadPoolExecutor {
             super(priority);
             this.runnable = runnable;
             this.insertionOrder = insertionOrder;
-            System.out.println("===TieBreakingPrioritizedRunnable===178===");//try { Integer.parseInt("TieBreakingPrioritizedRunnable"); }catch (Exception e){e.printStackTrace();}
+            //System.out.println("===TieBreakingPrioritizedRunnable===178==="+runnable.getClass().getName());//try { Integer.parseInt("TieBreakingPrioritizedRunnable"); }catch (Exception e){e.printStackTrace();}
         }
         @Override
         public void run() {

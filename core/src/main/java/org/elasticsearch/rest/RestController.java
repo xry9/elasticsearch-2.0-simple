@@ -113,7 +113,7 @@ public class RestController extends AbstractLifecycleComponent<RestController> {
      * Registers a rest handler to be execute when the provided method and path match the request.
      */
     public void registerHandler(RestRequest.Method method, String path, RestHandler handler) {
-        System.out.println("===registerHandler===116==="+method+"==="+path+"==="+handler.getClass().getName());
+        //System.out.println("===registerHandler===116==="+method+"==="+path+"==="+handler.getClass().getName());
         switch (method) {
             case GET:
                 getHandlers.insert(path, handler);

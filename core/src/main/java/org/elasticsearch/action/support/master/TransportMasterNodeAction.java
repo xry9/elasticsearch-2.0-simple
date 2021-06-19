@@ -83,7 +83,7 @@ public abstract class TransportMasterNodeAction<Request extends MasterNodeReques
         if ((listener instanceof ThreadedActionListener) == false) {
             listener = new ThreadedActionListener<>(logger, threadPool, ThreadPool.Names.LISTENER, listener);
         }
-        logger.info("===doExecute===86==="+this.getClass().getName());
+        //logger.info("===doExecute===86==="+this.getClass().getName());
         innerExecute(request, listener, new ClusterStateObserver(clusterService, request.masterNodeTimeout(), logger), false);
     }
     private void innerExecute(final Request request, final ActionListener<Response> listener, final ClusterStateObserver observer, final boolean retrying) {
@@ -178,7 +178,7 @@ public abstract class TransportMasterNodeAction<Request extends MasterNodeReques
 
                 @Override
                 public void handleResponse(Response response) {
-                    logger.info("===handleResponse===181==="+listener.getClass().getName());
+                    //logger.info("===handleResponse===181==="+listener.getClass().getName());
                     listener.onResponse(response);
                 }
                 @Override

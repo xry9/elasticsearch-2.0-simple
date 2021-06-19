@@ -97,7 +97,7 @@ public class StoreRecoveryService extends AbstractIndexShardComponent implements
      * Recovers the state of the shard from the gateway.
      */
     public void recover(final IndexShard indexShard, final boolean indexShouldExists, final RecoveryListener listener) throws IndexShardRecoveryException {
-        logger.info("===recover===100===");//try { Integer.parseInt("recover"); }catch (Exception e){logger.error("===", e);}
+        //logger.info("===recover===100===");//try { Integer.parseInt("recover"); }catch (Exception e){logger.error("===", e);}
         if (indexShard.state() == IndexShardState.CLOSED) {
             // got closed on us, just ignore this recovery
             listener.onIgnoreRecovery("shard closed");
@@ -197,7 +197,7 @@ public class StoreRecoveryService extends AbstractIndexShardComponent implements
         store.incRef();
         try {
             try {
-                logger.info("===recoverFromStore===200==="+store.directory());
+                //logger.info("===recoverFromStore===200==="+store.directory());
                 store.failIfCorrupted();
                 try {
                     si = store.readLastCommittedSegmentsInfo();

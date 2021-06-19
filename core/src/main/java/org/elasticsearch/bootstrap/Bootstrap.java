@@ -222,7 +222,7 @@ final class Bootstrap {
     static void init(String[] args) throws Throwable {
         // Set the system property before anything has a chance to trigger its use
         System.setProperty("es.logger.prefix", "");
-        System.out.println("===init===225===");
+        //System.out.println("===init===225===");
 
         BootstrapCLIParser bootstrapCLIParser = new BootstrapCLIParser();
         CliTool.ExitStatus status = bootstrapCLIParser.execute(args);

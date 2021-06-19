@@ -272,7 +272,7 @@ public class InternalEngine extends Engine {
         try {
             try {
                 final DirectoryReader directoryReader = ElasticsearchDirectoryReader.wrap(DirectoryReader.open(indexWriter, true), shardId);
-                logger.info("===createSearcherManager===275==="+directoryReader.directory());
+                //logger.info("===createSearcherManager===275==="+directoryReader.directory());
                 searcherManager = new SearcherManager(directoryReader, searcherFactory);
                 lastCommittedSegmentInfos = readLastCommittedSegmentInfos(searcherManager, store);
                 success = true;
