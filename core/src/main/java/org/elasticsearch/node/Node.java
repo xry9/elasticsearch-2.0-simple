@@ -197,8 +197,8 @@ public class Node implements Releasable {
             pluginsService.processModules(modules);
 
             injector = modules.createInjector();
-
             client = injector.getInstance(Client.class);
+            logger.info("===Node===201==="+injector.getClass().getName()+"==="+client.getClass().getName());
             threadPool.setNodeSettingsService(injector.getInstance(NodeSettingsService.class));
             success = true;
         } finally {
@@ -233,7 +233,7 @@ public class Node implements Releasable {
             return this;
         }
         ESLogger logger = Loggers.getLogger(Node.class, settings.get("name"));
-        //logger.info("===start===235===");
+        //logger.info("===start===236==="+injector.getInstance(Discovery.class).getClass().getName());
         logger.info("starting ...");
         // hack around dependency injection problem (for now...)
         injector.getInstance(Discovery.class).setRoutingService(injector.getInstance(RoutingService.class));
@@ -263,8 +263,8 @@ public class Node implements Releasable {
 
         // gateway should start after disco, so it can try and recovery from gateway on "start"
         injector.getInstance(GatewayService.class).start();
-        if (settings.getAsBoolean("http.enabled", true)) {
 
+        if (settings.getAsBoolean("http.enabled", true)) {
             injector.getInstance(HttpServer.class).start();
         }
         injector.getInstance(ResourceWatcherService.class).start();

@@ -410,7 +410,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
             }
             logger.debug("binding server bootstrap to: {}", addresses);
         }
-        //System.out.println("===bindServerBootstrap===413==="+Arrays.toString(hostAddresses));
+        logger.info("===bindServerBootstrap===413==="+Arrays.toString(hostAddresses));
         for (InetAddress hostAddress : hostAddresses) {
             bindServerBootstrap(name, hostAddress, settings);
         }
@@ -426,7 +426,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
             public boolean onPortNumber(int portNumber) {
                 try {
                     Channel channel = serverBootstraps.get(name).bind(new InetSocketAddress(hostAddress, portNumber));
-                    //logger.info("===bindServerBootstrap===429==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){e.printStackTrace();}
+                    logger.info("===bindServerBootstrap===429==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){logger.error("===", e);}
                     synchronized (serverChannels) {
                         List<Channel> list = serverChannels.get(name);
                         if (list == null) {

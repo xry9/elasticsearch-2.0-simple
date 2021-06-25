@@ -109,6 +109,7 @@ import org.elasticsearch.search.warmer.IndexWarmersMetaData;
 import org.elasticsearch.threadpool.ThreadPool;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -312,8 +313,8 @@ public class SearchService extends AbstractLifecycleComponent<SearchService> {
             cleanContext(context);
         }
     }
-
     public ScrollQueryFetchSearchResult executeScan(InternalScrollSearchRequest request) {
+        logger.info("===executeScan===316===");
         final SearchContext context = findContext(request.id());
         ShardSearchStats shardSearchStats = context.indexShard().searchService();
         contextProcessing(context);
@@ -370,9 +371,8 @@ public class SearchService extends AbstractLifecycleComponent<SearchService> {
             queryPhase.execute(context);
         }
     }
-    @SuppressForbidden(reason = "Exception#printStackTrace()")
+
     public QuerySearchResultProvider executeQueryPhase(ShardSearchRequest request) {
-        System.out.println("===executeQueryPhase===375==="+request);//try{ Integer.parseInt("executeQueryPhase"); }catch (Exception e){e.printStackTrace();}
         final SearchContext context = createAndPutContext(request);
         final ShardSearchStats shardSearchStats = context.indexShard().searchService();
         try {
@@ -386,6 +386,7 @@ public class SearchService extends AbstractLifecycleComponent<SearchService> {
                 contextProcessedSuccessfully(context);
             }
             shardSearchStats.onQueryPhase(context, System.nanoTime() - time);
+            logger.info("===executeQueryPhase===389==="+request+"==="+request.index()+"==="+ Arrays.toString(request.types())+"==="+context.queryResult().topDocs());//try{ Integer.parseInt("executeQueryPhase"); }catch (Exception e){logger.error("===", e);}
 
             return context.queryResult();
         } catch (Throwable e) {
@@ -589,7 +590,6 @@ public class SearchService extends AbstractLifecycleComponent<SearchService> {
             cleanContext(context);
         }
     }
-
     public FetchSearchResult executeFetchPhase(ShardFetchRequest request) {
         final SearchContext context = findContext(request.id());
         contextProcessing(context);
@@ -608,6 +608,7 @@ public class SearchService extends AbstractLifecycleComponent<SearchService> {
                 contextProcessedSuccessfully(context);
             }
             shardSearchStats.onFetchPhase(context, System.nanoTime() - time);
+            logger.info("===executeFetchPhase===611==="+context.getClass().getName()+"==="+context.fetchResult().hits().getHits()[0].getSource());
             return context.fetchResult();
         } catch (Throwable e) {
             shardSearchStats.onFailedFetchPhase(context);

@@ -239,7 +239,7 @@ public class IndexShard extends AbstractIndexShardComponent {
         this.path = path;
         this.mergePolicyConfig = new MergePolicyConfig(logger, indexSettings);
         /* create engine config */
-
+        logger.info("===IndexShard===242==="+path+"==="+store.nodeName()+"==="+store.getClass().getName());
         logger.debug("state: [CREATED]");
 
         this.checkIndexOnStartup = indexSettings.get("index.shard.check_on_startup", "false");
@@ -587,7 +587,7 @@ public class IndexShard extends AbstractIndexShardComponent {
 
     public Engine.GetResult get(Engine.Get get) {
         readAllowed();
-        logger.info("===get===590==="+engine().getClass().getName());
+        logger.info("===get===590==="+engine().getClass().getName()+"==="+path);
         return engine().get(get);
     }
     public void refresh(String source) {

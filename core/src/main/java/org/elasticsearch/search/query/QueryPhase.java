@@ -26,6 +26,8 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.lucene.Lucene;
 import org.elasticsearch.search.SearchParseElement;
 import org.elasticsearch.search.SearchPhase;
@@ -37,14 +39,12 @@ import org.elasticsearch.search.rescore.RescoreSearchContext;
 import org.elasticsearch.search.sort.SortParseElement;
 import org.elasticsearch.search.sort.TrackScoresParseElement;
 import org.elasticsearch.search.suggest.SuggestPhase;
-
 import java.util.Map;
-
 /**
  *
  */
 public class QueryPhase implements SearchPhase {
-
+    protected final ESLogger logger = Loggers.getLogger(QueryPhase.class);
     private final AggregationPhase aggregationPhase;
     private final SuggestPhase suggestPhase;
     private RescorePhase rescorePhase;
@@ -94,7 +94,7 @@ public class QueryPhase implements SearchPhase {
         // request, preProcess is called on the DFS phase phase, this is why we pre-process them
         // here to make sure it happens during the QUERY phase
         aggregationPhase.preProcess(searchContext);
-
+        logger.info("===execute===97==="+searchContext.getClass().getName());
         searchContext.queryResult().searchTimedOut(false);
 
         searchContext.searcher().inStage(ContextIndexSearcher.Stage.MAIN_QUERY);
@@ -107,7 +107,6 @@ public class QueryPhase implements SearchPhase {
 
             final TopDocs topDocs;
             int numDocs = searchContext.from() + searchContext.size();
-
             if (searchContext.size() == 0) { // no matter what the value of from is
                 topDocs = new TopDocs(searchContext.searcher().count(query), Lucene.EMPTY_SCORE_DOCS, 0);
             } else if (searchContext.searchType() == SearchType.SCAN) {
@@ -129,7 +128,6 @@ public class QueryPhase implements SearchPhase {
                         }
                         topDocs = searchContext.searcher().searchAfter(lastEmittedDoc, query, numDocs);
                     }
-
                     int size = topDocs.scoreDocs.length;
                     if (size > 0) {
                         // In the case of *QUERY_AND_FETCH we don't get back to shards telling them which least
@@ -141,6 +139,7 @@ public class QueryPhase implements SearchPhase {
                     }
                 } else {
                     if (searchContext.sort() != null) {
+                        logger.info("===execute===142==="+searchContext.searcher().getClass().getName());
                         topDocs = searchContext.searcher().search(query, null, numDocs, searchContext.sort(),
                                 searchContext.trackScores(), searchContext.trackScores());
                     } else {
@@ -152,6 +151,7 @@ public class QueryPhase implements SearchPhase {
                     }
                 }
             }
+            logger.info("===execute===154==="+topDocs.scoreDocs[0]);
             searchContext.queryResult().topDocs(topDocs);
         } catch (Throwable e) {
             throw new QueryPhaseExecutionException(searchContext, "Failed to execute main query", e);

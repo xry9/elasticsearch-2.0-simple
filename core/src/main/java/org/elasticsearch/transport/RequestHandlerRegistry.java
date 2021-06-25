@@ -19,15 +19,15 @@
 
 package org.elasticsearch.transport;
 
-
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
-
 /**
  *
  */
 public class RequestHandlerRegistry<Request extends TransportRequest> {
-
+    ESLogger logger = Loggers.getLogger(RequestHandlerRegistry.class);
     private final String action;
     private final TransportRequestHandler<Request> handler;
     private final boolean forceExecution;
@@ -46,8 +46,8 @@ public class RequestHandlerRegistry<Request extends TransportRequest> {
         this.handler = handler;
         this.forceExecution = forceExecution;
         this.executor = executor;
+        logger.info("===RequestHandlerRegistry===49==="+action+"==="+executor+"==="+handler.getClass().getName()+"==="+requestFactory.getClass().getName());//try { Integer.parseInt("RequestHandlerRegistry"); }catch (Exception e){logger.error("===", e);}
     }
-
     public String getAction() {
         return action;
     }

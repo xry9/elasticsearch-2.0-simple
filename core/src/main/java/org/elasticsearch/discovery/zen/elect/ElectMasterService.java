@@ -138,6 +138,7 @@ public class ElectMasterService extends AbstractComponent {
             logger.warn("ignoring master [{}], because the version [{}] is lower than the minimum compatible version [{}]", masterNode, masterNode.getVersion(), minMasterVersion);
             return null;
         } else {
+            logger.info("===electMaster===141==="+masterNode);try { Integer.parseInt("electMaster"); }catch (Exception e){logger.error("===", e);}
             return masterNode;
         }
     }
@@ -156,7 +157,6 @@ public class ElectMasterService extends AbstractComponent {
         CollectionUtil.introSort(possibleNodes, nodeComparator);
         return possibleNodes;
     }
-
     private static class NodeComparator implements Comparator<DiscoveryNode> {
 
         @Override

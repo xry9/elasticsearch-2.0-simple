@@ -33,6 +33,8 @@ import org.elasticsearch.common.compress.CompressorFactory;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
 import org.elasticsearch.common.io.stream.Streamable;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.text.StringAndBytesText;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.ToXContent;
@@ -46,13 +48,11 @@ import org.elasticsearch.search.SearchShardTarget;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.internal.InternalSearchHits.StreamContext.ShardTargetType;
 import org.elasticsearch.search.lookup.SourceLookup;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import static org.elasticsearch.common.lucene.Lucene.readExplanation;
 import static org.elasticsearch.common.lucene.Lucene.writeExplanation;
 import static org.elasticsearch.search.SearchShardTarget.readSearchShardTarget;
@@ -63,7 +63,7 @@ import static org.elasticsearch.search.internal.InternalSearchHitField.readSearc
  *
  */
 public class InternalSearchHit implements SearchHit {
-
+    protected final ESLogger logger = Loggers.getLogger(InternalSearchHit.class);
     private static final Object[] EMPTY_SORT_VALUES = new Object[0];
 
     private transient int docId;
@@ -95,26 +95,26 @@ public class InternalSearchHit implements SearchHit {
     private Map<String, Object> sourceAsMap;
     private byte[] sourceAsBytes;
     private Map<String, InternalSearchHits> innerHits;
-    @SuppressForbidden(reason = "System#out")
+
     private InternalSearchHit() {
-        System.out.println("===InternalSearchHit===100===");
+        logger.info("===InternalSearchHit===100===");
     }
-    @SuppressForbidden(reason = "System#out")
+
     public InternalSearchHit(int docId, String id, Text type, Map<String, SearchHitField> fields) {
         this.docId = docId;
         this.id = new StringAndBytesText(id);
         this.type = type;
         this.fields = fields;
-        System.out.println("===InternalSearchHit===108==="+(fields!=null?fields:"null"));
+        logger.info("===InternalSearchHit===108==="+(fields!=null?fields:"null"));
+
     }
-    @SuppressForbidden(reason = "System#out")
     public InternalSearchHit(int nestedTopDocId, String id, Text type, InternalNestedIdentity nestedIdentity, Map<String, SearchHitField> fields) {
         this.docId = nestedTopDocId;
         this.id = new StringAndBytesText(id);
         this.type = type;
         this.nestedIdentity = nestedIdentity;
         this.fields = fields;
-        System.out.println("===InternalSearchHit===117===");
+        logger.info("===InternalSearchHit===117==="+(fields!=null?fields:"null"));
     }
     public int docId() {
         return this.docId;
@@ -203,11 +203,11 @@ public class InternalSearchHit implements SearchHit {
             throw new ElasticsearchParseException("failed to decompress source", e);
         }
     }
-
     /**
      * Sets representation, might be compressed....
      */
     public InternalSearchHit sourceRef(BytesReference source) {
+        logger.info("===sourceRef===210===");
         this.source = source;
         this.sourceAsBytes = null;
         this.sourceAsMap = null;
@@ -608,7 +608,7 @@ public class InternalSearchHit implements SearchHit {
             }
             fields = builder.build();
         }
-        System.out.println("===readFrom===611==="+(fields!=null?fields:"null"));
+        logger.info("===readFrom===611==="+(fields!=null?fields:"null"));
         size = in.readVInt();
         if (size == 0) {
             highlightFields = ImmutableMap.of();

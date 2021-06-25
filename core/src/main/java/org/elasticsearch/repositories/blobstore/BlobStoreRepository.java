@@ -74,7 +74,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * BlobStore - based implementation of Snapshot Repository
  * <p/>
  * This repository works with any {@link BlobStore} implementation. The blobStore should be initialized in the derived
- * class before {@link #doStart()} is called.
+ *
  * <p/>
  * <p/>
  * BlobStoreRepository maintains the following structure in the blob store
@@ -224,7 +224,7 @@ public abstract class BlobStoreRepository extends AbstractLifecycleComponent<Rep
     /**
      * Returns initialized and ready to use BlobStore
      * <p/>
-     * This method is first called in the {@link #doStart()} method.
+     * This method is first called in the
      *
      * @return blob store
      */

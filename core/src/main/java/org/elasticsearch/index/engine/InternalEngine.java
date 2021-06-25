@@ -324,7 +324,7 @@ public class InternalEngine extends Engine {
                     }
                 }
             }
-            logger.info("===get===327===");
+            //logger.info("===get===327===");
             // no version, get the version from the index, we know that we refresh on flush
             return getFromSearcher(get);
         }

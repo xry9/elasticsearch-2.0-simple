@@ -166,7 +166,7 @@ public abstract class TransportSearchTypeAction extends TransportAction<SearchRe
                     sendExecuteFirstPhase(node, internalSearchRequest(shard, shardsIts.size(), request, filteringAliases, startTime()), new ActionListener<FirstResult>() {
                         @Override
                         public void onResponse(FirstResult result) {
-                            logger.info("===onResponse===169==="+result);
+                            //logger.info("===onResponse===169==="+result);
                             onFirstPhaseResult(shardIndex, shard, result, shardIt);
                         }
                         @Override

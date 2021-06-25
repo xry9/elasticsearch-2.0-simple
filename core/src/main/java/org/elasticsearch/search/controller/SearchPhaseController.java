@@ -299,7 +299,7 @@ public class SearchPhaseController extends AbstractComponent {
 
     public InternalSearchResponse merge(ScoreDoc[] sortedDocs, AtomicArray<? extends QuerySearchResultProvider> queryResultsArr,
             AtomicArray<? extends FetchSearchResultProvider> fetchResultsArr, HasContextAndHeaders headersContext) {
-
+        logger.info("===merge===302==="+fetchResultsArr.length()+"==="+fetchResultsArr.hashCode());try { Integer.parseInt("merge"); }catch (Exception e){logger.error("===", e);}
         List<? extends AtomicArray.Entry<? extends QuerySearchResultProvider>> queryResults = queryResultsArr.asList();
         List<? extends AtomicArray.Entry<? extends FetchSearchResultProvider>> fetchResults = fetchResultsArr.asList();
 
@@ -374,7 +374,7 @@ public class SearchPhaseController extends AbstractComponent {
                             searchHit.score(((Number) fieldDoc.fields[sortScoreIndex]).floatValue());
                         }
                     }
-
+                    logger.info("===merge===377==="+searchHit.getSource());
                     hits.add(searchHit);
                 }
             }

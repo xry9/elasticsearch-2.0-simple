@@ -45,9 +45,9 @@ public class RestClusterHealthAction extends BaseRestHandler {
         controller.registerHandler(RestRequest.Method.GET, "/_cluster/health", this);
         controller.registerHandler(RestRequest.Method.GET, "/_cluster/health/{index}", this);
     }
-
     @Override
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
+        logger.info("===handleRequest===50==="+request.getClass().getName());
         ClusterHealthRequest clusterHealthRequest = clusterHealthRequest(Strings.splitStringByCommaToArray(request.param("index")));
         clusterHealthRequest.local(request.paramAsBoolean("local", clusterHealthRequest.local()));
         clusterHealthRequest.masterNodeTimeout(request.paramAsTime("master_timeout", clusterHealthRequest.masterNodeTimeout()));

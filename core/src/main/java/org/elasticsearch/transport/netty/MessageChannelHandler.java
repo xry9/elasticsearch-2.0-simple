@@ -66,7 +66,7 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
     }
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        //logger.info("===messageReceived===69==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress());//try { Integer.parseInt("messageReceived"); }catch (Exception ex){logger.error("===", ex);}
+        logger.info("===messageReceived===69==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress()+"===");//try { Integer.parseInt("messageReceived"); }catch (Exception ex){logger.error("===", ex);}
 
         Transports.assertTransportThread();
         Object m = e.getMessage();
@@ -109,10 +109,10 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
                 streamIn = compressor.streamInput(streamIn);
             }
             streamIn.setVersion(version);
-            //logger.info("===messageReceived===112==="+(TransportStatus.isRequest(status)));
+            logger.info("===messageReceived===112==="+(TransportStatus.isRequest(status)));
             if (TransportStatus.isRequest(status)) {
                 String action = handleRequest(ctx.getChannel(), streamIn, requestId, version);
-                //logger.info("===messageReceived===115==="+action);
+                logger.info("===messageReceived===115==="+action);
                 // Chek the entire message has been read
                 final int nextByte = streamIn.read();
                 // calling read() is useful to make sure the message is fully read, even if there some kind of EOS marker
@@ -129,7 +129,7 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
                 }
             } else {
                 TransportResponseHandler<?> handler = transportServiceAdapter.onResponseReceived(requestId);
-                //logger.info("===messageReceived===132==="+handler.getClass().getName());
+                logger.info("===messageReceived===132==="+handler.getClass().getName());
                 // ignore if its null, the adapter logs it
                 if (handler != null) {
                     if (TransportStatus.isError(status)) {
@@ -200,7 +200,6 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
         }
         handleException(handler, error);
     }
-
     private void handleException(final TransportResponseHandler handler, Throwable error) {
         if (!(error instanceof RemoteTransportException)) {
             error = new RemoteTransportException(error.getMessage(), error);
@@ -232,18 +231,19 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
         final NettyTransportChannel transportChannel = new NettyTransportChannel(transport, transportServiceAdapter, action, channel, requestId, version, profileName);
         try {
             final RequestHandlerRegistry reg = transportServiceAdapter.getRequestHandler(action);
-            if (reg == null) {
-                throw new ActionNotFoundTransportException(action);
-            }
+            if (reg == null) { throw new ActionNotFoundTransportException(action); }
             final TransportRequest request = reg.newRequest();
             request.remoteAddress(new InetSocketTransportAddress((InetSocketAddress) channel.getRemoteAddress()));
             request.readFrom(buffer);
             if (ThreadPool.Names.SAME.equals(reg.getExecutor())) {
                 //noinspection unchecked
-                //logger.info("===handleRequest===243==="+reg.getHandler().getClass().getName());
+
+                if (!"org.elasticsearch.discovery.zen.fd.MasterFaultDetection$MasterPingRequestHandler".equals(reg.getHandler().getClass().getName())&&!"org.elasticsearch.discovery.zen.fd.NodesFaultDetection$PingRequestHandler".equals(reg.getHandler().getClass().getName())){
+                    logger.info("===handleRequest===243==="+reg.getHandler().getClass().getName());
+                }
                 reg.getHandler().messageReceived(request, transportChannel);
             } else {
-                //logger.info("===handleRequest===246==="+request.getClass().getName());
+                logger.info("===handleRequest===246==="+request.getClass().getName()+"==="+reg.getExecutor()+"==="+reg.getHandler().getClass().getName()+"==="+threadPool.executor(reg.getExecutor()).getClass().getName());
                 threadPool.executor(reg.getExecutor()).execute(new RequestHandler(reg, request, transportChannel));
             }
         } catch (Throwable e) {

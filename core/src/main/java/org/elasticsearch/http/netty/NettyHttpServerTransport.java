@@ -278,7 +278,7 @@ public class NettyHttpServerTransport extends AbstractLifecycleComponent<HttpSer
             public boolean onPortNumber(int portNumber) {
                 try {
                     synchronized (serverChannels) {
-                        //logger.info("===bindAddress===281==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){e.printStackTrace();}
+                        logger.info("===bindAddress===281==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){logger.error("===", e);}
                         Channel channel = serverBootstrap.bind(new InetSocketAddress(hostAddress, portNumber));
                         serverChannels.add(channel);
                         boundSocket.set((InetSocketAddress) channel.getLocalAddress());

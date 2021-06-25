@@ -138,7 +138,7 @@ public class SearchServiceTransportAction extends AbstractComponent {
         });
     }
     public void sendExecuteQuery(DiscoveryNode node, final ShardSearchTransportRequest request, final ActionListener<QuerySearchResultProvider> listener) {
-        logger.info("===sendExecuteQuery===141==="+listener.getClass().getName());
+        //logger.info("===sendExecuteQuery===141==="+listener.getClass().getName());
         transportService.sendRequest(node, QUERY_ACTION_NAME, request, new ActionListenerResponseHandler<QuerySearchResultProvider>(listener) {
             @Override
             public QuerySearchResult newInstance() {

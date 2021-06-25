@@ -18,11 +18,12 @@
  */
 
 package org.elasticsearch.search.fetch.source;
-
 import com.google.common.collect.ImmutableMap;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.io.stream.BytesStreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.search.SearchParseElement;
@@ -33,11 +34,10 @@ import org.elasticsearch.search.lookup.SourceLookup;
 
 import java.io.IOException;
 import java.util.Map;
-
 /**
  */
 public class FetchSourceSubPhase implements FetchSubPhase {
-
+    protected final ESLogger logger = Loggers.getLogger(FetchSourceSubPhase.class);
     @Inject
     public FetchSourceSubPhase() {
 
@@ -72,7 +72,6 @@ public class FetchSourceSubPhase implements FetchSubPhase {
             hitContext.hit().sourceRef(context.lookup().source().internalSourceRef());
             return;
         }
-
         SourceLookup source = context.lookup().source();
         Object value = source.filter(fetchSourceContext.includes(), fetchSourceContext.excludes());
         try {
@@ -80,6 +79,7 @@ public class FetchSourceSubPhase implements FetchSubPhase {
             BytesStreamOutput streamOutput = new BytesStreamOutput(initialCapacity);
             XContentBuilder builder = new XContentBuilder(context.lookup().source().sourceContentType().xContent(), streamOutput);
             builder.value(value);
+            logger.info("===hitExecute===82==="+context.getClass().getName()+"===");
             hitContext.hit().sourceRef(builder.bytes());
         } catch (IOException e) {
             throw new ElasticsearchException("Error filtering source", e);

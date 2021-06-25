@@ -23,17 +23,17 @@ import com.carrotsearch.hppc.IntObjectHashMap;
 import com.google.common.collect.Iterators;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentBuilderString;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.SearchShardTarget;
-
 import java.io.IOException;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import static org.elasticsearch.search.SearchShardTarget.readSearchShardTarget;
 import static org.elasticsearch.search.internal.InternalSearchHit.readSearchHit;
 
@@ -41,7 +41,7 @@ import static org.elasticsearch.search.internal.InternalSearchHit.readSearchHit;
  *
  */
 public class InternalSearchHits implements SearchHits {
-
+    protected final ESLogger logger = Loggers.getLogger(InternalSearchHits.class);
     public static class StreamContext {
 
         public static enum ShardTargetType {
@@ -104,26 +104,26 @@ public class InternalSearchHits implements SearchHits {
     private float maxScore;
 
     InternalSearchHits() {
-
+        logger.info("===hits===107===");
     }
-
     public InternalSearchHits(InternalSearchHit[] hits, long totalHits, float maxScore) {
         this.hits = hits;
         this.totalHits = totalHits;
         this.maxScore = maxScore;
+        logger.info("===hits===113==="+hits.length+"==="+hits[0].getSource());try { Integer.parseInt("InternalSearchHits"); }catch (Exception e){logger.error("===", e);}
+        for (InternalSearchHit hit: hits){
+            logger.info("===hits===115==="+hit.getSource());
+        }
     }
-
     public void shardTarget(SearchShardTarget shardTarget) {
         for (InternalSearchHit hit : hits) {
             hit.shard(shardTarget);
         }
     }
-
     @Override
     public long totalHits() {
         return totalHits;
     }
-
     @Override
     public long getTotalHits() {
         return totalHits();

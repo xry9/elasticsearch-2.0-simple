@@ -114,8 +114,8 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         this.tracelLogExclude = settings.getAsArray(SETTING_TRACE_LOG_EXCLUDE, new String[]{"internal:discovery/zen/fd*", TransportLivenessAction.NAME}, true);
         tracerLog = Loggers.getLogger(logger, ".tracer");
         adapter = createAdapter();
+        logger.info("===TransportService===117==="+transport.getClass().getName());
     }
-
     /**
      * makes the transport service aware of the local node. this allows it to optimize requests sent
      * from the local node to it self and by pass the network stack/ serialization
@@ -276,14 +276,14 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         return futureHandler;
     }
 
-    public <T extends TransportResponse> void sendRequest(final DiscoveryNode node, final String action, final TransportRequest request,
-                                                          final TransportResponseHandler<T> handler) {
+    public <T extends TransportResponse> void sendRequest(final DiscoveryNode node, final String action, final TransportRequest request, final TransportResponseHandler<T> handler) {
         sendRequest(node, action, request, TransportRequestOptions.EMPTY, handler);
     }
     public <T extends TransportResponse> void sendRequest(final DiscoveryNode node, final String action, final TransportRequest request, final TransportRequestOptions options, TransportResponseHandler<T> handler) {
         if (node == null) {
             throw new IllegalStateException("can't send request to a null node");
         }
+        logger.info("===sendRequest===286==="+node.getAddress()+"==="+options.type()+"==="+handler.getClass().getName());
         final long requestId = newRequestId();
         final TimeoutHandler timeoutHandler;
         try {
@@ -328,10 +328,10 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
             }
         }
     }
-    @SuppressForbidden(reason = "Exception#printStackTrace()")
+
     private void sendLocalRequest(long requestId, final String action, final TransportRequest request) {
         final DirectResponseChannel channel = new DirectResponseChannel(logger, localNode, action, requestId, adapter, threadPool);
-        //System.out.println("===sendLocalRequest===334==="+requestId+"==="+action+"==="+request.getClass().getName()+"-"+request.hashCode());//try { Integer.parseInt("sendLocalRequest"); }catch (Exception e){e.printStackTrace();}
+        logger.info("===sendLocalRequest===334==="+requestId+"==="+action+"==="+request.getClass().getName()+"-"+request.hashCode());//try { Integer.parseInt("sendLocalRequest"); }catch (Exception e){logger.error("===", e);}
         try {
             final RequestHandlerRegistry reg = adapter.getRequestHandler(action);
             if (reg == null) {
@@ -497,9 +497,9 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         protected void traceResponseSent(long requestId, String action, Throwable t) {
             tracerLog.trace("[{}][{}] sent error response (error: [{}])", requestId, action, t.getMessage());
         }
-
         @Override
         public void onRequestReceived(long requestId, String action) {
+            logger.info("===onRequestReceived===502==="+requestId+"==="+action);
             if (traceEnabled() && shouldTraceAction(action)) {
                 traceReceivedRequest(requestId, action);
             }

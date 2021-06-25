@@ -32,6 +32,8 @@ import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.collect.Tuple;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.lucene.search.Queries;
 import org.elasticsearch.common.text.StringAndBytesText;
 import org.elasticsearch.common.text.Text;
@@ -45,7 +47,6 @@ import org.elasticsearch.index.mapper.DocumentMapper;
 import org.elasticsearch.index.mapper.MappedFieldType;
 import org.elasticsearch.index.mapper.internal.SourceFieldMapper;
 import org.elasticsearch.index.mapper.object.ObjectMapper;
-import org.elasticsearch.index.query.functionscore.ScoreFunctionParser;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.SearchParseElement;
@@ -75,12 +76,11 @@ import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.elasticsearch.common.xcontent.XContentFactory.contentBuilder;
-
 /**
  *
  */
 public class FetchPhase implements SearchPhase {
-
+    protected final ESLogger logger = Loggers.getLogger(FetchPhase.class);
     private final FetchSubPhase[] fetchSubPhases;
 
     @Inject
@@ -109,7 +109,7 @@ public class FetchPhase implements SearchPhase {
         FieldsVisitor fieldsVisitor;
         Set<String> fieldNames = null;
         List<String> extractFieldNames = null;
-
+        logger.info("===execute===112===");
         boolean loadAllStored = false;
         if (!context.hasFieldNames()) {
             // no fields specified, default to return source if no explicit indication
@@ -160,7 +160,6 @@ public class FetchPhase implements SearchPhase {
                 fieldsVisitor = new FieldsVisitor(extractFieldNames != null || context.sourceRequested());
             }
         }
-
         InternalSearchHit[] hits = new InternalSearchHit[context.docIdsToLoadSize()];
         FetchSubPhase.HitContext hitContext = new FetchSubPhase.HitContext();
         for (int index = 0; index < context.docIdsToLoadSize(); index++) {
@@ -168,7 +167,6 @@ public class FetchPhase implements SearchPhase {
             int readerIndex = ReaderUtil.subIndex(docId, context.searcher().getIndexReader().leaves());
             LeafReaderContext subReaderContext = context.searcher().getIndexReader().leaves().get(readerIndex);
             int subDocId = docId - subReaderContext.docBase;
-
             final InternalSearchHit searchHit;
             try {
                 int rootDocId = findRootDocumentIfNested(context, subReaderContext, subDocId);
@@ -177,28 +175,30 @@ public class FetchPhase implements SearchPhase {
                 } else {
                     searchHit = createSearchHit(context, fieldsVisitor, docId, subDocId, extractFieldNames, subReaderContext);
                 }
+
             } catch (IOException e) {
                 throw ExceptionsHelper.convertToElastic(e);
             }
-
             hits[index] = searchHit;
             hitContext.reset(searchHit, subReaderContext, subDocId, context.searcher());
+            logger.info("===execute===184==="+fetchSubPhases.length+"==="+searchHit.getSource());
             for (FetchSubPhase fetchSubPhase : fetchSubPhases) {
                 if (fetchSubPhase.hitExecutionNeeded(context)) {
+                    logger.info("===execute===187==="+fetchSubPhase.getClass().getName());
                     fetchSubPhase.hitExecute(context, hitContext);
                 }
             }
+            logger.info("===execute===191==="+searchHit.getSource());
         }
-
         for (FetchSubPhase fetchSubPhase : fetchSubPhases) {
             if (fetchSubPhase.hitsExecutionNeeded(context)) {
                 fetchSubPhase.hitsExecute(context, hits);
             }
         }
 
+
         context.fetchResult().hits(new InternalSearchHits(hits, context.queryResult().topDocs().totalHits, context.queryResult().topDocs().getMaxScore()));
     }
-
     private int findRootDocumentIfNested(SearchContext context, LeafReaderContext subReaderContext, int subDocId) throws IOException {
         if (context.mapperService().hasNested()) {
             BitDocIdSet nonNested = context.bitsetFilterCache().getBitDocIdSetFilter(Queries.newNonNestedFilter()).getDocIdSet(subReaderContext);
@@ -411,8 +411,8 @@ public class FetchPhase implements SearchPhase {
         } while (current != null);
         return nestedIdentity;
     }
-
     private void loadStoredFields(SearchContext searchContext, LeafReaderContext readerContext, FieldsVisitor fieldVisitor, int docId) {
+
         fieldVisitor.reset();
         try {
             readerContext.reader().document(docId, fieldVisitor);

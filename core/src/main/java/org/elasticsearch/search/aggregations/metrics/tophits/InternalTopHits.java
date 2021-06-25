@@ -17,7 +17,6 @@
  * under the License.
  */
 package org.elasticsearch.search.aggregations.metrics.tophits;
-
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
@@ -25,6 +24,8 @@ import org.apache.lucene.search.TopFieldDocs;
 import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.lucene.Lucene;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.search.SearchHits;
@@ -38,11 +39,10 @@ import org.elasticsearch.search.internal.InternalSearchHits;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
 /**
  */
 public class InternalTopHits extends InternalMetricsAggregation implements TopHits {
-
+    protected final ESLogger logger = Loggers.getLogger(InternalTopHits.class);
     public static final InternalAggregation.Type TYPE = new Type("top_hits");
 
     public static final AggregationStreams.Stream STREAM = new AggregationStreams.Stream() {
@@ -64,8 +64,8 @@ public class InternalTopHits extends InternalMetricsAggregation implements TopHi
     private InternalSearchHits searchHits;
 
     InternalTopHits() {
+        logger.info("===hits===67===");
     }
-
     public InternalTopHits(String name, int from, int size, TopDocs topDocs, InternalSearchHits searchHits,
             List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData) {
         super(name, pipelineAggregators, metaData);
@@ -73,8 +73,8 @@ public class InternalTopHits extends InternalMetricsAggregation implements TopHi
         this.size = size;
         this.topDocs = topDocs;
         this.searchHits = searchHits;
+        logger.info("===hits===76===");
     }
-
     @Override
     public Type type() {
         return TYPE;

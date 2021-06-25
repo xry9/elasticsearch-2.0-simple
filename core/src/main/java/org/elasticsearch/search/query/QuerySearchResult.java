@@ -24,6 +24,8 @@ import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.search.SearchShardTarget;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.InternalAggregations;
@@ -31,11 +33,9 @@ import org.elasticsearch.search.aggregations.pipeline.PipelineAggregator;
 import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorStreams;
 import org.elasticsearch.search.aggregations.pipeline.SiblingPipelineAggregator;
 import org.elasticsearch.search.suggest.Suggest;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.elasticsearch.common.lucene.Lucene.readTopDocs;
 import static org.elasticsearch.common.lucene.Lucene.writeTopDocs;
 
@@ -43,7 +43,7 @@ import static org.elasticsearch.common.lucene.Lucene.writeTopDocs;
  *
  */
 public class QuerySearchResult extends QuerySearchResultProvider {
-
+    protected final ESLogger logger = Loggers.getLogger(QuerySearchResult.class);
     private long id;
     private SearchShardTarget shardTarget;
     private int from;
@@ -110,8 +110,8 @@ public class QuerySearchResult extends QuerySearchResultProvider {
     @SuppressForbidden(reason = "Exception#printStackTrace()")
     public void topDocs(TopDocs topDocs) {
         this.topDocs = topDocs;
-        System.out.println("===topDocs===114==="+topDocs+"==="+topDocs.totalHits+"==="+topDocs.scoreDocs.length);
-        if (topDocs.totalHits>0){try { Integer.parseInt("topDocs"); }catch (Exception e){e.printStackTrace();} }
+        logger.info("===topDocs===114==="+topDocs.totalHits+"==="+topDocs.scoreDocs.length+"==="+(topDocs.scoreDocs.length>0?topDocs.scoreDocs[0]:"null"));
+        if (topDocs.totalHits>0){try { Integer.parseInt("topDocs114"); }catch (Exception e){logger.error("===", e);} }
     }
     public Aggregations aggregations() {
         return aggregations;

@@ -32,6 +32,8 @@ import org.apache.lucene.search.Weight;
 import org.elasticsearch.ExceptionsHelper;
 import org.apache.lucene.index.DirectoryReader;
 import org.elasticsearch.common.lease.Releasable;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.lucene.Lucene;
 import org.elasticsearch.common.lucene.MinimumScoreCollector;
 import org.elasticsearch.common.lucene.search.FilteredCollector;
@@ -39,18 +41,16 @@ import org.elasticsearch.index.engine.Engine;
 import org.elasticsearch.search.SearchService;
 import org.elasticsearch.search.dfs.CachedDfSource;
 import org.elasticsearch.search.internal.SearchContext.Lifetime;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 /**
  * Context-aware extension of {@link IndexSearcher}.
  */
 public class ContextIndexSearcher extends IndexSearcher implements Releasable {
-
+    protected final ESLogger logger = Loggers.getLogger(ContextIndexSearcher.class);
     public static enum Stage {
         NA,
         MAIN_QUERY
@@ -146,7 +146,7 @@ public class ContextIndexSearcher extends IndexSearcher implements Releasable {
         // matches off for aggregation or to impose a time-limit on collection.
         final boolean timeoutSet = searchContext.timeoutInMillis() != SearchService.NO_TIMEOUT.millis();
         final boolean terminateAfterSet = searchContext.terminateAfter() != SearchContext.DEFAULT_TERMINATE_AFTER;
-
+        logger.info("===search===149==="+collector.getClass().getName());
         if (timeoutSet) {
             // TODO: change to use our own counter that uses the scheduler in ThreadPool
             // throws TimeLimitingCollector.TimeExceededException when timeout has reached
@@ -177,9 +177,9 @@ public class ContextIndexSearcher extends IndexSearcher implements Releasable {
         }
         super.search(query, collector);
     }
-
     @Override
     public void search(List<LeafReaderContext> leaves, Weight weight, Collector collector) throws IOException {
+        logger.info("===search===182==="+collector.getClass().getName());
         final boolean timeoutSet = searchContext.timeoutInMillis() != SearchService.NO_TIMEOUT.millis();
         final boolean terminateAfterSet = searchContext.terminateAfter() != SearchContext.DEFAULT_TERMINATE_AFTER;
         try {

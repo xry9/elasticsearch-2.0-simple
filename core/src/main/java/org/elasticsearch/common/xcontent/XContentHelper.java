@@ -22,7 +22,6 @@ package org.elasticsearch.common.xcontent;
 import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
-
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.ElasticsearchParseException;
 import org.elasticsearch.common.bytes.BytesArray;
@@ -31,8 +30,9 @@ import org.elasticsearch.common.collect.Tuple;
 import org.elasticsearch.common.compress.Compressor;
 import org.elasticsearch.common.compress.CompressorFactory;
 import org.elasticsearch.common.io.Streams;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.xcontent.ToXContent.Params;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +47,7 @@ import static org.elasticsearch.common.xcontent.ToXContent.EMPTY_PARAMS;
  */
 @SuppressWarnings("unchecked")
 public class XContentHelper {
-
+    protected final static ESLogger logger = Loggers.getLogger(XContentHelper.class);
     public static XContentParser createParser(BytesReference bytes) throws IOException {
         Compressor compressor = CompressorFactory.compressor(bytes);
         if (compressor != null) {
@@ -82,6 +82,7 @@ public class XContentHelper {
                 if (ordered) {
                     return Tuple.tuple(contentType, parser.mapOrdered());
                 } else {
+                    logger.info("===convertToMap===85==="+parser.map());
                     return Tuple.tuple(contentType, parser.map());
                 }
             }
@@ -89,7 +90,6 @@ public class XContentHelper {
             throw new ElasticsearchParseException("Failed to parse content to map", e);
         }
     }
-
     public static String convertToJson(BytesReference bytes, boolean reformatJson) throws IOException {
         return convertToJson(bytes, reformatJson, false);
     }

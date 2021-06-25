@@ -37,6 +37,8 @@ import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.ParseFieldMatcher;
 import org.elasticsearch.common.SuppressForbidden;
 import org.elasticsearch.common.lease.Releasables;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.lucene.search.Queries;
 import org.elasticsearch.common.lucene.search.function.BoostScoreFunction;
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery;
@@ -78,12 +80,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 /**
- *
  */
 public class DefaultSearchContext extends SearchContext {
-
+    protected final ESLogger logger = Loggers.getLogger(DefaultSearchContext.class);
     private final long id;
     private final ShardSearchRequest request;
     private final SearchShardTarget shardTarget;
@@ -138,7 +138,7 @@ public class DefaultSearchContext extends SearchContext {
     private InnerHitsContext innerHitsContext;
 
     private final Map<String, FetchSubPhaseContext> subPhaseContexts = new HashMap<>();
-    @SuppressForbidden(reason = "System#out")
+
     public DefaultSearchContext(long id, ShardSearchRequest request, SearchShardTarget shardTarget,
                                 Engine.Searcher engineSearcher, IndexService indexService, IndexShard indexShard,
                                 ScriptService scriptService, PageCacheRecycler pageCacheRecycler,
@@ -156,7 +156,7 @@ public class DefaultSearchContext extends SearchContext {
         this.bigArrays = bigArrays.withCircuitBreaking();
         this.dfsResult = new DfsSearchResult(id, shardTarget);
         this.queryResult = new QuerySearchResult(id, shardTarget);
-        System.out.println("===DefaultSearchContext===159==="+queryResult+"==="+shardTarget);
+        logger.info("===DefaultSearchContext===159==="+shardTarget);
         this.fetchResult = new FetchSearchResult(id, shardTarget);
         this.indexShard = indexShard;
         this.indexService = indexService;

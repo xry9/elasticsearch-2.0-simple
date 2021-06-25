@@ -233,7 +233,7 @@ public abstract class Engine implements Closeable {
         final Searcher searcher = acquireSearcher("get");
         final Versions.DocIdAndVersion docIdAndVersion;
         try {
-            logger.info("===getFromSearcher===236==="+get.uid()+"==="+searcher.reader().leaves().get(0).getClass().getName());
+            logger.info("===getFromSearcher===236==="+get.uid()+"==="+searcher.reader().leaves().get(0).getClass().getName());try { Integer.parseInt("getFromSearcher"); }catch (Exception e){logger.error("===", e);}
             docIdAndVersion = Versions.loadDocIdAndVersion(searcher.reader(), get.uid());
         } catch (Throwable e) {
             Releasables.closeWhileHandlingException(searcher);
@@ -271,10 +271,9 @@ public abstract class Engine implements Closeable {
     public final Searcher acquireSearcher(String source) throws EngineException {
         return acquireSearcher(source, true);
     }
-
     protected final Searcher acquireSearcher(String source, boolean maybeWrap) throws EngineException {
         boolean success = false;
-         /* Acquire order here is store -> manager since we need
+        /* Acquire order here is store -> manager since we need
           * to make sure that the store is not closed before
           * the searcher is acquired. */
         store.incRef();
@@ -285,6 +284,7 @@ public abstract class Engine implements Closeable {
             final IndexSearcher searcher = manager.acquire();
             try {
                 final Searcher retVal = newSearcher(source, searcher, manager);
+                logger.info("===acquireSearcher===287==="+source+"==="+retVal.getClass().getName());
                 final Searcher wrappedSearcher = maybeWrap ? config().getWrappingService().wrap(engineConfig, retVal) : retVal;
                 success = true;
                 return wrappedSearcher;
@@ -587,8 +587,8 @@ public abstract class Engine implements Closeable {
         public Searcher(String source, IndexSearcher searcher) {
             this.source = source;
             this.searcher = searcher;
+            logger.info("===Searcher===590==="+searcher.getClass().getName()+"==="+source);
         }
-
         /**
          * The source that caused this searcher to be acquired.
          */
@@ -597,9 +597,9 @@ public abstract class Engine implements Closeable {
         }
 
         public IndexReader reader() {
+            logger.info("===reader===600===");//try { Integer.parseInt("reader"); }catch (Exception e){logger.error("===", e);}
             return searcher.getIndexReader();
         }
-
         public DirectoryReader getDirectoryReader() {
             if (reader() instanceof  DirectoryReader) {
                 return (DirectoryReader) reader();

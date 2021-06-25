@@ -631,10 +631,10 @@ public class DiscoveryNodes extends AbstractDiffable<DiscoveryNodes> implements 
             logger.info("===Builder===631==="+this.hashCode()+"==="+masterNodeId+"==="+localNodeId);
         }
         public Builder put(DiscoveryNode node) {
+            logger.info("===put===634==="+this.hashCode()+"==="+node.getAddress()+"==="+node.hashCode());try { Integer.parseInt("put"); }catch (Exception e){logger.error("===", e);}
             nodes.put(node.id(), node);
             return this;
         }
-
         public Builder remove(String nodeId) {
             nodes.remove(nodeId);
             return this;

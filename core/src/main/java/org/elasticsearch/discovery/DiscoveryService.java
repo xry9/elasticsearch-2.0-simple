@@ -72,8 +72,8 @@ public class DiscoveryService extends AbstractLifecycleComponent<DiscoveryServic
         this.discoverySettings = discoverySettings;
         this.discovery = discovery;
         this.initialStateTimeout = settings.getAsTime(SETTING_INITIAL_STATE_TIMEOUT, TimeValue.timeValueSeconds(30));
+        logger.info("===DiscoveryService===75==="+discovery.getClass().getName());//try { Integer.parseInt("DiscoveryService"); }catch (Exception e){logger.error("===", e);}
     }
-
     public ClusterBlock getNoMasterBlock() {
         return discoverySettings.getNoMasterBlock();
     }
@@ -116,7 +116,7 @@ public class DiscoveryService extends AbstractLifecycleComponent<DiscoveryServic
 
     /**
      * Returns <tt>true</tt> if the initial state was received within the timeout waiting for it
-     * on {@link #doStart()}.
+     *
      */
     public boolean initialStateReceived() {
         return initialStateListener.initialStateReceived;

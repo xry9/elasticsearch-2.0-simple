@@ -28,33 +28,32 @@ import org.elasticsearch.cluster.routing.ShardRouting;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.script.Template;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.transport.TransportRequest;
 
 import java.io.IOException;
-
 /**
  * Shard level search request that represents an actual search sent from the coordinating node to the nodes holding
  * the shards where the query needs to be executed. Holds the same info as {@link org.elasticsearch.search.internal.ShardSearchLocalRequest}
  * but gets sent over the transport and holds also the indices coming from the original request that generated it, plus its headers and context.
  */
 public class ShardSearchTransportRequest extends TransportRequest implements ShardSearchRequest, IndicesRequest {
-
+    ESLogger logger = Loggers.getLogger(ShardSearchTransportRequest.class);
     private OriginalIndices originalIndices;
-
     private ShardSearchLocalRequest shardSearchLocalRequest;
 
     public ShardSearchTransportRequest(){
+        logger.info("===ShardSearchTransportRequest===49===");
     }
-
-    public ShardSearchTransportRequest(SearchRequest searchRequest, ShardRouting shardRouting, int numberOfShards,
-                                       String[] filteringAliases, long nowInMillis) {
+    public ShardSearchTransportRequest(SearchRequest searchRequest, ShardRouting shardRouting, int numberOfShards, String[] filteringAliases, long nowInMillis) {
         super(searchRequest);
         this.shardSearchLocalRequest = new ShardSearchLocalRequest(searchRequest, shardRouting, numberOfShards, filteringAliases, nowInMillis);
         this.originalIndices = new OriginalIndices(searchRequest);
+        logger.info("===ShardSearchTransportRequest===55==="+searchRequest.getClass().getName()+"==="+searchRequest);//try { Integer.parseInt("ShardSearchTransportRequest"); }catch (Exception e){logger.error("===", e);}
     }
-
     @Override
     public String[] indices() {
         if (originalIndices == null) {

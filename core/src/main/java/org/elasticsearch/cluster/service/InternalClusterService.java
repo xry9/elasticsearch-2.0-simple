@@ -165,7 +165,7 @@ public class InternalClusterService extends AbstractLifecycleComponent<ClusterSe
         DiscoveryNode localNode = new DiscoveryNode(settings.get("name"), nodeId, publishAddress, nodeAttributes, version);
         DiscoveryNodes.Builder nodeBuilder = DiscoveryNodes.builder().put(localNode).localNodeId(localNode.id());
         this.clusterState = ClusterState.builder(clusterState).nodes(nodeBuilder).blocks(initialBlocks).build();
-        //logger.info("===clusterState===168==="+clusterState);
+        logger.info("===clusterState===168==="+nodeId+"==="+clusterState);
         this.transportService.setLocalNode(localNode);
     }
     @Override

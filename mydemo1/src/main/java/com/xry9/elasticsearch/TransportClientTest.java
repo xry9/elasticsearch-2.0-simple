@@ -28,7 +28,7 @@ public class TransportClientTest {
         EsClient esclient = null;
         try {
             //初始化一个pool
-            pool = new EsClientPool("elasticsearch", "127.0.0.1", "9500", 20);
+            pool = new EsClientPool("elasticsearch", "127.0.0.1", "9700", 20);
 //            logger.info("初始化一个es pool成功：{}", pool);
 
             //获取一个客户端
@@ -73,7 +73,7 @@ public class TransportClientTest {
 
             /***************添加********************/
             //单个添加
-            esUserService.singleInsert(new User(26L, "qiyongkang", 12, 0, DateUtil.strToYMDHMSDate("2021-11-1 11:11:11")));
+//            esUserService.singleInsert(new User(27L, "qiyongkang", 12, 0, DateUtil.strToYMDHMSDate("2021-11-1 11:11:11")));
 //
 //            //批量添加
 //            Date date = DateUtil.strToYMDHMSDate("2015-11-1 11:11:11");

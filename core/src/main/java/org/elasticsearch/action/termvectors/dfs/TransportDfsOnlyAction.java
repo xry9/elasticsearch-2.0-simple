@@ -74,9 +74,9 @@ public class TransportDfsOnlyAction extends TransportBroadcastAction<DfsOnlyRequ
         request.nowInMillis = System.currentTimeMillis();
         super.doExecute(request, listener);
     }
-
     @Override
     protected ShardDfsOnlyRequest newShardRequest(int numShards, ShardRouting shard, DfsOnlyRequest request) {
+        logger.info("===newShardRequest===79===");
         String[] filteringAliases = indexNameExpressionResolver.filteringAliases(clusterService.state(), shard.index(), request.indices());
         return new ShardDfsOnlyRequest(shard, numShards, filteringAliases, request.nowInMillis, request);
     }

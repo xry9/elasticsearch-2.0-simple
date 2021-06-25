@@ -21,6 +21,8 @@ package org.elasticsearch.search.aggregations.pipeline;
 
 import com.google.common.collect.Lists;
 
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.InternalAggregation;
 import org.elasticsearch.search.aggregations.InternalAggregation.ReduceContext;
@@ -28,21 +30,19 @@ import org.elasticsearch.search.aggregations.InternalAggregations;
 import org.elasticsearch.search.aggregations.InternalMultiBucketAggregation;
 import org.elasticsearch.search.aggregations.bucket.InternalSingleBucketAggregation;
 import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation.Bucket;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 public abstract class SiblingPipelineAggregator extends PipelineAggregator {
-
+    protected final ESLogger logger = Loggers.getLogger(SiblingPipelineAggregator.class);
     protected SiblingPipelineAggregator() { // for Serialisation
         super();
+        logger.info("===SiblingPipelineAggregator===40===");
     }
-
     protected SiblingPipelineAggregator(String name, String[] bucketsPaths, Map<String, Object> metaData) {
         super(name, bucketsPaths, metaData);
+        logger.info("===SiblingPipelineAggregator===44===");
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public InternalAggregation reduce(InternalAggregation aggregation, ReduceContext reduceContext) {

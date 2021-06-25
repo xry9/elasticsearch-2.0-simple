@@ -162,7 +162,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
         pingTimeout = this.settings.getAsTime("discovery.zen.ping_timeout", pingTimeout);
         pingTimeout = settings.getAsTime("discovery.zen.ping_timeout", pingTimeout);
         this.pingTimeout = settings.getAsTime(SETTING_PING_TIMEOUT, pingTimeout);
-
+        logger.info("===ZenDiscovery===165===");//try { Integer.parseInt("ZenDiscovery"); }catch (Exception e){logger.error("===", e);}
         this.joinTimeout = settings.getAsTime(SETTING_JOIN_TIMEOUT, TimeValue.timeValueMillis(this.pingTimeout.millis() * 20));
         this.joinRetryAttempts = settings.getAsInt(SETTING_JOIN_RETRY_ATTEMPTS, 3);
         this.joinRetryDelay = settings.getAsTime(SETTING_JOIN_RETRY_DELAY, TimeValue.timeValueMillis(100));
@@ -216,7 +216,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
         joinThreadControl.start();
         pingService.start();
         this.nodeJoinController = new NodeJoinController(clusterService, routingService, discoverySettings, settings);
-        //logger.info("===submitStateUpdateTask===219==="+clusterService.getClass().getName());try { Integer.parseInt("submitStateUpdateTask"); }catch (Exception e){logger.error("===", e);}
+        logger.info("===submitStateUpdateTask===219==="+clusterService.getClass().getName());try { Integer.parseInt("submitStateUpdateTask"); }catch (Exception e){logger.error("===", e);}
         // start the join thread from a cluster state update. See {@link JoinThreadControl} for details.
         clusterService.submitStateUpdateTask("initial_join", new ClusterStateNonMasterUpdateTask() {
             @Override

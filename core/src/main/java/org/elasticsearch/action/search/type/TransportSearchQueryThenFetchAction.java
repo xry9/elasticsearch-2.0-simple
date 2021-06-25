@@ -109,17 +109,17 @@ public class TransportSearchQueryThenFetchAction extends TransportSearchTypeActi
             }
         }
         void executeFetch(final int shardIndex, final SearchShardTarget shardTarget, final AtomicInteger counter, final ShardFetchSearchRequest fetchSearchRequest, DiscoveryNode node) {
-            logger.info("===executeFetch===111==="+shardIndex+"==="+shardTarget+"==="+ Arrays.toString(fetchSearchRequest.indices())+"==="+node);
+            logger.info("===executeFetch===112==="+fetchResults.hashCode()+"==="+shardIndex+"==="+shardTarget+"==="+ Arrays.toString(fetchSearchRequest.indices())+"==="+node);//try { Integer.parseInt("executeFetch"); }catch (Exception e){logger.error("===", e);}
             searchService.sendExecuteFetch(node, fetchSearchRequest, new ActionListener<FetchSearchResult>() {
                 @Override
                 public void onResponse(FetchSearchResult result) {
+                    logger.info("===onResponse===116===");try { Integer.parseInt("executeFetch"); }catch (Exception e){logger.error("===", e);}
                     result.shardTarget(shardTarget);
                     fetchResults.set(shardIndex, result);
                     if (counter.decrementAndGet() == 0) {
                         finishHim();
                     }
                 }
-
                 @Override
                 public void onFailure(Throwable t) {
                     // the search context might not be cleared on the node where the fetch was executed for example
@@ -143,12 +143,12 @@ public class TransportSearchQueryThenFetchAction extends TransportSearchTypeActi
             }
         }
         private void finishHim() {
-
+            logger.info("===finishHim===146===");//try { Integer.parseInt("doRun"); }catch (Exception e){logger.error("===", e);}
             threadPool.executor(ThreadPool.Names.SEARCH).execute(new ActionRunnable<SearchResponse>(listener) {
                 @Override
                 public void doRun() throws IOException {
-                    final InternalSearchResponse internalResponse = searchPhaseController.merge(sortedShardList, firstResults,
-                            fetchResults, request);
+                    final InternalSearchResponse internalResponse = searchPhaseController.merge(sortedShardList, firstResults, fetchResults, request);
+                    //logger.info("===doRun===151===");
                     String scrollId = null;
                     if (request.scroll() != null) {
                         scrollId = TransportSearchHelper.buildScrollId(request.searchType(), firstResults, null);
