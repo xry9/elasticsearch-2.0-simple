@@ -832,7 +832,7 @@ public abstract class AbstractClient extends AbstractComponent implements Client
 
         @Override
         public <Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> void execute(Action<Request, Response, RequestBuilder> action, Request request, ActionListener<Response> listener) {
-            //logger.info("===execute===835==="+client.getClass().getName()+"==="+action);
+            logger.info("===execute===835==="+client.getClass().getName()+"==="+action);
             client.execute(action, request, listener);
         }
         @Override

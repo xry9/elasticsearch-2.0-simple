@@ -223,7 +223,6 @@ public class NettyHttpServerTransport extends AbstractLifecycleComponent<HttpSer
                     Executors.newCachedThreadPool(daemonThreadFactory(settings, "http_server_worker")),
                     workerCount));
         }
-
         serverBootstrap.setPipelineFactory(configureServerChannelPipelineFactory());
 
         if (!"default".equals(tcpNoDelay)) {
@@ -249,10 +248,10 @@ public class NettyHttpServerTransport extends AbstractLifecycleComponent<HttpSer
         } catch (IOException e) {
             throw new BindHttpException("Failed to resolve host [" + bindHost + "]", e);
         }
-        //System.out.println("===doStart===253===");//try { Integer.parseInt("doStart"); }catch (Exception e){e.printStackTrace();}
+        logger.info("===doStart===251===");//try { Integer.parseInt("doStart"); }catch (Exception e){e.printStackTrace();}
         List<InetSocketTransportAddress> boundAddresses = new ArrayList<>(hostAddresses.length);
         for (InetAddress address : hostAddresses) {
-            //System.out.println("===doStart===256==="+address);
+            logger.info("===doStart===254==="+address);
             boundAddresses.add(bindAddress(address));
         }
         InetSocketTransportAddress boundAddress = boundAddresses.get(0);
@@ -266,6 +265,7 @@ public class NettyHttpServerTransport extends AbstractLifecycleComponent<HttpSer
             throw new BindTransportException("Failed to resolve publish address", e);
         }
         this.boundAddress = new BoundTransportAddress(boundAddresses.toArray(new TransportAddress[boundAddresses.size()]), new InetSocketTransportAddress(publishAddress));
+        logger.info("===doStart===268==="+boundAddress.address());
     }
     @SuppressForbidden(reason = "Exception#printStackTrace()")
     private InetSocketTransportAddress bindAddress(final InetAddress hostAddress) {

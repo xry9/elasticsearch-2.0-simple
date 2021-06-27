@@ -172,7 +172,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
         this.networkService = networkService;
         this.bigArrays = bigArrays;
         this.version = version;
-
+        //logger.info("===NettyTransport===175===");try { Integer.parseInt("NettyTransport"); }catch (Exception e){logger.error("===", e);}
         if (settings.getAsBoolean("netty.epollBugWorkaround", false)) {
             System.setProperty("org.jboss.netty.epollBugWorkaround", "true");
         }
@@ -751,7 +751,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
 
     @Override
     public void sendRequest(final DiscoveryNode node, final long requestId, final String action, final TransportRequest request, TransportRequestOptions options) throws IOException, TransportException {
-//        System.out.println("===sendRequest===754==="+requestId+"==="+node.getHostAddress());try{ Integer.parseInt("sendRequest"); }catch (Exception e){e.printStackTrace();}
+
         Channel targetChannel = nodeChannel(node, options);
         //logger.info("===sendRequest===756==="+options.type().name()+"==="+requestId+"==="+targetChannel.getLocalAddress()+"==="+targetChannel.getRemoteAddress()+"==="+request.getClass().getName()+"==="+action);//try{ Integer.parseInt("sendRequest"); }catch (Exception e){logger.error("===", e);}
         if (compress) {

@@ -97,7 +97,7 @@ public class InternalSearchHit implements SearchHit {
     private Map<String, InternalSearchHits> innerHits;
 
     private InternalSearchHit() {
-        logger.info("===InternalSearchHit===100===");
+        //logger.info("===InternalSearchHit===100===");
     }
 
     public InternalSearchHit(int docId, String id, Text type, Map<String, SearchHitField> fields) {
@@ -608,7 +608,7 @@ public class InternalSearchHit implements SearchHit {
             }
             fields = builder.build();
         }
-        logger.info("===readFrom===611==="+(fields!=null?fields:"null"));
+        //logger.info("===readFrom===611==="+(fields!=null?fields:"null"));
         size = in.readVInt();
         if (size == 0) {
             highlightFields = ImmutableMap.of();

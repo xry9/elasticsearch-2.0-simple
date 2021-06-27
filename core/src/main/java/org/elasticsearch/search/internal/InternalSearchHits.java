@@ -104,7 +104,7 @@ public class InternalSearchHits implements SearchHits {
     private float maxScore;
 
     InternalSearchHits() {
-        logger.info("===hits===107===");
+        //logger.info("===hits===107===");
     }
     public InternalSearchHits(InternalSearchHit[] hits, long totalHits, float maxScore) {
         this.hits = hits;

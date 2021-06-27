@@ -247,7 +247,6 @@ public class PublishClusterStateAction extends AbstractComponent {
 
     private class PublishClusterStateRequestHandler implements TransportRequestHandler<BytesTransportRequest> {
         private ClusterState lastSeenClusterState;
-
         @Override
         public void messageReceived(BytesTransportRequest request, final TransportChannel channel) throws Exception {
             Compressor compressor = CompressorFactory.compressor(request.bytes());
@@ -261,6 +260,7 @@ public class PublishClusterStateAction extends AbstractComponent {
             synchronized (this) {
                 // If true we received full cluster state - otherwise diffs
                 if (in.readBoolean()) {
+                    logger.info("===messageReceived===263===");
                     lastSeenClusterState = ClusterState.Builder.readFrom(in, nodesProvider.nodes().localNode());
                     logger.debug("received full cluster state version {} with size {}", lastSeenClusterState.version(), request.bytes().length());
                 } else if (lastSeenClusterState != null) {

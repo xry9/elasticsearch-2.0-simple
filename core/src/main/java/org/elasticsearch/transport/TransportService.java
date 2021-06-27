@@ -114,7 +114,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         this.tracelLogExclude = settings.getAsArray(SETTING_TRACE_LOG_EXCLUDE, new String[]{"internal:discovery/zen/fd*", TransportLivenessAction.NAME}, true);
         tracerLog = Loggers.getLogger(logger, ".tracer");
         adapter = createAdapter();
-        logger.info("===TransportService===117==="+transport.getClass().getName());
+        //logger.info("===TransportService===117==="+transport.getClass().getName());
     }
     /**
      * makes the transport service aware of the local node. this allows it to optimize requests sent
@@ -169,6 +169,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         adapter.txMetric.clear();
         transport.transportServiceAdapter(adapter);
         transport.start();
+        //logger.info("===doStart===172==="+transport.getClass().getName());
         if (transport.boundAddress() != null && logger.isInfoEnabled()) {
             logger.info("{}", transport.boundAddress());
             for (Map.Entry<String, BoundTransportAddress> entry : transport.profileBoundAddresses().entrySet()) {
@@ -178,7 +179,6 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         boolean setStarted = started.compareAndSet(false, true);
         assert setStarted : "service was already started";
     }
-
     @Override
     protected void doStop() {
         final boolean setStopped = started.compareAndSet(true, false);
@@ -283,7 +283,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         if (node == null) {
             throw new IllegalStateException("can't send request to a null node");
         }
-        logger.info("===sendRequest===286==="+node.getAddress()+"==="+options.type()+"==="+handler.getClass().getName());
+        //logger.info("===sendRequest===286==="+node.getAddress()+"==="+options.type()+"==="+handler.getClass().getName());
         final long requestId = newRequestId();
         final TimeoutHandler timeoutHandler;
         try {
@@ -437,13 +437,13 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
     protected <Request extends TransportRequest> void registerRequestHandler(RequestHandlerRegistry<Request> reg) {
         synchronized (requestHandlerMutex) {
             RequestHandlerRegistry replaced = requestHandlers.get(reg.getAction());
+            logger.info("===registerRequestHandler===440==="+reg.getAction()+"==="+reg.getClass().getName());//try{ Integer.parseInt("registerRequestHandler"); }catch (Exception e){logger.error("===", e);}
             requestHandlers = MapBuilder.newMapBuilder(requestHandlers).put(reg.getAction(), reg).immutableMap();
             if (replaced != null) {
                 logger.warn("registered two transport handlers for action {}, handlers: {}, {}", reg.getAction(), reg.getHandler(), replaced.getHandler());
             }
         }
     }
-
     public void removeHandler(String action) {
         synchronized (requestHandlerMutex) {
             requestHandlers = MapBuilder.newMapBuilder(requestHandlers).remove(action).immutableMap();
@@ -513,6 +513,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         @Override
         public TransportResponseHandler onResponseReceived(final long requestId) {
             RequestHolder holder = clientHandlers.remove(requestId);
+            //logger.info("===onResponseReceived===516==="+requestId+"==="+(holder!=null?holder.getClass().getName():"null"));
             if (holder == null) {
                 checkForTimeout(requestId);
                 return null;
@@ -523,7 +524,6 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
             }
             return holder.handler();
         }
-
         protected void checkForTimeout(long requestId) {
             // lets see if its in the timeout holder, but sync on mutex to make sure any ongoing timeout handling has finished
             final DiscoveryNode sourceNode;

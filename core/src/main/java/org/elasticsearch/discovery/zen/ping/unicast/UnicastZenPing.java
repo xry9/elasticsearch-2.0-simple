@@ -531,9 +531,9 @@ public class UnicastZenPing extends AbstractLifecycleComponent<ZenPing> implemen
     }
 
     private PingResponse createPingResponse(DiscoveryNodes discoNodes) {
+        logger.info("===createPingResponse===534==="+discoNodes.hashCode());
         return new PingResponse(discoNodes.localNode(), discoNodes.masterNode(), clusterName, contextProvider.nodeHasJoinedClusterOnce());
     }
-
     static class UnicastPingResponse extends TransportResponse {
 
         int id;

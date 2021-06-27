@@ -83,7 +83,7 @@ import java.util.Map;
  * a full version of the cluster state to the node on which this exception was thrown.
  */
 public class ClusterState implements ToXContent, Diffable<ClusterState> {
-    ESLogger logger = Loggers.getLogger(ClusterState.class);
+    static ESLogger logger = Loggers.getLogger(ClusterState.class);
     public static final ClusterState PROTO = builder(ClusterName.DEFAULT).build();
 
     public static enum ClusterStateStatus {
@@ -175,7 +175,7 @@ public class ClusterState implements ToXContent, Diffable<ClusterState> {
         this.metaData = metaData;
         this.routingTable = routingTable;
         this.nodes = nodes;
-        //logger.info("===ClusterState===178==="+nodes);
+        logger.info("===ClusterState===178==="+nodes.hashCode()+"==="+nodes.masterNodeId()+"==="+nodes);
         this.blocks = blocks;
         this.customs = customs;
         this.status = ClusterStateStatus.UNKNOWN;
@@ -569,12 +569,12 @@ public class ClusterState implements ToXContent, Diffable<ClusterState> {
         public Builder nodes(DiscoveryNodes.Builder nodesBuilder) {
             return nodes(nodesBuilder.build());
         }
-
         public Builder nodes(DiscoveryNodes nodes) {
+            logger.info("===nodes===573==="+nodes.masterNodeId());//try{ Integer.parseInt("nodes"); }catch (Exception e){logger.error("===", e);}
+
             this.nodes = nodes;
             return this;
         }
-
         public Builder routingTable(RoutingTable.Builder routingTable) {
             return routingTable(routingTable.build());
         }

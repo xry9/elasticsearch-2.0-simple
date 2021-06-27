@@ -82,7 +82,7 @@ public class XContentHelper {
                 if (ordered) {
                     return Tuple.tuple(contentType, parser.mapOrdered());
                 } else {
-                    logger.info("===convertToMap===85==="+parser.map());
+                    //logger.info("===convertToMap===85==="+parser.map());
                     return Tuple.tuple(contentType, parser.map());
                 }
             }

@@ -143,7 +143,7 @@ public abstract class TransportNodesAction<NodesRequest extends BaseNodesRequest
                         onFailure(idx, nodeId, new NodeShouldNotConnectException(clusterService.localNode(), node));
                     } else {
                         NodeRequest nodeRequest = newNodeRequest(nodeId, request);
-                        //logger.info("===start===146==="+transportRequestOptions.type().name()+"==="+request.getClass().getName());
+                        logger.info("===start===146==="+transportRequestOptions.type().name()+"==="+request.getClass().getName());
                         transportService.sendRequest(node, transportNodeAction, nodeRequest, transportRequestOptions, new BaseTransportResponseHandler<NodeResponse>() {
 
                             @Override

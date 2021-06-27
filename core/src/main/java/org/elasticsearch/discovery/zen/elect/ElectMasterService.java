@@ -138,7 +138,7 @@ public class ElectMasterService extends AbstractComponent {
             logger.warn("ignoring master [{}], because the version [{}] is lower than the minimum compatible version [{}]", masterNode, masterNode.getVersion(), minMasterVersion);
             return null;
         } else {
-            logger.info("===electMaster===141==="+masterNode);try { Integer.parseInt("electMaster"); }catch (Exception e){logger.error("===", e);}
+            logger.info("===electMaster===141==="+masterNode);//try { Integer.parseInt("electMaster"); }catch (Exception e){logger.error("===", e);}
             return masterNode;
         }
     }
@@ -147,6 +147,7 @@ public class ElectMasterService extends AbstractComponent {
         if (possibleNodes.isEmpty()) {
             return null;
         }
+        logger.info("===sortedMasterNodes===150==="+possibleNodes.size()+"==="+possibleNodes);
         // clean non master nodes
         for (Iterator<DiscoveryNode> it = possibleNodes.iterator(); it.hasNext(); ) {
             DiscoveryNode node = it.next();
@@ -158,9 +159,9 @@ public class ElectMasterService extends AbstractComponent {
         return possibleNodes;
     }
     private static class NodeComparator implements Comparator<DiscoveryNode> {
-
         @Override
         public int compare(DiscoveryNode o1, DiscoveryNode o2) {
+            logger.info("===compare===164==="+(o1.masterNode() && !o2.masterNode())+"==="+(!o1.masterNode() && o2.masterNode())+"==="+o1.getAddress()+"==="+o2.getAddress()+"==="+o1.getId()+"==="+o2.getId());
             if (o1.masterNode() && !o2.masterNode()) {
                 return -1;
             }

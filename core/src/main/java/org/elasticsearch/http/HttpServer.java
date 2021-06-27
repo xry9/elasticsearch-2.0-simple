@@ -86,9 +86,9 @@ public class HttpServer extends AbstractLifecycleComponent<HttpServer> {
             server.internalDispatchRequest(request, channel);
         }
     }
-
     @Override
     protected void doStart() {
+        logger.info("===doStart===91==="+transport.getClass().getName());
         transport.start();
         if (logger.isInfoEnabled()) {
             logger.info("{}", transport.boundAddress());

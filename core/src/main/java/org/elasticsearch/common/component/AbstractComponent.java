@@ -30,7 +30,7 @@ import org.elasticsearch.common.settings.Settings;
  */
 public abstract class AbstractComponent {
 
-    protected final ESLogger logger;
+    protected static ESLogger logger;
     protected final DeprecationLogger deprecationLogger;
     protected final Settings settings;
 

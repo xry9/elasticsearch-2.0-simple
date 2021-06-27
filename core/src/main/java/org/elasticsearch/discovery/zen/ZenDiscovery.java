@@ -348,7 +348,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
             logger.trace("thread is no longer in currentJoinThread. Stopping.");
             return;
         }
-
+        logger.info("===innerJoinCluster===351==="+masterNode.getId()+"==="+masterNode.getAddress());
         if (clusterService.localNode().equals(masterNode)) {
             final int requiredJoins = Math.max(0, electMaster.minimumMasterNodes() - 1); // we count as one
             logger.debug("elected as master, waiting for incoming joins ([{}] needed)", requiredJoins);
@@ -356,7 +356,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                     new NodeJoinController.ElectionCallback() {
                         @Override
                         public void onElectedAsMaster(ClusterState state) {
-                            //logger.info("===onElectedAsMaster===359==="+state);
+                            logger.info("===onElectedAsMaster===359==="+state);
                             joinThreadControl.markThreadAsDone(currentThread);
                             // we only starts nodesFD if we are master (it may be that we received a cluster state while pinging)
                             nodesFD.updateNodesAndPing(state); // start the nodes FD
@@ -885,7 +885,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
     private DiscoveryNode findMaster() {
         logger.trace("starting to ping");
         ZenPing.PingResponse[] fullPingResponses = pingService.pingAndWait(pingTimeout);
-        //logger.info("===findMaster===888==="+(fullPingResponses == null));
+        logger.info("===findMaster===888==="+(fullPingResponses == null));
         if (fullPingResponses == null) {
             logger.trace("No full ping responses");
             return null;
@@ -906,6 +906,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
         List<ZenPing.PingResponse> pingResponses = Lists.newArrayList();
         for (ZenPing.PingResponse pingResponse : fullPingResponses) {
             DiscoveryNode node = pingResponse.node();
+            logger.info("===findMaster===909==="+fullPingResponses.length+"==="+(masterElectionFilterClientNodes && (node.clientNode() || (!node.masterNode() && !node.dataNode())))+"==="+(masterElectionFilterDataNodes && (!node.masterNode() && node.dataNode())));
             if (masterElectionFilterClientNodes && (node.clientNode() || (!node.masterNode() && !node.dataNode()))) {
                 // filter out the client node, which is a client node, or also one that is not data and not master (effectively, client)
             } else if (masterElectionFilterDataNodes && (!node.masterNode() && node.dataNode())) {
@@ -914,7 +915,6 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                 pingResponses.add(pingResponse);
             }
         }
-
         if (logger.isDebugEnabled()) {
             StringBuilder sb = new StringBuilder("filtered ping responses: (filter_client[").append(masterElectionFilterClientNodes).append("], filter_data[").append(masterElectionFilterDataNodes).append("])");
             if (pingResponses.isEmpty()) {
@@ -926,10 +926,10 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
             }
             logger.debug(sb.toString());
         }
-
         final DiscoveryNode localNode = clusterService.localNode();
         List<DiscoveryNode> pingMasters = newArrayList();
         for (ZenPing.PingResponse pingResponse : pingResponses) {
+            logger.info("===findMaster===932==="+(pingResponse.master() != null)+"==="+(!localNode.equals(pingResponse.master())));
             if (pingResponse.master() != null) {
                 // We can't include the local node in pingMasters list, otherwise we may up electing ourselves without
                 // any check / verifications from other nodes in ZenDiscover#innerJoinCluster()
@@ -956,14 +956,14 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                 joinedOnceActiveNodes.add(pingResponse.node());
             }
         }
-        //logger.info("===findMaster===959==="+pingResponses+"==="+activeNodes+"==="+pingMasters);
+        logger.info("===findMaster===959==="+pingResponses+"==="+activeNodes+"==="+pingMasters);
         if (pingMasters.isEmpty()) {
             if (electMaster.hasEnoughMasterNodes(activeNodes)) {
                 // we give preference to nodes who have previously already joined the cluster. Those will
                 // have a cluster state in memory, including an up to date routing table (which is not persistent to disk
                 // by the gateway)
                 DiscoveryNode master = electMaster.electMaster(joinedOnceActiveNodes);
-                //logger.info("===findMaster===966==="+(master != null)+"==="+localNode+"==="+activeNodes);
+                logger.info("===findMaster===966==="+(master != null)+"==="+localNode+"==="+activeNodes);
                 if (master != null) {
                     return master;
                 }
@@ -974,7 +974,7 @@ public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implemen
                 return null;
             }
         } else {
-            //logger.info("===findMaster===977==="+localNode+"==="+pingMasters);
+            logger.info("===findMaster===977==="+localNode+"==="+pingMasters);
             assert !pingMasters.contains(localNode) : "local node should never be elected as master when other nodes indicate an active master";
             // lets tie break between discovered nodes
             return electMaster.electMaster(pingMasters);

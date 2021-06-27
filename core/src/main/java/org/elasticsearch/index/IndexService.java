@@ -287,9 +287,9 @@ public class IndexService extends AbstractIndexComponent implements IndexCompone
             return sum / count;
         }
     }
-
     public synchronized IndexShard createShard(int sShardId, ShardRouting routing) {
         final boolean primary = routing.primary();
+        logger.info("===createShard===292==="+sShardId+"==="+routing);try { Integer.parseInt("createShard"); }catch (Exception e){logger.error("===", e);}
         /*
          * TODO: we execute this in parallel but it's a synced method. Yet, we might
          * be able to serialize the execution via the cluster state in the future. for now we just
@@ -308,6 +308,7 @@ public class IndexService extends AbstractIndexComponent implements IndexCompone
             ShardPath path;
             try {
                 path = ShardPath.loadShardPath(logger, nodeEnv, shardId, indexSettings);
+
             } catch (IllegalStateException ex) {
                 logger.warn("{} failed to load shard path, trying to remove leftover", shardId);
                 try {
@@ -318,7 +319,6 @@ public class IndexService extends AbstractIndexComponent implements IndexCompone
                     throw t;
                 }
             }
-
             if (path == null) {
                 // TODO: we should, instead, hold a "bytes reserved" of how large we anticipate this shard will be, e.g. for a shard
                 // that's being relocated/replicated we know how large it will become once it's done copying:

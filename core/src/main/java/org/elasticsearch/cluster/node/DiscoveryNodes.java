@@ -62,7 +62,7 @@ public class DiscoveryNodes extends AbstractDiffable<DiscoveryNodes> implements 
         this.nodes = nodes;
         this.dataNodes = dataNodes;
         this.masterNodes = masterNodes;
-        //logger.info("===DiscoveryNodes===65==="+masterNodeId+"==="+localNodeId+"==="+masterNodes);try { Integer.parseInt("DiscoveryNodes"); }catch (Exception e){logger.error("===", e);}
+        logger.info("===DiscoveryNodes===65==="+masterNodeId+"==="+localNodeId+"==="+masterNodes);//try { Integer.parseInt("DiscoveryNodes"); }catch (Exception e){logger.error("===", e);}
         this.masterNodeId = masterNodeId;
         this.localNodeId = localNodeId;
         this.minNodeVersion = minNodeVersion;

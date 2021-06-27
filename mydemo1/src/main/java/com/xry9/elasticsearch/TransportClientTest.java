@@ -29,10 +29,9 @@ public class TransportClientTest {
         try {
             //初始化一个pool
             pool = new EsClientPool("elasticsearch", "127.0.0.1", "9700", 20);
-//            logger.info("初始化一个es pool成功：{}", pool);
-
-            //获取一个客户端
             esclient = pool.getEsClient();
+//            esclient = new EsClient(new EsEnv("elasticsearch", "127.0.0.1", "9700"));
+
 //            logger.info("获取一个客户端：{}", esclient);
 
             //创建一个EsUserImpl实现类
