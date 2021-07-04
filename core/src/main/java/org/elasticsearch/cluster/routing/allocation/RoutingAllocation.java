@@ -18,7 +18,6 @@
  */
 
 package org.elasticsearch.cluster.routing.allocation;
-
 import com.google.common.collect.ImmutableSet;
 import org.elasticsearch.cluster.ClusterInfo;
 import org.elasticsearch.cluster.metadata.MetaData;
@@ -27,20 +26,21 @@ import org.elasticsearch.cluster.routing.RoutingNodes;
 import org.elasticsearch.cluster.routing.RoutingTable;
 import org.elasticsearch.cluster.routing.allocation.decider.AllocationDeciders;
 import org.elasticsearch.cluster.routing.allocation.decider.Decision;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.index.shard.ShardId;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 /**
  * The {@link RoutingAllocation} keep the state of the current allocation
  * of shards and holds the {@link AllocationDeciders} which are responsible
  *  for the current routing state.
  */
 public class RoutingAllocation {
-
+    ESLogger logger = Loggers.getLogger(RoutingAllocation.class);
     /**
      * this class is used to describe results of a {@link RoutingAllocation}  
      */
@@ -131,8 +131,8 @@ public class RoutingAllocation {
         this.routingNodes = routingNodes;
         this.nodes = nodes;
         this.clusterInfo = clusterInfo;
+        logger.info("===RoutingAllocation===134==="+routingNodes+"==="+nodes+"==="+clusterInfo);
     }
-
     /**
      * Get {@link AllocationDeciders} used for allocation
      * @return {@link AllocationDeciders} used for allocation

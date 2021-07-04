@@ -156,7 +156,7 @@ public class DefaultSearchContext extends SearchContext {
         this.bigArrays = bigArrays.withCircuitBreaking();
         this.dfsResult = new DfsSearchResult(id, shardTarget);
         this.queryResult = new QuerySearchResult(id, shardTarget);
-        logger.info("===DefaultSearchContext===159==="+shardTarget);
+        ////xlogger.info("===DefaultSearchContext===159==="+shardTarget);
         this.fetchResult = new FetchSearchResult(id, shardTarget);
         this.indexShard = indexShard;
         this.indexService = indexService;

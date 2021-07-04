@@ -117,7 +117,7 @@ public class Store extends AbstractIndexShardComponent implements Closeable, Ref
     public Store(ShardId shardId, @IndexSettings Settings indexSettings, DirectoryService directoryService, ShardLock shardLock, OnClose onClose) throws IOException {
         super(shardId, indexSettings);
         this.directory = new StoreDirectory(directoryService.newDirectory(), Loggers.getLogger("index.store.deletes", indexSettings, shardId));
-        //logger.info("===Store===120==="+this.directory.getDelegate()+"==="+this.directory);//try { Integer.parseInt("Store"); }catch (Exception e){logger.error("===", e);}
+        //xlogger.info("===Store===120==="+this.directory.getDelegate()+"==="+this.directory);//try { Integer.parseInt("Store"); }catch (Exception e){logger.error("===", e);}
         this.shardLock = shardLock;
         this.onClose = onClose;
         final TimeValue refreshInterval = indexSettings.getAsTime(INDEX_STORE_STATS_REFRESH_INTERVAL, TimeValue.timeValueSeconds(10));

@@ -347,7 +347,7 @@ public class TransportClientNodesService extends AbstractComponent {
                     }
                 }
                 try {
-                    //logger.info("===STATE===STATE===350===");
+                    //xlogger.info("===STATE===STATE===350===");
                     LivenessResponse livenessResponse = transportService.submitRequest(listedNode, TransportLivenessAction.NAME,
                             headers.applyTo(new LivenessRequest()),
                             TransportRequestOptions.options().withType(TransportRequestOptions.Type.STATE).withTimeout(pingTimeout),
@@ -418,7 +418,7 @@ public class TransportClientNodesService extends AbstractComponent {
                                     return;
                                 }
                             }
-                            //logger.info("===STATE===STATE===421===");
+                            //xlogger.info("===STATE===STATE===421===");
                             transportService.sendRequest(listedNode, ClusterStateAction.NAME,
                                     headers.applyTo(Requests.clusterStateRequest().clear().nodes(true).local(true)),
                                     TransportRequestOptions.options().withType(TransportRequestOptions.Type.STATE).withTimeout(pingTimeout),

@@ -50,7 +50,7 @@ public abstract class FilterClient extends AbstractClient {
 
     @Override
     protected <Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> void doExecute(Action<Request, Response, RequestBuilder> action, Request request, ActionListener<Response> listener) {
-        logger.info("===doExecute===53==="+in().getClass().getName());
+        //xlogger.info("===doExecute===53==="+in().getClass().getName());
         in().execute(action, request, listener);
     }
     /**

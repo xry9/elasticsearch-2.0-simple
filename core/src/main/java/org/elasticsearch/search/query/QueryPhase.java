@@ -94,7 +94,7 @@ public class QueryPhase implements SearchPhase {
         // request, preProcess is called on the DFS phase phase, this is why we pre-process them
         // here to make sure it happens during the QUERY phase
         aggregationPhase.preProcess(searchContext);
-        logger.info("===execute===97==="+searchContext.getClass().getName());
+        //xlogger.info("===execute===97==="+searchContext.getClass().getName());
         searchContext.queryResult().searchTimedOut(false);
 
         searchContext.searcher().inStage(ContextIndexSearcher.Stage.MAIN_QUERY);
@@ -139,7 +139,7 @@ public class QueryPhase implements SearchPhase {
                     }
                 } else {
                     if (searchContext.sort() != null) {
-                        logger.info("===execute===142==="+searchContext.searcher().getClass().getName());
+                        //xlogger.info("===execute===142==="+searchContext.searcher().getClass().getName());
                         topDocs = searchContext.searcher().search(query, null, numDocs, searchContext.sort(),
                                 searchContext.trackScores(), searchContext.trackScores());
                     } else {
@@ -151,7 +151,7 @@ public class QueryPhase implements SearchPhase {
                     }
                 }
             }
-            logger.info("===execute===154==="+topDocs.scoreDocs[0]);
+            //xlogger.info("===execute===154==="+topDocs.scoreDocs[0]);
             searchContext.queryResult().topDocs(topDocs);
         } catch (Throwable e) {
             throw new QueryPhaseExecutionException(searchContext, "Failed to execute main query", e);

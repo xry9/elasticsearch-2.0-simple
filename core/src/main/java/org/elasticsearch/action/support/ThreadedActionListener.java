@@ -86,7 +86,7 @@ public final class ThreadedActionListener<Response> implements ActionListener<Re
         threadPool.executor(executor).execute(new AbstractRunnable() {
             @Override
             protected void doRun() throws Exception {
-                //logger.info("===onResponse===89==="+listener.getClass().getName());
+                //xlogger.info("===onResponse===89==="+listener.getClass().getName());
                 listener.onResponse(response);
             }
             @Override

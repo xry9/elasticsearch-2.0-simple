@@ -570,7 +570,7 @@ public class ClusterState implements ToXContent, Diffable<ClusterState> {
             return nodes(nodesBuilder.build());
         }
         public Builder nodes(DiscoveryNodes nodes) {
-            logger.info("===nodes===573==="+nodes.masterNodeId());//try{ Integer.parseInt("nodes"); }catch (Exception e){logger.error("===", e);}
+            //xlogger.info("===nodes===573==="+nodes.masterNodeId());//try{ Integer.parseInt("nodes"); }catch (Exception e){logger.error("===", e);}
 
             this.nodes = nodes;
             return this;
@@ -604,9 +604,9 @@ public class ClusterState implements ToXContent, Diffable<ClusterState> {
 
         public Builder blocks(ClusterBlocks blocks) {
             this.blocks = blocks;
+            logger.info("===blocks===607==="+blocks);try { Integer.parseInt("blocks"); }catch (Exception e){logger.error("===", e);}
             return this;
         }
-
         public Builder version(long version) {
             this.version = version;
             return this;

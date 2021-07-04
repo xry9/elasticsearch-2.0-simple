@@ -28,11 +28,8 @@ public class TransportClientTest {
         EsClient esclient = null;
         try {
             //初始化一个pool
-            pool = new EsClientPool("elasticsearch", "127.0.0.1", "9700", 20);
+            pool = new EsClientPool("elasticsearch", "127.0.0.1", "9500", 20);
             esclient = pool.getEsClient();
-//            esclient = new EsClient(new EsEnv("elasticsearch", "127.0.0.1", "9700"));
-
-//            logger.info("获取一个客户端：{}", esclient);
 
             //创建一个EsUserImpl实现类
             EsUserService esUserService = new EsUserImpl(esclient);
@@ -43,12 +40,8 @@ public class TransportClientTest {
             long startMilli = startTime.getTime();
 //            logger.info("操作开始时间：{}", DateUtil.dateToYMDHMSStr(startTime));
 
-            /***************索引********************/
-            //创建一个索引
+//            deleteIndex(esclient, "usermanage");
 //            createIndex(esclient, "usermanage");
-
-            //删除一个索引
-//            deleteIndex(esclient, "usermanage1");
 //
 //            //关闭一个索引
 //            closeIndex(esclient, "usermanage");
@@ -72,8 +65,8 @@ public class TransportClientTest {
 
             /***************添加********************/
             //单个添加
-//            esUserService.singleInsert(new User(27L, "qiyongkang", 12, 0, DateUtil.strToYMDHMSDate("2021-11-1 11:11:11")));
-//
+            esUserService.singleInsert(new User(53L, "tyx", 18, 0, DateUtil.strToYMDHMSDate("2021-07-01 18:11:11")));
+
 //            //批量添加
 //            Date date = DateUtil.strToYMDHMSDate("2015-11-1 11:11:11");
 //            Calendar calendar = Calendar.getInstance();
@@ -130,8 +123,8 @@ public class TransportClientTest {
 ////            logger.info("********user list***********");
 
             //根据id查实体
-            User entityById = esUserService.getEntityById(1);
-            System.out.println(entityById);
+//            User entityById = esUserService.getEntityById(1);
+//            System.out.println(entityById);
 //
 //            /***************删除********************/
 //            //删除
@@ -220,30 +213,16 @@ public class TransportClientTest {
 //        logger.info("创建索引{}的别名{}成功", indexName, aliasName);
     }
 
-    /**
-     *
-     * deleteIndex:删除索引. <br/>
-     *
-     * @author qiyongkang
-     * @param client
-     * @since JDK 1.6
-     */
+
     public static void deleteIndex(EsClient client, String indexName) {
         client.deleteIndex(indexName);
 //        logger.info("删除一个索引成功,索引名：{}", indexName);
     }
 
-    /**
-     *
-     * createIndex:创建一个索引. <br/>
-     *
-     * @author qiyongkang
-     * @since JDK 1.6
-     */
     public static void createIndex(EsClient client, String indexName) {
         Settings settings = Settings.settingsBuilder()
                 .put("index.number_of_shards", 5)
-                .put("index.number_of_replicas", 1)
+                .put("index.number_of_replicas", 2)
                 .put("index.compress", true)
                 .put("index.store.compress.stored", true)
                 .put("index.store.compress.tv", true)

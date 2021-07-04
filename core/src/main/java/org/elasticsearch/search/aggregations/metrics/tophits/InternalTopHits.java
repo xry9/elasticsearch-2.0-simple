@@ -64,7 +64,7 @@ public class InternalTopHits extends InternalMetricsAggregation implements TopHi
     private InternalSearchHits searchHits;
 
     InternalTopHits() {
-        logger.info("===hits===67===");
+        //xlogger.info("===hits===67===");
     }
     public InternalTopHits(String name, int from, int size, TopDocs topDocs, InternalSearchHits searchHits,
             List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData) {
@@ -73,7 +73,7 @@ public class InternalTopHits extends InternalMetricsAggregation implements TopHi
         this.size = size;
         this.topDocs = topDocs;
         this.searchHits = searchHits;
-        logger.info("===hits===76===");
+        //xlogger.info("===hits===76===");
     }
     @Override
     public Type type() {

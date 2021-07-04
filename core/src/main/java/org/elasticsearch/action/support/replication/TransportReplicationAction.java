@@ -117,7 +117,7 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
     }
     @Override
     protected void doExecute(Request request, ActionListener<Response> listener) {
-        logger.info("===doExecute===120==="+request.getClass().getName()+"-"+request.hashCode());
+        logger.info("===doExecute===120==="+this.getClass().getName()+"==="+request.getClass().getName()+"-"+request.hashCode());try { Integer.parseInt("doExecute"); }catch (Exception e){logger.error("===", e);}
         new PrimaryPhase(request, listener).run();
     }
 
@@ -362,7 +362,6 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
         public void onFailure(Throwable e) {
             finishWithUnexpectedFailure(e);
         }
-
         @Override
         protected void doRun() {
             if (checkBlocks() == false) {
@@ -370,6 +369,7 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
             }
             final ShardIterator shardIt = shards(observer.observedState(), internalRequest);
             final ShardRouting primary = resolvePrimary(shardIt);
+            logger.info("===doRun===372==="+this.getClass().getName()+"==="+TransportReplicationAction.this.getClass().getName()+"==="+primary.primary()+"==="+primary.getId()+"==="+primary.currentNodeId());
             if (primary == null) {
                 retryBecauseUnavailable(shardIt.shardId(), "No active shards.");
                 return;
@@ -560,12 +560,12 @@ public abstract class TransportReplicationAction<Request extends ReplicationRequ
                 assert false : "finishOnRemoteSuccess called but operation is already finished";
             }
         }
+
         /**
          * perform the operation on the node holding the primary
          */
-        @SuppressForbidden(reason = "Exception#printStackTrace()")
         void performOnPrimary(final ShardRouting primary, final ShardIterator shardsIt) {
-            logger.info("===performOnPrimary===569===");
+            //xlogger.info("===performOnPrimary===569===");
 
             final String writeConsistencyFailure = checkWriteConsistency(primary);
             if (writeConsistencyFailure != null) {

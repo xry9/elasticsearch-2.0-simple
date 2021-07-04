@@ -66,7 +66,6 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
     }
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        //logger.info("===messageReceived===69==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress()+"==="+e.getMessage().getClass().getName());//try { Integer.parseInt("messageReceived"); }catch (Exception ex){logger.error("===", ex);}
 
         Transports.assertTransportThread();
         Object m = e.getMessage();
@@ -89,9 +88,9 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
         boolean success = false;
         try {
             long requestId = streamIn.readLong();
+            logger.info("===messageReceived===91==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress()+"==="+requestId);//try { Integer.parseInt("messageReceived"); }catch (Exception ex){logger.error("===", ex);}
             byte status = streamIn.readByte();
             Version version = Version.fromId(streamIn.readInt());
-
             if (TransportStatus.isCompress(status) && hasMessageBytesToRead && buffer.readable()) {
                 Compressor compressor;
                 try {
@@ -112,45 +111,46 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
             //logger.info("===messageReceived===112==="+(TransportStatus.isRequest(status)));
             if (TransportStatus.isRequest(status)) {
                 String action = handleRequest(ctx.getChannel(), streamIn, requestId, version);
-                logger.info("===messageReceived===115==="+action);
+                if(!"internal:discovery/zen/fd/master_ping".equals(action)&&!"internal:discovery/zen/fd/ping".equals(action)) {
+                    logger.info("===messageReceived===115==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress()+"==="+requestId+"==="+action);
+                }
                 // Chek the entire message has been read
                 final int nextByte = streamIn.read();
                 // calling read() is useful to make sure the message is fully read, even if there some kind of EOS marker
                 if (nextByte != -1) {
-                    throw new IllegalStateException("Message not fully read (request) for requestId [" + requestId + "], action ["
-                            + action + "], readerIndex [" + buffer.readerIndex() + "] vs expected [" + expectedIndexReader + "]; resetting");
+                    throw new IllegalStateException("Message not fully read (request) for requestId [" + requestId + "], action [" + action + "], readerIndex [" + buffer.readerIndex() + "] vs expected [" + expectedIndexReader + "]; resetting");
                 }
                 if (buffer.readerIndex() < expectedIndexReader) {
                     throw new IllegalStateException("Message is fully read (request), yet there are " + (expectedIndexReader - buffer.readerIndex()) + " remaining bytes; resetting");
                 }
                 if (buffer.readerIndex() > expectedIndexReader) {
-                    throw new IllegalStateException("Message read past expected size (request) for requestId [" + requestId + "], action ["
-                            + action + "], readerIndex [" + buffer.readerIndex() + "] vs expected [" + expectedIndexReader + "]; resetting");
+                    throw new IllegalStateException("Message read past expected size (request) for requestId [" + requestId + "], action [" + action + "], readerIndex [" + buffer.readerIndex() + "] vs expected [" + expectedIndexReader + "]; resetting");
                 }
             } else {
                 TransportResponseHandler<?> handler = transportServiceAdapter.onResponseReceived(requestId);
-                //logger.info("===messageReceived===132==="+handler.getClass().getName());
+//                if (!"org.elasticsearch.discovery.zen.fd.MasterFaultDetection$MasterPinger$1".equals(handler.getClass().getName())&&!"org.elasticsearch.discovery.zen.fd.NodesFaultDetection$NodeFD$1".equals(handler.getClass().getName())){
+                    logger.info("===messageReceived===132==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress()+"==="+requestId);
+//                    logger.info("===messageReceived===132==="+handler.getClass().getName()+"==="+handler.getClass().getSuperclass().getName());
+//                }
                 // ignore if its null, the adapter logs it
                 if (handler != null) {
                     if (TransportStatus.isError(status)) {
                         handlerResponseError(streamIn, handler);
                     } else {
-                        //logger.info("===messageReceived===138==="+handler.getClass().getName());
+                        //xlogger.info("===messageReceived===138==="+handler.getClass().getName());
                         handleResponse(ctx.getChannel(), streamIn, handler);
                     }
                     // Chek the entire message has been read
                     final int nextByte = streamIn.read();
                     // calling read() is useful to make sure the message is fully read, even if there is an EOS marker
                     if (nextByte != -1) {
-                        throw new IllegalStateException("Message not fully read (response) for requestId [" + requestId + "], handler ["
-                                + handler + "], error [" + TransportStatus.isError(status) + "]; resetting");
+                        throw new IllegalStateException("Message not fully read (response) for requestId [" + requestId + "], handler [" + handler + "], error [" + TransportStatus.isError(status) + "]; resetting");
                     }
                     if (buffer.readerIndex() < expectedIndexReader) {
                         throw new IllegalStateException("Message is fully read (response), yet there are " + (expectedIndexReader - buffer.readerIndex()) + " remaining bytes; resetting");
                     }
                     if (buffer.readerIndex() > expectedIndexReader) {
-                        throw new IllegalStateException("Message read past expected size (response) for requestId [" + requestId + "], handler ["
-                                + handler + "], error [" + TransportStatus.isError(status) + "]; resetting");
+                        throw new IllegalStateException("Message read past expected size (response) for requestId [" + requestId + "], handler [" + handler + "], error [" + TransportStatus.isError(status) + "]; resetting");
                     }
 
                 }
@@ -179,7 +179,7 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
             return;
         }
         try {
-            //logger.info("===handleResponse===182==="+(ThreadPool.Names.SAME.equals(handler.executor()))+"==="+handler.getClass().getName());
+            //xlogger.info("===handleResponse===182==="+(ThreadPool.Names.SAME.equals(handler.executor()))+"==="+handler.getClass().getName());
             if (ThreadPool.Names.SAME.equals(handler.executor())) {
                 //noinspection unchecked
                 handler.handleResponse(response);
@@ -286,11 +286,11 @@ public class MessageChannelHandler extends SimpleChannelUpstreamHandler {
         private final RequestHandlerRegistry reg;
         private final TransportRequest request;
         private final NettyTransportChannel transportChannel;
-
         public RequestHandler(RequestHandlerRegistry reg, TransportRequest request, NettyTransportChannel transportChannel) {
             this.reg = reg;
             this.request = request;
             this.transportChannel = transportChannel;
+            logger.info("===RequestHandler===293==="+reg.getAction()+"==="+reg.getExecutor()+"==="+reg.getHandler().getClass().getName());
         }
 
         @SuppressWarnings({"unchecked"})

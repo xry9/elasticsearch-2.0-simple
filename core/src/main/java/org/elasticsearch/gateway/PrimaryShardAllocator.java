@@ -89,12 +89,12 @@ public abstract class PrimaryShardAllocator extends AbstractComponent {
                 }
                 continue;
             }
-
             NodesToAllocate nodesToAllocate = buildNodesToAllocate(shard, allocation, nodesAndVersions);
             if (nodesToAllocate.yesNodes.isEmpty() == false) {
                 DiscoveryNode node = nodesToAllocate.yesNodes.get(0);
                 logger.debug("[{}][{}]: allocating [{}] to [{}] on primary allocation", shard.index(), shard.id(), shard, node);
                 changed = true;
+                logger.info("===allocateUnassigned===97==="+shard.currentNodeId()+"==="+node.id()+"==="+shard.primary());try { Integer.parseInt("allocateUnassigned"); }catch (Exception e){logger.error("===", e);}
                 unassignedIterator.initialize(node.id(), nodesAndVersions.highestVersion, ShardRouting.UNAVAILABLE_EXPECTED_SHARD_SIZE);
             } else if (nodesToAllocate.throttleNodes.isEmpty() == true && nodesToAllocate.noNodes.isEmpty() == false) {
                 DiscoveryNode node = nodesToAllocate.noNodes.get(0);

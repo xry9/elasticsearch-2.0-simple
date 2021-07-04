@@ -110,7 +110,7 @@ public class QuerySearchResult extends QuerySearchResultProvider {
     @SuppressForbidden(reason = "Exception#printStackTrace()")
     public void topDocs(TopDocs topDocs) {
         this.topDocs = topDocs;
-        logger.info("===topDocs===114==="+topDocs.totalHits+"==="+topDocs.scoreDocs.length+"==="+(topDocs.scoreDocs.length>0?topDocs.scoreDocs[0]:"null"));
+        //xlogger.info("===topDocs===114==="+topDocs.totalHits+"==="+topDocs.scoreDocs.length+"==="+(topDocs.scoreDocs.length>0?topDocs.scoreDocs[0]:"null"));
         if (topDocs.totalHits>0){try { Integer.parseInt("topDocs114"); }catch (Exception e){logger.error("===", e);} }
     }
     public Aggregations aggregations() {

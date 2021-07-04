@@ -88,7 +88,7 @@ public class TransportIndexAction extends TransportReplicationAction<IndexReques
     protected void doExecute(final IndexRequest request, final ActionListener<IndexResponse> listener) {
         // if we don't have a master, we don't have metadata, that's fine, let it find a master using create index API
         ClusterState state = clusterService.state();
-        logger.info("===doExecute===91==="+this.getClass().getName()+"==="+(autoCreateIndex.shouldAutoCreate(request.index(), state)));
+        //xlogger.info("===doExecute===91==="+this.getClass().getName()+"==="+(autoCreateIndex.shouldAutoCreate(request.index(), state)));
         if (autoCreateIndex.shouldAutoCreate(request.index(), state)) {
             CreateIndexRequest createIndexRequest = new CreateIndexRequest(request);
             createIndexRequest.index(request.index());
@@ -147,10 +147,9 @@ public class TransportIndexAction extends TransportReplicationAction<IndexReques
 
     @Override
     protected ShardIterator shards(ClusterState clusterState, InternalRequest request) {
-        return clusterService.operationRouting()
-                .indexShards(clusterService.state(), request.concreteIndex(), request.request().type(), request.request().id(), request.request().routing());
+        logger.info("===shards===150==="+request.request().id()+"==="+request.request().routing());
+        return clusterService.operationRouting().indexShards(clusterService.state(), request.concreteIndex(), request.request().type(), request.request().id(), request.request().routing());
     }
-
     @Override
     protected Tuple<IndexResponse, IndexRequest> shardOperationOnPrimary(ClusterState clusterState, PrimaryOperationRequest shardRequest) throws Throwable {
         final IndexRequest request = shardRequest.request;
@@ -180,7 +179,7 @@ public class TransportIndexAction extends TransportReplicationAction<IndexReques
         IndexShard indexShard = indexService.shardSafe(shardId.id());
         SourceToParse sourceToParse = SourceToParse.source(SourceToParse.Origin.REPLICA, request.source()).index(shardId.getIndex()).type(request.type()).id(request.id())
                 .routing(request.routing()).parent(request.parent()).timestamp(request.timestamp()).ttl(request.ttl());
-
+        logger.info("===shardOperationOnReplica===183==="+(request.opType() == IndexRequest.OpType.INDEX));
         final Engine.IndexingOperation operation;
         if (request.opType() == IndexRequest.OpType.INDEX) {
             operation = indexShard.prepareIndex(sourceToParse, request.version(), request.versionType(), Engine.Operation.Origin.REPLICA, request.canHaveDuplicates());

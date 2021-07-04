@@ -18,11 +18,12 @@
  */
 
 package org.elasticsearch.cluster.routing;
-
 import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
 import org.elasticsearch.common.io.stream.Streamable;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.shard.ShardId;
@@ -30,13 +31,12 @@ import org.elasticsearch.index.shard.ShardId;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-
 /**
  * {@link ShardRouting} immutably encapsulates information about shard
  * routings like id, state, version, etc.
  */
 public final class ShardRouting implements Streamable, ToXContent {
-
+    static ESLogger logger = Loggers.getLogger(ShardRouting.class);
     /**
      * Used if shard size is not available
      */
@@ -68,17 +68,18 @@ public final class ShardRouting implements Streamable, ToXContent {
     public ShardRouting(ShardRouting copy, long version) {
         this(copy.index(), copy.id(), copy.currentNodeId(), copy.relocatingNodeId(), copy.restoreSource(), copy.primary(), copy.state(), version, copy.unassignedInfo(), copy.allocationId(), true, copy.getExpectedShardSize());
     }
-
     /**
      * A constructor to internally create shard routing instances, note, the internal flag should only be set to true
      * by either this class or tests. Visible for testing.
      */
-    ShardRouting(String index, int shardId, String currentNodeId,
-                 String relocatingNodeId, RestoreSource restoreSource, boolean primary, ShardRoutingState state, long version,
+    ShardRouting(String index, int shardId, String currentNodeId, String relocatingNodeId, RestoreSource restoreSource, boolean primary, ShardRoutingState state, long version,
                  UnassignedInfo unassignedInfo, AllocationId allocationId, boolean internal, long expectedShardSize) {
         this.index = index;
         this.shardId = shardId;
         this.currentNodeId = currentNodeId;
+        if (primary && currentNodeId!=null){
+            logger.info("===primary===81==="+primary+"==="+currentNodeId+"==="+index+"==="+shardId);try { Integer.parseInt("currentNodeId"); }catch (Exception e){logger.error("===", e);}
+        }
         this.relocatingNodeId = relocatingNodeId;
         this.primary = primary;
         this.state = state;
@@ -97,16 +98,15 @@ public final class ShardRouting implements Streamable, ToXContent {
             assert relocatingNodeId == null;
             assert allocationId == null;
         }
-
     }
 
     /**
      * Creates a new unassigned shard.
      */
     public static ShardRouting newUnassigned(String index, int shardId, RestoreSource restoreSource, boolean primary, UnassignedInfo unassignedInfo) {
+        logger.info("===newUnassigned===107==="+primary+"==="+index+"==="+shardId);try { Integer.parseInt("newUnassigned"); }catch (Exception e){logger.error("===", e);}
         return new ShardRouting(index, shardId, null, null, restoreSource, primary, ShardRoutingState.UNASSIGNED, 0, unassignedInfo, null, true, UNAVAILABLE_EXPECTED_SHARD_SIZE);
     }
-
     /**
      * The index name.
      */
@@ -311,8 +311,8 @@ public final class ShardRouting implements Streamable, ToXContent {
         version = in.readLong();
         if (in.readBoolean()) {
             currentNodeId = in.readString();
+            //xlogger.info("===currentNodeId===314==="+currentNodeId);try { Integer.parseInt("currentNodeId"); }catch (Exception e){logger.error("===", e);}
         }
-
         if (in.readBoolean()) {
             relocatingNodeId = in.readString();
         }
@@ -430,9 +430,9 @@ public final class ShardRouting implements Streamable, ToXContent {
         state = ShardRoutingState.INITIALIZING;
         currentNodeId = nodeId;
         allocationId = AllocationId.newInitializing();
+        logger.info("===currentNodeId===433==="+currentNodeId+"==="+expectedShardSize+"==="+allocationId+"==="+primary);try { Integer.parseInt("currentNodeId"); }catch (Exception e){logger.error("===", e);}
         this.expectedShardSize = expectedShardSize;
     }
-
     /**
      * Relocate the shard to another node.
      *
@@ -495,7 +495,6 @@ public final class ShardRouting implements Streamable, ToXContent {
         expectedShardSize = UNAVAILABLE_EXPECTED_SHARD_SIZE;
         state = ShardRoutingState.STARTED;
     }
-
     /**
      * Make the shard primary unless it's not Primary
      * //TODO: doc exception
@@ -506,9 +505,11 @@ public final class ShardRouting implements Streamable, ToXContent {
         if (primary) {
             throw new IllegalShardRoutingStateException(this, "Already primary, can't move to primary");
         }
+//        if (this.currentNodeId != null){
+            logger.info("===primary===509==="+currentNodeId);
+//        }
         primary = true;
     }
-
     /**
      * Set the primary shard to non-primary
      */
@@ -520,7 +521,6 @@ public final class ShardRouting implements Streamable, ToXContent {
         }
         primary = false;
     }
-
     /** returns true if this routing has the same shardId as another */
     public boolean isSameShard(ShardRouting other) {
         return index.equals(other.index) && shardId == other.shardId;

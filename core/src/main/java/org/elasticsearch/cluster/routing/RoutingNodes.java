@@ -26,12 +26,12 @@ import com.google.common.collect.*;
 import org.apache.lucene.util.CollectionUtil;
 import org.elasticsearch.cluster.ClusterState;
 import org.elasticsearch.cluster.block.ClusterBlocks;
-import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MetaData;
 import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.index.shard.ShardId;
-
 import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -42,7 +42,7 @@ import static com.google.common.collect.Maps.newHashMap;
  * the {@link ClusterState cluster state}.
  */
 public class RoutingNodes implements Iterable<RoutingNode> {
-
+    ESLogger logger = Loggers.getLogger(RoutingNodes.class);
     private final MetaData metaData;
 
     private final ClusterBlocks blocks;
@@ -77,7 +77,7 @@ public class RoutingNodes implements Iterable<RoutingNode> {
         this.blocks = clusterState.blocks();
         this.routingTable = clusterState.routingTable();
         this.customs = clusterState.customs();
-
+        logger.info("===RoutingNodes===80==="+metaData+"==="+blocks);
         Map<String, List<ShardRouting>> nodesToShards = newHashMap();
         // fill in the nodeToShards with the "live" nodes
         for (ObjectCursor<DiscoveryNode> cursor : clusterState.nodes().dataNodes().values()) {

@@ -73,7 +73,7 @@ public class NettyHttpChannel extends HttpChannel {
 
     @Override
     public void sendResponse(RestResponse response) {
-        logger.info("===sendResponse===77==="+response.contentType());
+        //xlogger.info("===sendResponse===77==="+response.contentType());
 
         // Decide whether to close the connection or not.
         boolean http10 = nettyRequest.getProtocolVersion().equals(HttpVersion.HTTP_1_0);

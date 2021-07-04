@@ -46,13 +46,13 @@ public class ShardSearchTransportRequest extends TransportRequest implements Sha
     private ShardSearchLocalRequest shardSearchLocalRequest;
 
     public ShardSearchTransportRequest(){
-        logger.info("===ShardSearchTransportRequest===49===");
+        ////xlogger.info("===ShardSearchTransportRequest===49===");
     }
     public ShardSearchTransportRequest(SearchRequest searchRequest, ShardRouting shardRouting, int numberOfShards, String[] filteringAliases, long nowInMillis) {
         super(searchRequest);
         this.shardSearchLocalRequest = new ShardSearchLocalRequest(searchRequest, shardRouting, numberOfShards, filteringAliases, nowInMillis);
         this.originalIndices = new OriginalIndices(searchRequest);
-        logger.info("===ShardSearchTransportRequest===55==="+searchRequest.getClass().getName()+"==="+searchRequest);//try { Integer.parseInt("ShardSearchTransportRequest"); }catch (Exception e){logger.error("===", e);}
+        ////xlogger.info("===ShardSearchTransportRequest===55==="+searchRequest.getClass().getName()+"==="+searchRequest);//try { Integer.parseInt("ShardSearchTransportRequest"); }catch (Exception e){logger.error("===", e);}
     }
     @Override
     public String[] indices() {

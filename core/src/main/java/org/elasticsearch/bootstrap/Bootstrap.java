@@ -242,7 +242,7 @@ final class Bootstrap {
         Settings settings = environment.settings();
         setupLogging(settings, environment);
         checkForCustomConfFile();
-        System.out.println("===init===245==="+environment.pidFile());
+        //System.out.println("===init===245==="+environment.pidFile());
         if (environment.pidFile() != null) {
             PidFile.create(environment.pidFile(), true);
         }

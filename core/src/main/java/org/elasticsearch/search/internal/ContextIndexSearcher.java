@@ -146,7 +146,7 @@ public class ContextIndexSearcher extends IndexSearcher implements Releasable {
         // matches off for aggregation or to impose a time-limit on collection.
         final boolean timeoutSet = searchContext.timeoutInMillis() != SearchService.NO_TIMEOUT.millis();
         final boolean terminateAfterSet = searchContext.terminateAfter() != SearchContext.DEFAULT_TERMINATE_AFTER;
-        logger.info("===search===149==="+collector.getClass().getName());
+        ////xlogger.info("===search===149==="+collector.getClass().getName());
         if (timeoutSet) {
             // TODO: change to use our own counter that uses the scheduler in ThreadPool
             // throws TimeLimitingCollector.TimeExceededException when timeout has reached
@@ -179,7 +179,7 @@ public class ContextIndexSearcher extends IndexSearcher implements Releasable {
     }
     @Override
     public void search(List<LeafReaderContext> leaves, Weight weight, Collector collector) throws IOException {
-        logger.info("===search===182==="+collector.getClass().getName());
+        ////xlogger.info("===search===182==="+collector.getClass().getName());
         final boolean timeoutSet = searchContext.timeoutInMillis() != SearchService.NO_TIMEOUT.millis();
         final boolean terminateAfterSet = searchContext.terminateAfter() != SearchContext.DEFAULT_TERMINATE_AFTER;
         try {

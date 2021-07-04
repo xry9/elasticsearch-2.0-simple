@@ -452,7 +452,7 @@ public class UnicastZenPing extends AbstractLifecycleComponent<ZenPing> implemen
                                 logger.warn("received ping response {} with no matching handler id [{}]", pingResponse, response.id);
                             }
                         } else {
-                            //logger.info("===handleResponse===456==="+pingResponse);
+                            //xlogger.info("===handleResponse===456==="+pingResponse);
                             sendPingsHandler.pingCollection().addPing(pingResponse);
                         }
                     }
@@ -531,7 +531,7 @@ public class UnicastZenPing extends AbstractLifecycleComponent<ZenPing> implemen
     }
 
     private PingResponse createPingResponse(DiscoveryNodes discoNodes) {
-        logger.info("===createPingResponse===534==="+discoNodes.hashCode());
+        //xlogger.info("===createPingResponse===534==="+discoNodes.hashCode());
         return new PingResponse(discoNodes.localNode(), discoNodes.masterNode(), clusterName, contextProvider.nodeHasJoinedClusterOnce());
     }
     static class UnicastPingResponse extends TransportResponse {

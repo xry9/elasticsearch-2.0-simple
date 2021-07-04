@@ -94,7 +94,7 @@ public class TransportClusterRerouteAction extends TransportMasterNodeAction<Clu
                 ClusterState newState = ClusterState.builder(currentState).routingResult(routingResult).build();
                 clusterStateToSend = newState;
                 explanations = routingResult.explanations();
-                //logger.info("===newState===97==="+(request.dryRun)+"==="+currentState.getNodes()+"==="+newState);
+                //xlogger.info("===newState===97==="+(request.dryRun)+"==="+currentState.getNodes()+"==="+newState);
                 if (request.dryRun) {
                     return currentState;
                 }

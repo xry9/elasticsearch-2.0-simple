@@ -198,7 +198,7 @@ public class Node implements Releasable {
 
             injector = modules.createInjector();
             client = injector.getInstance(Client.class);
-            logger.info("===Node===201==="+injector.getClass().getName()+"==="+client.getClass().getName());
+            //xlogger.info("===Node===201==="+injector.getClass().getName()+"==="+client.getClass().getName());
             threadPool.setNodeSettingsService(injector.getInstance(NodeSettingsService.class));
             success = true;
         } finally {
@@ -233,7 +233,7 @@ public class Node implements Releasable {
             return this;
         }
         ESLogger logger = Loggers.getLogger(Node.class, settings.get("name"));
-        //logger.info("===start===236==="+injector.getInstance(Discovery.class).getClass().getName());
+        //xlogger.info("===start===236==="+injector.getInstance(Discovery.class).getClass().getName());
         logger.info("starting ...");
         // hack around dependency injection problem (for now...)
         injector.getInstance(Discovery.class).setRoutingService(injector.getInstance(RoutingService.class));

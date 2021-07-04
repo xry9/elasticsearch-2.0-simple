@@ -22,14 +22,14 @@ package org.elasticsearch.action;
 import com.google.common.base.Preconditions;
 import org.elasticsearch.action.support.PlainListenableActionFuture;
 import org.elasticsearch.client.ElasticsearchClient;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.threadpool.ThreadPool;
-
 /**
- *
  */
 public abstract class ActionRequestBuilder<Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> {
-
+    public static ESLogger logger = Loggers.getLogger(ActionRequestBuilder.class);
     protected final Action<Request, Response, RequestBuilder> action;
     protected final Request request;
     private final ThreadPool threadPool;
@@ -41,8 +41,8 @@ public abstract class ActionRequestBuilder<Request extends ActionRequest, Respon
         this.request = request;
         this.client = client;
         threadPool = client.threadPool();
+        logger.info("===ActionRequestBuilder===44==="+action.name());//try { Integer.parseInt("ActionRequestBuilder"); }catch (Exception e){logger.error("===", e);}
     }
-
 
     public Request request() {
         return this.request;

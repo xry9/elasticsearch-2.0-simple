@@ -280,7 +280,7 @@ public abstract class TransportSingleShardAction<Request extends SingleShardRequ
                 logger.trace("executing [{}] on shard [{}]", request, request.internalShardId);
             }
             Response response = shardOperation(request, request.internalShardId);
-            logger.info("===messageReceived===283==="+TransportSingleShardAction.this.getClass().getName()+"==="+response.getClass().getName()+"-"+response.hashCode());
+            //xlogger.info("===messageReceived===283==="+TransportSingleShardAction.this.getClass().getName()+"==="+response.getClass().getName()+"-"+response.hashCode());
             channel.sendResponse(response);
         }
     }

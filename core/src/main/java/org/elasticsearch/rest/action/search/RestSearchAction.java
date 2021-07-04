@@ -81,7 +81,7 @@ public class RestSearchAction extends BaseRestHandler {
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
         SearchRequest searchRequest;
         searchRequest = RestSearchAction.parseSearchRequest(request, parseFieldMatcher);
-        logger.info("===handleRequest===84==="+request.uri()+"==="+client.getClass().getName());
+        //xlogger.info("===handleRequest===84==="+request.uri()+"==="+client.getClass().getName());
         client.search(searchRequest, new RestStatusToXContentListener<SearchResponse>(channel));
     }
     public static SearchRequest parseSearchRequest(RestRequest request, ParseFieldMatcher parseFieldMatcher) {

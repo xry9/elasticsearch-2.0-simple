@@ -45,7 +45,7 @@ public abstract class RestActionListener<Response> implements ActionListener<Res
     @Override
     public final void onResponse(Response response) {
         try {
-            logger.info("===onResponse===48==="+response.getClass().getName()+"-"+response.hashCode());//try { Integer.parseInt("onResponse"); }catch (Exception e){logger.error("===", e);}
+            //xlogger.info("===onResponse===48==="+response.getClass().getName()+"-"+response.hashCode());//try { Integer.parseInt("onResponse"); }catch (Exception e){logger.error("===", e);}
             processResponse(response);
         } catch (Throwable t) {
             onFailure(t);

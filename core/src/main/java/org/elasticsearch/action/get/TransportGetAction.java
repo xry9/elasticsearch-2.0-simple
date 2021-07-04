@@ -99,7 +99,7 @@ public class TransportGetAction extends TransportSingleShardAction<GetRequest, G
         }
         GetResult result = indexShard.getService().get(request.type(), request.id(), request.fields(),
                 request.realtime(), request.version(), request.versionType(), request.fetchSourceContext(), request.ignoreErrorsOnGeneratedFields());
-        logger.info("===shardOperation===102==="+result.getSource()+"==="+shardId.id());
+        //xlogger.info("===shardOperation===102==="+result.getSource()+"==="+shardId.id());
         return new GetResponse(result);
     }
 

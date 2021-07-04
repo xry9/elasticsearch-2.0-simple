@@ -513,7 +513,7 @@ public class Translog extends AbstractIndexShardComponent implements IndexShardC
             } else {
                 return null;
             }
-            logger.info("===read===516==="+reader.getClass().getName()+"==="+location);
+            ////xlogger.info("===read===516==="+reader.getClass().getName()+"==="+location);
             return reader.read(location);
         } catch (IOException e) {
             throw new ElasticsearchException("failed to read source from translog location " + location, e);

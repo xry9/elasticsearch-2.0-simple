@@ -18,7 +18,6 @@
  */
 
 package org.elasticsearch.cluster.routing;
-
 import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.cluster.ClusterState;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
@@ -28,18 +27,19 @@ import org.elasticsearch.common.io.stream.StreamOutput;
 import org.elasticsearch.common.io.stream.Writeable;
 import org.elasticsearch.common.joda.FormatDateTimeFormatter;
 import org.elasticsearch.common.joda.Joda;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 
 import java.io.IOException;
-
 /**
  * Holds additional information as to why the shard is in unassigned state.
  */
 public class UnassignedInfo implements ToXContent, Writeable<UnassignedInfo> {
-
+    ESLogger logger = Loggers.getLogger(UnassignedInfo.class);
     public static final FormatDateTimeFormatter DATE_TIME_FORMATTER = Joda.forPattern("dateOptionalTime");
 
     public static final String INDEX_DELAYED_NODE_LEFT_TIMEOUT_SETTING = "index.unassigned.node_left.delayed_timeout";
@@ -114,20 +114,20 @@ public class UnassignedInfo implements ToXContent, Writeable<UnassignedInfo> {
     public UnassignedInfo(Reason reason, @Nullable String message, @Nullable Throwable failure) {
         this(reason, System.currentTimeMillis(), message, failure);
     }
-
     private UnassignedInfo(Reason reason, long timestamp, String message, Throwable failure) {
+        logger.info("===UnassignedInfo===118==="+reason+"==="+message);try { Integer.parseInt("UnassignedInfo"); }catch (Exception e){logger.error("UnassignedInfo");}
         this.reason = reason;
         this.timestamp = timestamp;
         this.message = message;
         this.failure = failure;
         assert !(message == null && failure != null) : "provide a message if a failure exception is provided";
     }
-
     UnassignedInfo(StreamInput in) throws IOException {
         this.reason = Reason.values()[(int) in.readByte()];
         this.timestamp = in.readLong();
         this.message = in.readOptionalString();
         this.failure = in.readThrowable();
+        logger.info("===UnassignedInfo===130==="+reason+"==="+message);try { Integer.parseInt("UnassignedInfo"); }catch (Exception e){logger.error("UnassignedInfo");}
     }
 
     public void writeTo(StreamOutput out) throws IOException {

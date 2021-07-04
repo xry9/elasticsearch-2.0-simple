@@ -64,7 +64,7 @@ public class OpenChannelsHandler implements ChannelUpstreamHandler {
                     logger.trace("channel opened: {}", ctx.getChannel());
                 }
                 boolean added = openChannels.add(ctx.getChannel());
-                //logger.info("===handleUpstream===67==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress());
+                //xlogger.info("===handleUpstream===67==="+ctx.getChannel().getLocalAddress()+"==="+ctx.getChannel().getRemoteAddress());
 
                 if (added) {
                     openChannelsMetric.inc();

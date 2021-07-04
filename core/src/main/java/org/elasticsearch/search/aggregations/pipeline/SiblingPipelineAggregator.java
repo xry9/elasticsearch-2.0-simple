@@ -37,11 +37,11 @@ public abstract class SiblingPipelineAggregator extends PipelineAggregator {
     protected final ESLogger logger = Loggers.getLogger(SiblingPipelineAggregator.class);
     protected SiblingPipelineAggregator() { // for Serialisation
         super();
-        logger.info("===SiblingPipelineAggregator===40===");
+        //xlogger.info("===SiblingPipelineAggregator===40===");
     }
     protected SiblingPipelineAggregator(String name, String[] bucketsPaths, Map<String, Object> metaData) {
         super(name, bucketsPaths, metaData);
-        logger.info("===SiblingPipelineAggregator===44===");
+        //xlogger.info("===SiblingPipelineAggregator===44===");
     }
     @SuppressWarnings("unchecked")
     @Override

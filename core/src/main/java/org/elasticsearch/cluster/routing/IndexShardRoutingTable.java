@@ -27,12 +27,12 @@ import org.elasticsearch.cluster.node.DiscoveryNodes;
 import org.elasticsearch.common.collect.MapBuilder;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.index.shard.ShardId;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
@@ -43,7 +43,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * replicas (instances) for a single index shard.
  */
 public class IndexShardRoutingTable implements Iterable<ShardRouting> {
-
+    ESLogger logger = Loggers.getLogger(IndexShardRoutingTable.class);
     final ShardShuffler shuffler;
     final ShardId shardId;
 
@@ -61,7 +61,6 @@ public class IndexShardRoutingTable implements Iterable<ShardRouting> {
      * If we can come up with a better variable name, it would be nice...
      */
     final ImmutableList<ShardRouting> allInitializingShards;
-
     IndexShardRoutingTable(ShardId shardId, List<ShardRouting> shards) {
         this.shardId = shardId;
         this.shuffler = new RotationShardShuffler(ThreadLocalRandom.current().nextInt());
@@ -78,6 +77,7 @@ public class IndexShardRoutingTable implements Iterable<ShardRouting> {
                 primary = shard;
             } else {
                 replicas.add(shard);
+                logger.info("===IndexShardRoutingTable===80==="+shard.currentNodeId()+"==="+(shard.active())+"==="+(shard.initializing())+"==="+(shard.relocating())+"==="+(shard.assignedToNode()));
             }
             if (shard.active()) {
                 activeShards.add(shard);
@@ -105,11 +105,11 @@ public class IndexShardRoutingTable implements Iterable<ShardRouting> {
             this.primaryAsList = ImmutableList.of();
         }
         this.replicas = replicas.build();
+        //xlogger.info("===IndexShardRoutingTable===108==="+this.replicas.size());
         this.activeShards = activeShards.build();
         this.assignedShards = assignedShards.build();
         this.allInitializingShards = allInitializingShards.build();
     }
-
     /**
      * Normalizes all shard routings to the same version.
      */
@@ -254,12 +254,12 @@ public class IndexShardRoutingTable implements Iterable<ShardRouting> {
     public ShardIterator activeInitializingShardsRandomIt() {
         return activeInitializingShardsIt(shuffler.nextSeed());
     }
-
     /**
      * Returns an iterator over active and initializing shards. Making sure though that
      * its random within the active shards, and initializing shards are the last to iterate through.
      */
     public ShardIterator activeInitializingShardsIt(int seed) {
+        //xlogger.info("===activeInitializingShardsIt===262==="+(allInitializingShards.isEmpty()));
         if (allInitializingShards.isEmpty()) {
             return new PlainShardIterator(shardId, shuffler.shuffle(activeShards, seed));
         }

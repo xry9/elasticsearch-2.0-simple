@@ -62,7 +62,7 @@ public class DiscoveryNodes extends AbstractDiffable<DiscoveryNodes> implements 
         this.nodes = nodes;
         this.dataNodes = dataNodes;
         this.masterNodes = masterNodes;
-        logger.info("===DiscoveryNodes===65==="+masterNodeId+"==="+localNodeId+"==="+masterNodes);//try { Integer.parseInt("DiscoveryNodes"); }catch (Exception e){logger.error("===", e);}
+        logger.info("===DiscoveryNodes===65==="+masterNodeId+"==="+localNodeId+"==="+masterNodes);try { Integer.parseInt("DiscoveryNodes"); }catch (Exception e){logger.error("===", e);}
         this.masterNodeId = masterNodeId;
         this.localNodeId = localNodeId;
         this.minNodeVersion = minNodeVersion;
@@ -628,11 +628,11 @@ public class DiscoveryNodes extends AbstractDiffable<DiscoveryNodes> implements 
             this.masterNodeId = nodes.masterNodeId();
             this.localNodeId = nodes.localNodeId();
             this.nodes = ImmutableOpenMap.builder(nodes.nodes());
-            logger.info("===Builder===631==="+this.hashCode()+"==="+masterNodeId+"==="+localNodeId);
+            logger.info("===Builder===631==="+nodes.size()+"==="+this.hashCode()+"==="+masterNodeId+"==="+localNodeId);
         }
         public Builder put(DiscoveryNode node) {
-            logger.info("===put===634==="+this.hashCode()+"==="+node.getAddress()+"==="+node.hashCode());try { Integer.parseInt("put"); }catch (Exception e){logger.error("===", e);}
             nodes.put(node.id(), node);
+            logger.info("===put===635==="+nodes.size()+"==="+this.hashCode()+"==="+node.getAddress()+"==="+node.hashCode());try { Integer.parseInt("put"); }catch (Exception e){logger.error("===", e);}
             return this;
         }
         public Builder remove(String nodeId) {
@@ -642,7 +642,7 @@ public class DiscoveryNodes extends AbstractDiffable<DiscoveryNodes> implements 
         public Builder masterNodeId(String masterNodeId) {
 
             this.masterNodeId = masterNodeId;
-            logger.info("===masterNodeId===645==="+this.hashCode()+"==="+masterNodeId);//try { Integer.parseInt("masterNodeId"); }catch (Exception e){logger.error("===", e);}
+            //xlogger.info("===masterNodeId===645==="+this.hashCode()+"==="+masterNodeId);//try { Integer.parseInt("masterNodeId"); }catch (Exception e){logger.error("===", e);}
             return this;
         }
 

@@ -289,7 +289,7 @@ public class IndexService extends AbstractIndexComponent implements IndexCompone
     }
     public synchronized IndexShard createShard(int sShardId, ShardRouting routing) {
         final boolean primary = routing.primary();
-        logger.info("===createShard===292==="+sShardId+"==="+routing);try { Integer.parseInt("createShard"); }catch (Exception e){logger.error("===", e);}
+        //xlogger.info("===createShard===292==="+sShardId+"==="+routing);try { Integer.parseInt("createShard"); }catch (Exception e){logger.error("===", e);}
         /*
          * TODO: we execute this in parallel but it's a synced method. Yet, we might
          * be able to serialize the execution via the cluster state in the future. for now we just
@@ -380,7 +380,7 @@ public class IndexService extends AbstractIndexComponent implements IndexCompone
             IndexShard indexShard = shardInjector.getInstance(IndexShard.class);
             indicesLifecycle.indexShardStateChanged(indexShard, null, "shard created");
             indicesLifecycle.afterIndexShardCreated(indexShard);
-            //logger.info("===createShard===383==="+shardId.id());
+            //xlogger.info("===createShard===383==="+shardId.id());
             shards = newMapBuilder(shards).put(shardId.id(), new IndexShardInjectorPair(indexShard, shardInjector)).immutableMap();
             success = true;
             return indexShard;

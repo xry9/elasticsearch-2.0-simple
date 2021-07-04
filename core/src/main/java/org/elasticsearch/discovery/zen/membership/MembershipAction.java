@@ -112,7 +112,7 @@ public class MembershipAction extends AbstractComponent {
         private JoinRequest() {
         }
         private JoinRequest(DiscoveryNode node) {
-
+            logger.info("===JoinRequest===115==="+node);try { Integer.parseInt("JoinRequest"); }catch (Exception e){logger.error("===", e);}
             this.node = node;
         }
 
@@ -131,9 +131,9 @@ public class MembershipAction extends AbstractComponent {
 
 
     private class JoinRequestRequestHandler implements TransportRequestHandler<JoinRequest> {
-
         @Override
         public void messageReceived(final JoinRequest request, final TransportChannel channel) throws Exception {
+            logger.info("===messageReceived===136===");//try { Integer.parseInt("messageReceived"); }catch (Exception e){logger.error("===", e);}
             listener.onJoin(request.node, new JoinCallback() {
                 @Override
                 public void onSuccess() {

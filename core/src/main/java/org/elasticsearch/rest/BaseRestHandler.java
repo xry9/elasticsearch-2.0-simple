@@ -78,7 +78,7 @@ public abstract class BaseRestHandler extends AbstractComponent implements RestH
         }
         @Override
         protected <Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> void doExecute(Action<Request, Response, RequestBuilder> action, Request request, ActionListener<Response> listener) {
-            logger.info("===doExecute===81==="+this.getClass().getName());
+            //xlogger.info("===doExecute===81==="+this.getClass().getName());
             copyHeadersAndContext(request, restRequest, headers);
             super.doExecute(action, request, listener);
         }

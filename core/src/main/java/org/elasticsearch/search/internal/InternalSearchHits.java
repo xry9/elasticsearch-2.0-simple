@@ -104,15 +104,15 @@ public class InternalSearchHits implements SearchHits {
     private float maxScore;
 
     InternalSearchHits() {
-        //logger.info("===hits===107===");
+        //xlogger.info("===hits===107===");
     }
     public InternalSearchHits(InternalSearchHit[] hits, long totalHits, float maxScore) {
         this.hits = hits;
         this.totalHits = totalHits;
         this.maxScore = maxScore;
-        logger.info("===hits===113==="+hits.length+"==="+hits[0].getSource());try { Integer.parseInt("InternalSearchHits"); }catch (Exception e){logger.error("===", e);}
+        ////xlogger.info("===hits===113==="+hits.length+"==="+hits[0].getSource());try { Integer.parseInt("InternalSearchHits"); }catch (Exception e){logger.error("===", e);}
         for (InternalSearchHit hit: hits){
-            logger.info("===hits===115==="+hit.getSource());
+            ////xlogger.info("===hits===115==="+hit.getSource());
         }
     }
     public void shardTarget(SearchShardTarget shardTarget) {

@@ -36,10 +36,7 @@ import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.shard.ShardId;
 import org.elasticsearch.index.shard.ShardNotFoundException;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -80,10 +77,10 @@ public class OperationRouting extends AbstractComponent {
         final Set<IndexShardRoutingTable> shards = computeTargetedShards(clusterState, concreteIndices, routing);
         return shards.size();
     }
-
     public GroupShardsIterator searchShards(ClusterState clusterState, String[] concreteIndices, @Nullable Map<String, Set<String>> routing, @Nullable String preference) {
         final Set<IndexShardRoutingTable> shards = computeTargetedShards(clusterState, concreteIndices, routing);
         final Set<ShardIterator> set = new HashSet<>(shards.size());
+        //xlogger.info("===searchShards===83===" + shards.size() + "===" + Arrays.toString(concreteIndices) + "===" + routing);
         for (IndexShardRoutingTable shard : shards) {
             ShardIterator iterator = preferenceActiveShardIterator(shard, clusterState.nodes().localNodeId(), clusterState.nodes(), preference);
             if (iterator != null) {
@@ -92,9 +89,7 @@ public class OperationRouting extends AbstractComponent {
         }
         return new GroupShardsIterator(Lists.newArrayList(set));
     }
-
     private static final Map<String, Set<String>> EMPTY_ROUTING = Collections.emptyMap();
-
     private Set<IndexShardRoutingTable> computeTargetedShards(ClusterState clusterState, String[] concreteIndices, @Nullable Map<String, Set<String>> routing) {
         routing = routing == null ? EMPTY_ROUTING : routing; // just use an empty map
         final Set<IndexShardRoutingTable> set = new HashSet<>();
@@ -109,21 +104,24 @@ public class OperationRouting extends AbstractComponent {
                     if (indexShard == null) {
                         throw new ShardNotFoundException(new ShardId(index, shardId));
                     }
+                    //xlogger.info("===computeTargetedShards===110==="+index+"==="+indexShard);
                     // we might get duplicates, but that's ok, they will override one another
                     set.add(indexShard);
                 }
             } else {
                 for (IndexShardRoutingTable indexShard : indexRouting) {
+                    //xlogger.info("===computeTargetedShards===116==="+index+"==="+indexShard.getShardId());
                     set.add(indexShard);
                 }
             }
         }
         return set;
     }
-
     private ShardIterator preferenceActiveShardIterator(IndexShardRoutingTable indexShard, String localNodeId, DiscoveryNodes nodes, @Nullable String preference) {
+        //xlogger.info("===preferenceActiveShardIterator===124==="+(preference == null || preference.isEmpty()));
         if (preference == null || preference.isEmpty()) {
             String[] awarenessAttributes = awarenessAllocationDecider.awarenessAttributes();
+            //xlogger.info("===preferenceActiveShardIterator===127==="+(awarenessAttributes.length == 0));
             if (awarenessAttributes.length == 0) {
                 return indexShard.activeInitializingShardsRandomIt();
             } else {
@@ -135,7 +133,6 @@ public class OperationRouting extends AbstractComponent {
             if (preferenceType == Preference.SHARDS) {
                 // starts with _shards, so execute on specific ones
                 int index = preference.indexOf(';');
-
                 String shards;
                 if (index == -1) {
                     shards = preference.substring(Preference.SHARDS.type().length() + 1);
@@ -167,6 +164,7 @@ public class OperationRouting extends AbstractComponent {
                 }
             }
             preferenceType = Preference.parse(preference);
+            //xlogger.info("===preferenceActiveShardIterator===170==="+preferenceType.type());
             switch (preferenceType) {
                 case PREFER_NODE:
                     return indexShard.preferNodeActiveInitializingShardsIt(preference.substring(Preference.PREFER_NODE.type().length() + 1));
@@ -195,13 +193,13 @@ public class OperationRouting extends AbstractComponent {
         }
         // if not, then use it as the index
         String[] awarenessAttributes = awarenessAllocationDecider.awarenessAttributes();
+        //xlogger.info("===preferenceActiveShardIterator===199==="+(awarenessAttributes.length == 0));
         if (awarenessAttributes.length == 0) {
             return indexShard.activeInitializingShardsIt(DjbHashFunction.DJB_HASH(preference));
         } else {
             return indexShard.preferAttributesActiveInitializingShardsIt(awarenessAttributes, nodes, DjbHashFunction.DJB_HASH(preference));
         }
     }
-
     public IndexMetaData indexMetaData(ClusterState clusterState, String index) {
         IndexMetaData indexMetaData = clusterState.metaData().index(index);
         if (indexMetaData == null) {
@@ -209,7 +207,6 @@ public class OperationRouting extends AbstractComponent {
         }
         return indexMetaData;
     }
-
     protected IndexRoutingTable indexRoutingTable(ClusterState clusterState, String index) {
         IndexRoutingTable indexRouting = clusterState.routingTable().index(index);
         if (indexRouting == null) {
@@ -220,17 +217,17 @@ public class OperationRouting extends AbstractComponent {
 
 
     // either routing is set, or type/id are set
-
     protected IndexShardRoutingTable shards(ClusterState clusterState, String index, String type, String id, String routing) {
         int shardId = shardId(clusterState, index, type, id, routing);
+        logger.info("===shards===222==="+id+"==="+shardId);
         return shards(clusterState, index, shardId);
     }
-
     protected IndexShardRoutingTable shards(ClusterState clusterState, String index, int shardId) {
         IndexShardRoutingTable indexShard = indexRoutingTable(clusterState, index).shard(shardId);
         if (indexShard == null) {
             throw new ShardNotFoundException(new ShardId(index, shardId));
         }
+        logger.info("===shards===230==="+shardId+"==="+indexShard.shardId);
         return indexShard;
     }
 
@@ -240,7 +237,7 @@ public class OperationRouting extends AbstractComponent {
         final Version createdVersion = indexMetaData.getCreationVersion();
         final HashFunction hashFunction = indexMetaData.getRoutingHashFunction();
         final boolean useType = indexMetaData.getRoutingUseType();
-
+        logger.info("===shardId===240==="+type+"==="+id);try { Integer.parseInt("shardId"); }catch (Exception e){logger.error("===", e);}
         final int hash;
         if (routing == null) {
             if (!useType) {

@@ -50,7 +50,7 @@ public class RestGetSourceAction extends BaseRestHandler {
     @Override
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
         final GetRequest getRequest = new GetRequest(request.param("index"), request.param("type"), request.param("id"));
-        logger.info("===handleRequest===53==="+request.param("index")+"==="+request.param("type")+"==="+request.param("id"));
+        //xlogger.info("===handleRequest===53==="+request.param("index")+"==="+request.param("type")+"==="+request.param("id"));
         getRequest.operationThreaded(true);
         getRequest.refresh(request.paramAsBoolean("refresh", getRequest.refresh()));
         getRequest.routing(request.param("routing"));  // order is important, set it after routing, so it will set the routing
@@ -73,7 +73,7 @@ public class RestGetSourceAction extends BaseRestHandler {
             @Override
             public RestResponse buildResponse(GetResponse response) throws Exception {
                 XContentBuilder builder = channel.newBuilder(response.getSourceInternal(), false);
-                logger.info("===buildResponse===76==="+response.getSourceInternal().toUtf8());
+                //xlogger.info("===buildResponse===76==="+response.getSourceInternal().toUtf8());
                 if (!response.isExists()) {
                     return new BytesRestResponse(NOT_FOUND, builder);
                 } else {

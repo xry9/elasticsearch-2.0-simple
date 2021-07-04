@@ -82,8 +82,8 @@ public interface ZenPing extends LifecycleComponent<ZenPing> {
             this.master = master;
             this.clusterName = clusterName;
             this.hasJoinedOnce = hasJoinedOnce;
-            logger.info("===PingResponse===86==="+master+"==="+id+"==="+node+"==="+clusterName+"==="+hasJoinedOnce);
-            if (master!=null){try { Integer.parseInt("PingResponse-master"); }catch (Exception e){logger.error("===", e);} }
+            //xlogger.info("===PingResponse===86==="+master+"==="+id+"==="+node+"==="+clusterName+"==="+hasJoinedOnce);
+            //if (master!=null){try { Integer.parseInt("PingResponse-master"); }catch (Exception e){logger.error("===", e);} }
         }
         /**
          * an always increasing unique identifier for this ping response.

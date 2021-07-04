@@ -114,7 +114,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         this.tracelLogExclude = settings.getAsArray(SETTING_TRACE_LOG_EXCLUDE, new String[]{"internal:discovery/zen/fd*", TransportLivenessAction.NAME}, true);
         tracerLog = Loggers.getLogger(logger, ".tracer");
         adapter = createAdapter();
-        //logger.info("===TransportService===117==="+transport.getClass().getName());
+        //xlogger.info("===TransportService===117==="+transport.getClass().getName());
     }
     /**
      * makes the transport service aware of the local node. this allows it to optimize requests sent
@@ -169,7 +169,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         adapter.txMetric.clear();
         transport.transportServiceAdapter(adapter);
         transport.start();
-        //logger.info("===doStart===172==="+transport.getClass().getName());
+        //xlogger.info("===doStart===172==="+transport.getClass().getName());
         if (transport.boundAddress() != null && logger.isInfoEnabled()) {
             logger.info("{}", transport.boundAddress());
             for (Map.Entry<String, BoundTransportAddress> entry : transport.profileBoundAddresses().entrySet()) {
@@ -283,7 +283,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         if (node == null) {
             throw new IllegalStateException("can't send request to a null node");
         }
-        //logger.info("===sendRequest===286==="+node.getAddress()+"==="+options.type()+"==="+handler.getClass().getName());
+        //xlogger.info("===sendRequest===286==="+node.getAddress()+"==="+options.type()+"==="+handler.getClass().getName());
         final long requestId = newRequestId();
         final TimeoutHandler timeoutHandler;
         try {
@@ -306,7 +306,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
             if (node.equals(localNode)) {
                 sendLocalRequest(requestId, action, request);
             } else {
-                //logger.info("===options===309==="+options.type().name());
+                //xlogger.info("===options===309==="+options.type().name());
                 transport.sendRequest(node, requestId, action, request, options);
             }
         } catch (final Throwable e) {
@@ -331,7 +331,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
 
     private void sendLocalRequest(long requestId, final String action, final TransportRequest request) {
         final DirectResponseChannel channel = new DirectResponseChannel(logger, localNode, action, requestId, adapter, threadPool);
-        logger.info("===sendLocalRequest===334==="+requestId+"==="+action+"==="+request.getClass().getName()+"-"+request.hashCode());//try { Integer.parseInt("sendLocalRequest"); }catch (Exception e){logger.error("===", e);}
+        //xlogger.info("===sendLocalRequest===334==="+requestId+"==="+action+"==="+request.getClass().getName()+"-"+request.hashCode());//try { Integer.parseInt("sendLocalRequest"); }catch (Exception e){logger.error("===", e);}
         try {
             final RequestHandlerRegistry reg = adapter.getRequestHandler(action);
             if (reg == null) {
@@ -437,7 +437,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
     protected <Request extends TransportRequest> void registerRequestHandler(RequestHandlerRegistry<Request> reg) {
         synchronized (requestHandlerMutex) {
             RequestHandlerRegistry replaced = requestHandlers.get(reg.getAction());
-            logger.info("===registerRequestHandler===440==="+reg.getAction()+"==="+reg.getClass().getName());//try{ Integer.parseInt("registerRequestHandler"); }catch (Exception e){logger.error("===", e);}
+            logger.info("===registerRequestHandler===440==="+reg.getAction()+"==="+reg.getHandler().getClass().getName()+"==="+reg.getClass().getName());//try{ Integer.parseInt("registerRequestHandler"); }catch (Exception e){logger.error("===", e);}
             requestHandlers = MapBuilder.newMapBuilder(requestHandlers).put(reg.getAction(), reg).immutableMap();
             if (replaced != null) {
                 logger.warn("registered two transport handlers for action {}, handlers: {}, {}", reg.getAction(), reg.getHandler(), replaced.getHandler());
@@ -499,7 +499,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         }
         @Override
         public void onRequestReceived(long requestId, String action) {
-            logger.info("===onRequestReceived===502==="+requestId+"==="+action);
+            //xlogger.info("===onRequestReceived===502==="+requestId+"==="+action);
             if (traceEnabled() && shouldTraceAction(action)) {
                 traceReceivedRequest(requestId, action);
             }
@@ -513,7 +513,7 @@ public class TransportService extends AbstractLifecycleComponent<TransportServic
         @Override
         public TransportResponseHandler onResponseReceived(final long requestId) {
             RequestHolder holder = clientHandlers.remove(requestId);
-            //logger.info("===onResponseReceived===516==="+requestId+"==="+(holder!=null?holder.getClass().getName():"null"));
+            //xlogger.info("===onResponseReceived===516==="+requestId+"==="+(holder!=null?holder.getClass().getName():"null"));
             if (holder == null) {
                 checkForTimeout(requestId);
                 return null;

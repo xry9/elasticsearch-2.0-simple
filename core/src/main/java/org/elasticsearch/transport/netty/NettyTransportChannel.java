@@ -80,7 +80,6 @@ public class NettyTransportChannel implements TransportChannel {
             options.withCompress(true);
         }
 
-        logger.info("===sendResponse===83==="+response);//try { Integer.parseInt("sendResponse"); }catch (Exception e){logger.error("===", e);}
         byte status = 0;
         status = TransportStatus.setResponse(status);
 
@@ -95,6 +94,7 @@ public class NettyTransportChannel implements TransportChannel {
             }
             stream.setVersion(version);
             response.writeTo(stream);
+            logger.info("===sendResponse===97==="+channel.getRemoteAddress()+"==="+channel.getLocalAddress()+"==="+requestId+"==="+action);//try { Integer.parseInt("sendResponse"); }catch (Exception e){logger.error("===", e);}
             stream.close();
 
             ReleasablePagedBytesReference bytes = bStream.bytes();

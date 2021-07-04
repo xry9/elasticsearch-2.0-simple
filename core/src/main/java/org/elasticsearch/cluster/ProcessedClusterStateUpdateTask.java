@@ -26,7 +26,7 @@ package org.elasticsearch.cluster;
 public abstract class ProcessedClusterStateUpdateTask extends ClusterStateUpdateTask {
 
     /**
-     * Called when the result of the {@link #execute(ClusterState)} have been processed
+     * Called when the result of the { #execute(ClusterState)} have been processed
      * properly by all listeners.
      */
     public abstract void clusterStateProcessed(String source, ClusterState oldState, ClusterState newState);

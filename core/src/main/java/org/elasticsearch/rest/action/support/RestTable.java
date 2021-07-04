@@ -41,7 +41,7 @@ public class RestTable {
     public static RestResponse buildResponse(Table table, RestChannel channel) throws Exception {
         RestRequest request = channel.request();
         XContentType xContentType = XContentType.fromRestContentType(request.param("format", request.header("Content-Type")));
-        logger.info("===buildResponse===44==="+request.param("format", request.header("Content-Type"))+"==="+request.header("Content-Type"));
+        //xlogger.info("===buildResponse===44==="+request.param("format", request.header("Content-Type"))+"==="+request.header("Content-Type"));
         if (xContentType != null) {
             return buildXContentBuilder(table, channel);
         }
@@ -69,7 +69,7 @@ public class RestTable {
     public static RestResponse buildTextPlainResponse(Table table, RestChannel channel) throws IOException {
         RestRequest request = channel.request();
         boolean verbose = request.paramAsBoolean("v", false);
-        logger.info("===buildTextPlainResponse===72==="+verbose);
+        //xlogger.info("===buildTextPlainResponse===72==="+verbose);
         List<DisplayHeader> headers = buildDisplayHeaders(table, request);
         int[] width = buildWidths(table, request, verbose, headers);
 

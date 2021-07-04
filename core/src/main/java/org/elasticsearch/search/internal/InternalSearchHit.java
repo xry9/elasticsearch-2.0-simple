@@ -97,7 +97,7 @@ public class InternalSearchHit implements SearchHit {
     private Map<String, InternalSearchHits> innerHits;
 
     private InternalSearchHit() {
-        //logger.info("===InternalSearchHit===100===");
+        //xlogger.info("===InternalSearchHit===100===");
     }
 
     public InternalSearchHit(int docId, String id, Text type, Map<String, SearchHitField> fields) {
@@ -105,7 +105,7 @@ public class InternalSearchHit implements SearchHit {
         this.id = new StringAndBytesText(id);
         this.type = type;
         this.fields = fields;
-        logger.info("===InternalSearchHit===108==="+(fields!=null?fields:"null"));
+        ////xlogger.info("===InternalSearchHit===108==="+(fields!=null?fields:"null"));
 
     }
     public InternalSearchHit(int nestedTopDocId, String id, Text type, InternalNestedIdentity nestedIdentity, Map<String, SearchHitField> fields) {
@@ -114,7 +114,7 @@ public class InternalSearchHit implements SearchHit {
         this.type = type;
         this.nestedIdentity = nestedIdentity;
         this.fields = fields;
-        logger.info("===InternalSearchHit===117==="+(fields!=null?fields:"null"));
+        ////xlogger.info("===InternalSearchHit===117==="+(fields!=null?fields:"null"));
     }
     public int docId() {
         return this.docId;
@@ -207,7 +207,7 @@ public class InternalSearchHit implements SearchHit {
      * Sets representation, might be compressed....
      */
     public InternalSearchHit sourceRef(BytesReference source) {
-        logger.info("===sourceRef===210===");
+        ////xlogger.info("===sourceRef===210===");
         this.source = source;
         this.sourceAsBytes = null;
         this.sourceAsMap = null;
@@ -608,7 +608,7 @@ public class InternalSearchHit implements SearchHit {
             }
             fields = builder.build();
         }
-        //logger.info("===readFrom===611==="+(fields!=null?fields:"null"));
+        //xlogger.info("===readFrom===611==="+(fields!=null?fields:"null"));
         size = in.readVInt();
         if (size == 0) {
             highlightFields = ImmutableMap.of();

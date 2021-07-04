@@ -33,6 +33,8 @@ import org.elasticsearch.cluster.metadata.MetaData;
 import org.elasticsearch.common.collect.ImmutableOpenIntMap;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.index.shard.ShardId;
 
 import java.io.IOException;
@@ -43,7 +45,6 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.google.common.collect.Lists.*;
-
 /**
  * The {@link IndexRoutingTable} represents routing information for a single
  * index. The routing table maintains a list of all shards in the index. A
@@ -60,9 +61,8 @@ import static com.google.common.collect.Lists.*;
  * </p>
  */
 public class IndexRoutingTable extends AbstractDiffable<IndexRoutingTable> implements Iterable<IndexShardRoutingTable> {
-
+    static ESLogger logger = Loggers.getLogger(IndexRoutingTable.class);
     public static final IndexRoutingTable PROTO = builder("").build();
-
     private final String index;
     private final ShardShuffler shuffler;
 
@@ -71,11 +71,11 @@ public class IndexRoutingTable extends AbstractDiffable<IndexRoutingTable> imple
     private final ImmutableOpenIntMap<IndexShardRoutingTable> shards;
 
     private final List<ShardRouting> allActiveShards;
-
     IndexRoutingTable(String index, ImmutableOpenIntMap<IndexShardRoutingTable> shards) {
         this.index = index;
         this.shuffler = new RotationShardShuffler(ThreadLocalRandom.current().nextInt());
         this.shards = shards;
+        //xlogger.info("===IndexRoutingTable===78==="+shards);try { Integer.parseInt("IndexRoutingTable"); }catch (Exception e){logger.error("===", e);}
         ImmutableList.Builder<ShardRouting> allActiveShards = ImmutableList.builder();
         for (IntObjectCursor<IndexShardRoutingTable> cursor : shards) {
             for (ShardRouting shardRouting : cursor.value) {
@@ -526,8 +526,8 @@ public class IndexRoutingTable extends AbstractDiffable<IndexRoutingTable> imple
             shards.put(indexShard.shardId().id(), indexShard);
             return this;
         }
-
         public IndexRoutingTable build() throws RoutingValidationException {
+
             IndexRoutingTable indexRoutingTable = new IndexRoutingTable(index, shards.build());
             indexRoutingTable.validate();
             return indexRoutingTable;

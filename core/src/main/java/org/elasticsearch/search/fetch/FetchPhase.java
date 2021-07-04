@@ -109,7 +109,7 @@ public class FetchPhase implements SearchPhase {
         FieldsVisitor fieldsVisitor;
         Set<String> fieldNames = null;
         List<String> extractFieldNames = null;
-        logger.info("===execute===112===");
+        //xlogger.info("===execute===112===");
         boolean loadAllStored = false;
         if (!context.hasFieldNames()) {
             // no fields specified, default to return source if no explicit indication
@@ -181,14 +181,14 @@ public class FetchPhase implements SearchPhase {
             }
             hits[index] = searchHit;
             hitContext.reset(searchHit, subReaderContext, subDocId, context.searcher());
-            logger.info("===execute===184==="+fetchSubPhases.length+"==="+searchHit.getSource());
+            //xlogger.info("===execute===184==="+fetchSubPhases.length+"==="+searchHit.getSource());
             for (FetchSubPhase fetchSubPhase : fetchSubPhases) {
                 if (fetchSubPhase.hitExecutionNeeded(context)) {
-                    logger.info("===execute===187==="+fetchSubPhase.getClass().getName());
+                    //xlogger.info("===execute===187==="+fetchSubPhase.getClass().getName());
                     fetchSubPhase.hitExecute(context, hitContext);
                 }
             }
-            logger.info("===execute===191==="+searchHit.getSource());
+            //xlogger.info("===execute===191==="+searchHit.getSource());
         }
         for (FetchSubPhase fetchSubPhase : fetchSubPhases) {
             if (fetchSubPhase.hitsExecutionNeeded(context)) {

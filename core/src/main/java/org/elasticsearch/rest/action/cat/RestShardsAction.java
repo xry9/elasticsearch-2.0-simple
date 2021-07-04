@@ -194,8 +194,9 @@ public class RestShardsAction extends AbstractCatAction {
             table.addCell(shardStats == null ? null : shardStats.getDocs().getCount());
             table.addCell(shardStats == null ? null : shardStats.getStore().getSize());
             if (shard.assignedToNode()) {
-                String ip = state.getState().nodes().get(shard.currentNodeId()).getHostAddress();
+                String ip = state.getState().nodes().get(shard.currentNodeId()).getAddress().toString();//getHostAddress
                 String nodeId = shard.currentNodeId();
+                logger.info("===buildTable===199==="+ip+"==="+nodeId);
                 StringBuilder name = new StringBuilder();
                 name.append(state.getState().nodes().get(shard.currentNodeId()).name());
                 if (shard.relocating()) {
@@ -217,7 +218,6 @@ public class RestShardsAction extends AbstractCatAction {
                 table.addCell(null);
                 table.addCell(null);
             }
-
             if (shard.unassignedInfo() != null) {
                 table.addCell(shard.unassignedInfo().getReason());
                 table.addCell(UnassignedInfo.DATE_TIME_FORMATTER.printer().print(shard.unassignedInfo().getTimestampInMillis()));

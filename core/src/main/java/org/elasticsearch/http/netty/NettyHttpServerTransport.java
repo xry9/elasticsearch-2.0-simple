@@ -248,10 +248,10 @@ public class NettyHttpServerTransport extends AbstractLifecycleComponent<HttpSer
         } catch (IOException e) {
             throw new BindHttpException("Failed to resolve host [" + bindHost + "]", e);
         }
-        logger.info("===doStart===251===");//try { Integer.parseInt("doStart"); }catch (Exception e){e.printStackTrace();}
+        //xlogger.info("===doStart===251===");//try { Integer.parseInt("doStart"); }catch (Exception e){e.printStackTrace();}
         List<InetSocketTransportAddress> boundAddresses = new ArrayList<>(hostAddresses.length);
         for (InetAddress address : hostAddresses) {
-            logger.info("===doStart===254==="+address);
+            //xlogger.info("===doStart===254==="+address);
             boundAddresses.add(bindAddress(address));
         }
         InetSocketTransportAddress boundAddress = boundAddresses.get(0);
@@ -265,7 +265,7 @@ public class NettyHttpServerTransport extends AbstractLifecycleComponent<HttpSer
             throw new BindTransportException("Failed to resolve publish address", e);
         }
         this.boundAddress = new BoundTransportAddress(boundAddresses.toArray(new TransportAddress[boundAddresses.size()]), new InetSocketTransportAddress(publishAddress));
-        logger.info("===doStart===268==="+boundAddress.address());
+        //xlogger.info("===doStart===268==="+boundAddress.address());
     }
     @SuppressForbidden(reason = "Exception#printStackTrace()")
     private InetSocketTransportAddress bindAddress(final InetAddress hostAddress) {
@@ -278,7 +278,7 @@ public class NettyHttpServerTransport extends AbstractLifecycleComponent<HttpSer
             public boolean onPortNumber(int portNumber) {
                 try {
                     synchronized (serverChannels) {
-                        logger.info("===bindAddress===281==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){logger.error("===", e);}
+                        //xlogger.info("===bindAddress===281==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){logger.error("===", e);}
                         Channel channel = serverBootstrap.bind(new InetSocketAddress(hostAddress, portNumber));
                         serverChannels.add(channel);
                         boundSocket.set((InetSocketAddress) channel.getLocalAddress());

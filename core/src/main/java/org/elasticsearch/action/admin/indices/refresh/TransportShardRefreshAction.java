@@ -83,9 +83,9 @@ public class TransportShardRefreshAction extends TransportReplicationAction<Repl
 
     @Override
     protected ShardIterator shards(ClusterState clusterState, InternalRequest request) {
+        logger.info("===shards===86==="+request.concreteIndex()+"==="+request.request().shardId().getId());try { Integer.parseInt("shards"); }catch (Exception e){logger.error("===", e);}
         return clusterState.getRoutingTable().indicesRouting().get(request.concreteIndex()).getShards().get(request.request().shardId().getId()).shardsIt();
     }
-
     @Override
     protected ClusterBlockException checkGlobalBlock(ClusterState state) {
         return state.blocks().globalBlockedException(ClusterBlockLevel.METADATA_WRITE);

@@ -54,7 +54,7 @@ public abstract class AbstractRunnable implements Runnable {
     }
 
     /**
-     * This method is invoked for all exception thrown by {@link #doRun()}
+     * This method is invoked for all exception thrown by
      */
     public abstract void onFailure(Throwable t);
 

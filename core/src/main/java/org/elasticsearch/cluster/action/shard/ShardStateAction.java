@@ -181,7 +181,7 @@ public class ShardStateAction extends AbstractComponent {
         // possibly, we can do time based batching as well, but usually, we would want to
         // process started events as fast as possible, to make shards available
         startedShardsQueue.add(shardRoutingEntry);
-
+        logger.info("===shardStartedOnMaster===184==="+shardRoutingEntry.shardRouting+"==="+shardRoutingEntry.message);//try { Integer.parseInt("shardStartedOnMaster"); }catch (Exception e){logger.error("===", e);}
         clusterService.submitStateUpdateTask("shard-started (" + shardRoutingEntry.shardRouting + "), reason [" + shardRoutingEntry.message + "]", Priority.URGENT,
                 new ClusterStateUpdateTask() {
                     @Override
@@ -210,8 +210,8 @@ public class ShardStateAction extends AbstractComponent {
                         if (shardRoutingToBeApplied.isEmpty()) {
                             return currentState;
                         }
-
                         RoutingAllocation.Result routingResult = allocationService.applyStartedShards(currentState, shardRoutingToBeApplied, true);
+                        logger.info("===execute===214==="+(!routingResult.changed()));
                         if (!routingResult.changed()) {
                             return currentState;
                         }

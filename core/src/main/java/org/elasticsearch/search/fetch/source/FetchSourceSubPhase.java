@@ -79,7 +79,7 @@ public class FetchSourceSubPhase implements FetchSubPhase {
             BytesStreamOutput streamOutput = new BytesStreamOutput(initialCapacity);
             XContentBuilder builder = new XContentBuilder(context.lookup().source().sourceContentType().xContent(), streamOutput);
             builder.value(value);
-            logger.info("===hitExecute===82==="+context.getClass().getName()+"===");
+            //xlogger.info("===hitExecute===82==="+context.getClass().getName()+"===");
             hitContext.hit().sourceRef(builder.bytes());
         } catch (IOException e) {
             throw new ElasticsearchException("Error filtering source", e);

@@ -63,10 +63,10 @@ public class AllocationDeciders extends AllocationDecider {
         }
         return ret;
     }
-
     @Override
     public Decision canAllocate(ShardRouting shardRouting, RoutingNode node, RoutingAllocation allocation) {
         if (allocation.shouldIgnoreShardForNode(shardRouting.shardId(), node.nodeId())) {
+            logger.info("===canAllocate===69===");
             return Decision.NO;
         }
         Decision.Multi ret = new Decision.Multi();
@@ -89,9 +89,9 @@ public class AllocationDeciders extends AllocationDecider {
                 ret.add(decision);
             }
         }
+        logger.info("===canAllocate===92==="+ret);
         return ret;
     }
-
     @Override
     public Decision canRemain(ShardRouting shardRouting, RoutingNode node, RoutingAllocation allocation) {
         if (allocation.shouldIgnoreShardForNode(shardRouting.shardId(), node.nodeId())) {

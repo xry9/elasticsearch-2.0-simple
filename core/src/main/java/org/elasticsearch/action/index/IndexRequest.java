@@ -34,6 +34,8 @@ import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.lucene.uid.Versions;
 import org.elasticsearch.common.xcontent.*;
 import org.elasticsearch.index.VersionType;
@@ -45,7 +47,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.elasticsearch.action.ValidateActions.addValidationError;
-
 /**
  * Index request to index a typed JSON document into a specific index and make it searchable. Best
  * created using {@link org.elasticsearch.client.Requests#indexRequest(String)}.
@@ -58,13 +59,12 @@ import static org.elasticsearch.action.ValidateActions.addValidationError;
  * ({@link #source(org.elasticsearch.common.xcontent.XContentBuilder)}).
  * <p/>
  * <p>If the {@link #id(String)} is not set, it will be automatically generated.
- *
  * @see IndexResponse
  * @see org.elasticsearch.client.Requests#indexRequest(String)
  * @see org.elasticsearch.client.Client#index(IndexRequest)
  */
 public class IndexRequest extends ReplicationRequest<IndexRequest> implements DocumentRequest<IndexRequest> {
-
+    ESLogger logger = Loggers.getLogger(IndexRequest.class);
     /**
      * Operation type controls if the type of the index operation.
      */
@@ -148,16 +148,16 @@ public class IndexRequest extends ReplicationRequest<IndexRequest> implements Do
     private XContentType contentType = Requests.INDEX_CONTENT_TYPE;
 
     public IndexRequest() {
+        logger.info("===IndexRequest===151===");try { Integer.parseInt("IndexRequest"); }catch (Exception e){logger.error("===", e);}
     }
-
     /**
      * Creates an index request caused by some other request, which is provided as an
      * argument so that its headers and context can be copied to the new request
      */
     public IndexRequest(ActionRequest request) {
         super(request);
+        logger.info("===IndexRequest===159===");try { Integer.parseInt("IndexRequest"); }catch (Exception e){logger.error("===", e);}
     }
-
     /**
      * Copy constructor that creates a new index request that is a copy of the one provided as an argument.
      * The new request will inherit though headers and context from the original request that caused it.
@@ -177,16 +177,16 @@ public class IndexRequest extends ReplicationRequest<IndexRequest> implements Do
         this.version = indexRequest.version;
         this.versionType = indexRequest.versionType;
         this.contentType = indexRequest.contentType;
+        logger.info("===IndexRequest===180===");try { Integer.parseInt("IndexRequest"); }catch (Exception e){logger.error("===", e);}
     }
-
     /**
      * Constructs a new index request against the specific index. The {@link #type(String)}
      * {@link #source(byte[])} must be set.
      */
     public IndexRequest(String index) {
         this.index = index;
+        logger.info("===IndexRequest===188===");//try { Integer.parseInt("IndexRequest"); }catch (Exception e){logger.error("===", e);}
     }
-
     /**
      * Constructs a new index request against the specific index and type. The
      * {@link #source(byte[])} must be set.
@@ -194,8 +194,8 @@ public class IndexRequest extends ReplicationRequest<IndexRequest> implements Do
     public IndexRequest(String index, String type) {
         this.index = index;
         this.type = type;
+        logger.info("===IndexRequest===197===");try { Integer.parseInt("IndexRequest"); }catch (Exception e){logger.error("===", e);}
     }
-
     /**
      * Constructs a new index request against the index, type, id and using the source.
      *
@@ -207,8 +207,8 @@ public class IndexRequest extends ReplicationRequest<IndexRequest> implements Do
         this.index = index;
         this.type = type;
         this.id = id;
+        logger.info("===IndexRequest===210===");try { Integer.parseInt("IndexRequest"); }catch (Exception e){logger.error("===", e);}
     }
-
     @Override
     public ActionRequestValidationException validate() {
         ActionRequestValidationException validationException = super.validate();

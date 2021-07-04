@@ -17,15 +17,15 @@
  * under the License.
  */
 package org.elasticsearch.cluster.routing;
-
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import java.util.List;
-
 /**
  * A simple {@link ShardsIterator} that iterates a list or sub-list of
  * {@link ShardRouting shard routings}.
  */
 public class PlainShardsIterator implements ShardsIterator {
-
+    ESLogger logger = Loggers.getLogger(PlainShardsIterator.class);
     private final List<ShardRouting> shards;
 
     // Calls to nextOrNull might be performed on different threads in the transport actions so we need the volatile
@@ -35,9 +35,9 @@ public class PlainShardsIterator implements ShardsIterator {
 
     public PlainShardsIterator(List<ShardRouting> shards) {
         this.shards = shards;
+        //xlogger.info("===PlainShardsIterator===38==="+shards.size()+"==="+shards);try{ Integer.parseInt("PlainShardsIterator"); }catch (Exception e){logger.error("===", e);}
         reset();
     }
-
     @Override
     public void reset() {
         index = 0;

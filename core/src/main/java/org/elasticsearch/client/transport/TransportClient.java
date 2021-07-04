@@ -266,9 +266,9 @@ public class TransportClient extends AbstractClient {
 
         injector.getInstance(PageCacheRecycler.class).close();
     }
-
     @Override
     protected <Request extends ActionRequest, Response extends ActionResponse, RequestBuilder extends ActionRequestBuilder<Request, Response, RequestBuilder>> void doExecute(Action<Request, Response, RequestBuilder> action, Request request, ActionListener<Response> listener) {
+        logger.info("===doExecute===271==="+proxy.getClass().getName()+"==="+action.name()+"==="+action);//try { Integer.parseInt("doExecute"); }catch (Exception e){logger.error("===", e);}
         proxy.execute(action, request, listener);
     }
 }

@@ -191,7 +191,7 @@ public class PublishClusterStateAction extends AbstractComponent {
                                            final BlockingClusterStatePublishResponseHandler publishResponseHandler,
                                            final boolean sendDiffs) {
         try {
-            //logger.info("===STATE===STATE===194===");//try{ Integer.parseInt("STATE"); }catch (Exception e){logger.error("===", e);}
+            //xlogger.info("===STATE===STATE===194===");//try{ Integer.parseInt("STATE"); }catch (Exception e){logger.error("===", e);}
             TransportRequestOptions options = TransportRequestOptions.options().withType(TransportRequestOptions.Type.STATE).withCompress(false);
             // no need to put a timeout on the options here, because we want the response to eventually be received
             // and not log an error if it arrives after the timeout
@@ -260,7 +260,7 @@ public class PublishClusterStateAction extends AbstractComponent {
             synchronized (this) {
                 // If true we received full cluster state - otherwise diffs
                 if (in.readBoolean()) {
-                    logger.info("===messageReceived===263===");
+                    ////xlogger.info("===messageReceived===263===");
                     lastSeenClusterState = ClusterState.Builder.readFrom(in, nodesProvider.nodes().localNode());
                     logger.debug("received full cluster state version {} with size {}", lastSeenClusterState.version(), request.bytes().length());
                 } else if (lastSeenClusterState != null) {
@@ -274,7 +274,7 @@ public class PublishClusterStateAction extends AbstractComponent {
                 lastSeenClusterState.status(ClusterState.ClusterStateStatus.RECEIVED);
             }
             try {
-                //logger.info("===messageReceived===277==="+lastSeenClusterState);
+                //xlogger.info("===messageReceived===277==="+lastSeenClusterState);
                 listener.onNewClusterState(lastSeenClusterState, new NewClusterStateListener.NewStateProcessed() {
                     @Override
                     public void onNewClusterStateProcessed() {

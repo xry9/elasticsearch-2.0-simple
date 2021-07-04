@@ -172,7 +172,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
         this.networkService = networkService;
         this.bigArrays = bigArrays;
         this.version = version;
-        //logger.info("===NettyTransport===175===");try { Integer.parseInt("NettyTransport"); }catch (Exception e){logger.error("===", e);}
+        //xlogger.info("===NettyTransport===175===");try { Integer.parseInt("NettyTransport"); }catch (Exception e){logger.error("===", e);}
         if (settings.getAsBoolean("netty.epollBugWorkaround", false)) {
             System.setProperty("org.jboss.netty.epollBugWorkaround", "true");
         }
@@ -410,7 +410,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
             }
             logger.debug("binding server bootstrap to: {}", addresses);
         }
-        logger.info("===bindServerBootstrap===413==="+Arrays.toString(hostAddresses));
+        //xlogger.info("===bindServerBootstrap===413==="+Arrays.toString(hostAddresses));
         for (InetAddress hostAddress : hostAddresses) {
             bindServerBootstrap(name, hostAddress, settings);
         }
@@ -426,7 +426,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
             public boolean onPortNumber(int portNumber) {
                 try {
                     Channel channel = serverBootstraps.get(name).bind(new InetSocketAddress(hostAddress, portNumber));
-                    logger.info("===bindServerBootstrap===429==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){logger.error("===", e);}
+                    //xlogger.info("===bindServerBootstrap===429==="+hostAddress+"==="+portNumber);//try { Integer.parseInt("bindAddress"); }catch (Exception e){logger.error("===", e);}
                     synchronized (serverChannels) {
                         List<Channel> list = serverChannels.get(name);
                         if (list == null) {
@@ -751,13 +751,13 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
 
     @Override
     public void sendRequest(final DiscoveryNode node, final long requestId, final String action, final TransportRequest request, TransportRequestOptions options) throws IOException, TransportException {
-
         Channel targetChannel = nodeChannel(node, options);
-        //logger.info("===sendRequest===756==="+options.type().name()+"==="+requestId+"==="+targetChannel.getLocalAddress()+"==="+targetChannel.getRemoteAddress()+"==="+request.getClass().getName()+"==="+action);//try{ Integer.parseInt("sendRequest"); }catch (Exception e){logger.error("===", e);}
+        if (!"internal:discovery/zen/fd/master_ping".equals(action)&&!"internal:discovery/zen/fd/ping".equals(action)){
+            logger.info("===sendRequest===756==="+targetChannel.getLocalAddress()+"==="+targetChannel.getRemoteAddress()+"==="+requestId+"==="+action+"==="+request.getClass().getName()+"==="+options.type().name()); try{ Integer.parseInt("sendRequest"); }catch (Exception e){logger.error("===", e);}
+        }
         if (compress) {
             options.withCompress(true);
         }
-
         byte status = 0;
         status = TransportStatus.setRequest(status);
 
@@ -882,7 +882,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
     protected NodeChannels connectToChannelsLight(DiscoveryNode node) {
         InetSocketAddress address = ((InetSocketTransportAddress) node.address()).address();
         ChannelFuture connect = clientBootstrap.connect(address);
-        //logger.info("===clientBootstrap===885==="+address+"==="+connect.getChannel().getLocalAddress());
+        //xlogger.info("===clientBootstrap===885==="+address+"==="+connect.getChannel().getLocalAddress());
         connect.awaitUninterruptibly((long) (connectTimeout.millis() * 1.5));
         if (!connect.isSuccess()) {
             throw new ConnectTransportException(node, "connect_timeout[" + connectTimeout + "]", connect.getCause());
@@ -915,7 +915,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
         for (int i = 0; i < connectPing.length; i++) {
             connectPing[i] = clientBootstrap.connect(address);
         }
-        //logger.info("===clientBootstrap===918==="+address+"==="+connectRecovery[0].getChannel().getLocalAddress()+"==="+connectBulk[0].getChannel().getLocalAddress()+"==="+connectReg[0].getChannel().getLocalAddress()+"==="+connectState[0].getChannel().getLocalAddress()+"==="+connectPing[0].getChannel().getLocalAddress());
+        //xlogger.info("===clientBootstrap===918==="+address+"==="+connectRecovery[0].getChannel().getLocalAddress()+"==="+connectBulk[0].getChannel().getLocalAddress()+"==="+connectReg[0].getChannel().getLocalAddress()+"==="+connectState[0].getChannel().getLocalAddress()+"==="+connectPing[0].getChannel().getLocalAddress());
         try {
             for (int i = 0; i < connectRecovery.length; i++) {
                 connectRecovery[i].awaitUninterruptibly((long) (connectTimeout.millis() * 1.5));
@@ -1228,7 +1228,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
         final CounterMetric failedPings = new CounterMetric();
         @Override
         protected void doRun() throws Exception {
-            logger.info("===doRun===1231==="+connectedNodes.size());
+            ////xlogger.info("===doRun===1231==="+connectedNodes.size());
             if (lifecycle.stoppedOrClosed()) {
                 return;
             }
@@ -1236,7 +1236,7 @@ public class NettyTransport extends AbstractLifecycleComponent<Transport> implem
                 DiscoveryNode node = entry.getKey();
                 NodeChannels channels = entry.getValue();
                 for (Channel channel : channels.allChannels) {
-                    logger.info("===doRun===1239==="+channel.getLocalAddress()+"==="+channel.getRemoteAddress());
+                    ////xlogger.info("===doRun===1239==="+channel.getLocalAddress()+"==="+channel.getRemoteAddress());
                     try {
                         ChannelFuture future = channel.write(NettyHeader.pingHeader());
                         future.addListener(new ChannelFutureListener() {

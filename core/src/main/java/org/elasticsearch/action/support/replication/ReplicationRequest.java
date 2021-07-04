@@ -27,6 +27,8 @@ import org.elasticsearch.action.support.IndicesOptions;
 import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.shard.ShardId;
 
@@ -39,7 +41,7 @@ import static org.elasticsearch.action.ValidateActions.addValidationError;
  *
  */
 public class ReplicationRequest<T extends ReplicationRequest> extends ActionRequest<T> implements IndicesRequest {
-
+    ESLogger logger = Loggers.getLogger(ReplicationRequest.class);
     public static final TimeValue DEFAULT_TIMEOUT = new TimeValue(1, TimeUnit.MINUTES);
 
     ShardId internalShardId;
@@ -51,7 +53,7 @@ public class ReplicationRequest<T extends ReplicationRequest> extends ActionRequ
     private volatile boolean canHaveDuplicates = false;
 
     public ReplicationRequest() {
-
+        logger.info("===ReplicationRequest===56===");//try { Integer.parseInt("ReplicationRequest"); }catch (Exception e){logger.error("===", e);}
     }
 
     /**
@@ -59,8 +61,8 @@ public class ReplicationRequest<T extends ReplicationRequest> extends ActionRequ
      */
     public ReplicationRequest(ActionRequest request) {
         super(request);
+        logger.info("===ReplicationRequest===64===");//try { Integer.parseInt("ReplicationRequest"); }catch (Exception e){logger.error("===", e);}
     }
-
     /**
      * Copy constructor that creates a new request that is a copy of the one provided as an argument.
      */
@@ -77,8 +79,8 @@ public class ReplicationRequest<T extends ReplicationRequest> extends ActionRequ
         this.timeout = request.timeout();
         this.index = request.index();
         this.consistencyLevel = request.consistencyLevel();
+        logger.info("===ReplicationRequest===82===");//try { Integer.parseInt("ReplicationRequest"); }catch (Exception e){logger.error("===", e);}
     }
-
     void setCanHaveDuplicates() {
         this.canHaveDuplicates = true;
     }

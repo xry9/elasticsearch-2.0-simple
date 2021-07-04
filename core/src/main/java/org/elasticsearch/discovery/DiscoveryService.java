@@ -72,7 +72,7 @@ public class DiscoveryService extends AbstractLifecycleComponent<DiscoveryServic
         this.discoverySettings = discoverySettings;
         this.discovery = discovery;
         this.initialStateTimeout = settings.getAsTime(SETTING_INITIAL_STATE_TIMEOUT, TimeValue.timeValueSeconds(30));
-        logger.info("===DiscoveryService===75==="+discovery.getClass().getName());//try { Integer.parseInt("DiscoveryService"); }catch (Exception e){logger.error("===", e);}
+        //xlogger.info("===DiscoveryService===75==="+discovery.getClass().getName());//try { Integer.parseInt("DiscoveryService"); }catch (Exception e){logger.error("===", e);}
     }
     public ClusterBlock getNoMasterBlock() {
         return discoverySettings.getNoMasterBlock();
@@ -125,7 +125,6 @@ public class DiscoveryService extends AbstractLifecycleComponent<DiscoveryServic
     public String nodeDescription() {
         return discovery.nodeDescription();
     }
-
     /**
      * Publish all the changes to the cluster from the master (can be called just by the master). The publish
      * process should not publish this state to the master as well! (the master is sending it...).
@@ -138,12 +137,13 @@ public class DiscoveryService extends AbstractLifecycleComponent<DiscoveryServic
             discovery.publish(clusterChangedEvent, ackListener);
         }
     }
-
     public static String generateNodeId(Settings settings) {
         String seed = settings.get(DiscoveryService.SETTING_DISCOVERY_SEED);
         if (seed != null) {
             return Strings.randomBase64UUID(new Random(Long.parseLong(seed)));
         }
-        return Strings.randomBase64UUID();
+        String nodeId = Strings.randomBase64UUID();
+        //xlogger.info("===generateNodeId===146==="+nodeId);//try { Integer.parseInt("generateNodeId"); }catch (Exception e){logger.error("===", e);}
+        return nodeId;
     }
 }

@@ -88,7 +88,7 @@ public class HttpServer extends AbstractLifecycleComponent<HttpServer> {
     }
     @Override
     protected void doStart() {
-        logger.info("===doStart===91==="+transport.getClass().getName());
+        //xlogger.info("===doStart===91==="+transport.getClass().getName());
         transport.start();
         if (logger.isInfoEnabled()) {
             logger.info("{}", transport.boundAddress());

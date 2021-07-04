@@ -172,7 +172,6 @@ public class NodeJoinController extends AbstractComponent {
             }
         }
     }
-
     /**
      * processes or queues an incoming join request.
      * <p/>
@@ -184,6 +183,7 @@ public class NodeJoinController extends AbstractComponent {
             if (nodeCallbacks == null) {
                 nodeCallbacks = new ArrayList<>();
                 pendingJoinRequests.put(node, nodeCallbacks);
+                logger.info("===handleJoinRequest===186===");try { Integer.parseInt("handleJoinRequest"); }catch (Exception e){logger.error("===", e);}
             }
             nodeCallbacks.add(callback);
         }
@@ -222,7 +222,7 @@ public class NodeJoinController extends AbstractComponent {
             return;
         }
         final String source = "zen-disco-join(elected_as_master, [" + pendingMasterJoins + "] joins received)";
-        //logger.info("===checkPendingJoinsAndElectIfNeeded===225===");try { Integer.parseInt("checkPendingJoinsAndElectIfNeeded"); }catch (Exception e){logger.error("===", e);}
+        //xlogger.info("===checkPendingJoinsAndElectIfNeeded===225===");try { Integer.parseInt("checkPendingJoinsAndElectIfNeeded"); }catch (Exception e){logger.error("===", e);}
         clusterService.submitStateUpdateTask(source, Priority.IMMEDIATE, new ProcessJoinsTask() {
             @Override
             public ClusterState execute(ClusterState currentState) {
@@ -234,7 +234,7 @@ public class NodeJoinController extends AbstractComponent {
                     logger.trace("join thread elected local node as master, but there is already a master in place: {}", currentState.nodes().masterNode());
                     throw new NotMasterException("Node [" + clusterService.localNode() + "] not master for join request");
                 }
-                //logger.info("===checkPendingJoinsAndElectIfNeeded===237==="+currentState.nodes().localNode().id()+"==="+currentState.nodes().size()+"==="+currentState.nodes().masterNodeId());try { Integer.parseInt("checkPendingJoinsAndElectIfNeeded"); }catch (Exception e){logger.error("===", e);}
+                //xlogger.info("===checkPendingJoinsAndElectIfNeeded===237==="+currentState.nodes().localNode().id()+"==="+currentState.nodes().size()+"==="+currentState.nodes().masterNodeId());try { Integer.parseInt("checkPendingJoinsAndElectIfNeeded"); }catch (Exception e){logger.error("===", e);}
                 DiscoveryNodes.Builder builder = new DiscoveryNodes.Builder(currentState.nodes()).masterNodeId(currentState.nodes().localNode().id());
                 // update the fact that we are the master...
                 ClusterBlocks clusterBlocks = ClusterBlocks.builder().blocks(currentState.blocks()).removeGlobalBlock(discoverySettings.getNoMasterBlock()).build();
@@ -344,7 +344,7 @@ public class NodeJoinController extends AbstractComponent {
      * Note: this task automatically fails (and fails all pending joins) if the current node is not marked as master
      */
     class ProcessJoinsTask extends ProcessedClusterStateUpdateTask {
-
+        //public ProcessJoinsTask(){logger.info("===ProcessJoinsTask===347===");try { Integer.parseInt("ProcessJoinsTask"); }catch (Exception e){logger.error("===", e);} }
         private final List<MembershipAction.JoinCallback> joinCallbacksToRespondTo = new ArrayList<>();
         private boolean nodeAdded = false;
 
@@ -355,12 +355,13 @@ public class NodeJoinController extends AbstractComponent {
                 if (pendingJoinRequests.isEmpty()) {
                     return currentState;
                 }
-
+                logger.info("===execute===358==="+currentState.hashCode());//try { Integer.parseInt("execute"); }catch (Exception e){logger.error("===", e);}
                 nodesBuilder = DiscoveryNodes.builder(currentState.nodes());
                 Iterator<Map.Entry<DiscoveryNode, List<MembershipAction.JoinCallback>>> iterator = pendingJoinRequests.entrySet().iterator();
                 while (iterator.hasNext()) {
                     Map.Entry<DiscoveryNode, List<MembershipAction.JoinCallback>> entry = iterator.next();
                     final DiscoveryNode node = entry.getKey();
+                    logger.info("===execute===364==="+node);
                     joinCallbacksToRespondTo.addAll(entry.getValue());
                     iterator.remove();
                     if (currentState.nodes().nodeExists(node.id())) {
@@ -369,6 +370,7 @@ public class NodeJoinController extends AbstractComponent {
                         nodeAdded = true;
                         nodesBuilder.put(node);
                         for (DiscoveryNode existingNode : currentState.nodes()) {
+                            logger.info("===execute===373==="+(node.address().equals(existingNode.address()))+"==="+node.address()+"==="+existingNode.address());
                             if (node.address().equals(existingNode.address())) {
                                 nodesBuilder.remove(existingNode.id());
                                 logger.warn("received join request from node [{}], but found existing node {} with same address, removing existing node", node, existingNode);
@@ -377,14 +379,12 @@ public class NodeJoinController extends AbstractComponent {
                     }
                 }
             }
-
             // we must return a new cluster state instance to force publishing. This is important
             // for the joining node to finalize it's join and set us as a master
             final ClusterState.Builder newState = ClusterState.builder(currentState);
             if (nodeAdded) {
                 newState.nodes(nodesBuilder);
             }
-
             return newState.build();
         }
 

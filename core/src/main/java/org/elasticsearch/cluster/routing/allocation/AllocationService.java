@@ -68,8 +68,8 @@ public class AllocationService extends AbstractComponent {
     public RoutingAllocation.Result applyStartedShards(ClusterState clusterState, List<? extends ShardRouting> startedShards) {
         return applyStartedShards(clusterState, startedShards, true);
     }
-
     public RoutingAllocation.Result applyStartedShards(ClusterState clusterState, List<? extends ShardRouting> startedShards, boolean withReroute) {
+        logger.info("===applyStartedShards===72===");//try { Integer.parseInt("applyStartedShards"); }catch (Exception e){logger.error("===", e);}
         RoutingNodes routingNodes = getMutableRoutingNodes(clusterState);
         // shuffle the unassigned nodes, just so we won't have things like poison failed shards
         routingNodes.unassigned().shuffle();
@@ -323,7 +323,6 @@ public class AllocationService extends AbstractComponent {
         // apply shards might be called several times with the same shard, ignore it
         for (ShardRouting startedShard : startedShardEntries) {
             assert startedShard.initializing();
-
             // validate index still exists. strictly speaking this is not needed but it gives clearer logs
             if (routingNodes.routingTable().index(startedShard.index()) == null) {
                 logger.debug("{} ignoring shard started, unknown index (routing: {})", startedShard.shardId(), startedShard);
@@ -343,6 +342,7 @@ public class AllocationService extends AbstractComponent {
                         logger.trace("{} shard is already started, ignoring (routing: {})", startedShard.shardId(), startedShard);
                     } else {
                         dirty = true;
+                        logger.info("===applyStartedShards===345==="+dirty);
                         // override started shard with the latest copy. Capture it now , before starting the shard destroys it...
                         startedShard = new ShardRouting(shard);
                         routingNodes.started(shard);
@@ -351,26 +351,26 @@ public class AllocationService extends AbstractComponent {
                     break;
                 }
             }
-
             // startedShard is the current state of the shard (post relocation for example)
             // this means that after relocation, the state will be started and the currentNodeId will be
             // the node we relocated to
             if (startedShard.relocatingNodeId() == null) {
                 continue;
             }
-
             RoutingNodes.RoutingNodeIterator sourceRoutingNode = routingNodes.routingNodeIter(startedShard.relocatingNodeId());
             if (sourceRoutingNode != null) {
                 while (sourceRoutingNode.hasNext()) {
                     ShardRouting shard = sourceRoutingNode.next();
                     if (shard.isRelocationSourceOf(startedShard)) {
                         dirty = true;
+                        logger.info("===applyStartedShards===366==="+dirty);
                         sourceRoutingNode.remove();
                         break;
                     }
                 }
             }
         }
+        logger.info("===applyStartedShards===373==="+dirty);
         return dirty;
     }
 

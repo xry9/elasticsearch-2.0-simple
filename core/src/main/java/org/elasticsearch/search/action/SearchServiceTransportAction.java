@@ -138,7 +138,7 @@ public class SearchServiceTransportAction extends AbstractComponent {
         });
     }
     public void sendExecuteQuery(DiscoveryNode node, final ShardSearchTransportRequest request, final ActionListener<QuerySearchResultProvider> listener) {
-        //logger.info("===sendExecuteQuery===141==="+listener.getClass().getName());
+        ////xlogger.info("===sendExecuteQuery===141==="+node.getAddress()+"==="+listener.getClass().getName());try { Integer.parseInt("sendExecuteQuery"); }catch (Exception e){logger.error("===", e);}
         transportService.sendRequest(node, QUERY_ACTION_NAME, request, new ActionListenerResponseHandler<QuerySearchResultProvider>(listener) {
             @Override
             public QuerySearchResult newInstance() {
@@ -390,7 +390,7 @@ public class SearchServiceTransportAction extends AbstractComponent {
         @Override
         public void messageReceived(ShardSearchTransportRequest request, TransportChannel channel) throws Exception {
             QueryFetchSearchResult result = searchService.executeFetchPhase(request);
-            logger.info("===messageReceived===393==="+request.indices()+"==="+request.index()+"==="+result.queryResult());
+            //xlogger.info("===messageReceived===393==="+request.indices()+"==="+request.index()+"==="+result.queryResult());
             channel.sendResponse(result);
         }
     }

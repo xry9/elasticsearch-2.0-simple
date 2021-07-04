@@ -49,7 +49,6 @@ public abstract class ReplicaShardAllocator extends AbstractComponent {
     public ReplicaShardAllocator(Settings settings) {
         super(settings);
     }
-
     /**
      * Process existing recoveries of replicas and see if we need to cancel them if we find a better
      * match. Today, a better match is one that has full sync id match compared to not having one in
@@ -57,6 +56,7 @@ public abstract class ReplicaShardAllocator extends AbstractComponent {
      */
     public boolean processExistingRecoveries(RoutingAllocation allocation) {
         boolean changed = false;
+        logger.info("===processExistingRecoveries===59===");try { Integer.parseInt("processExistingRecoveries"); }catch (Exception e){logger.error("===", e);}
         for (RoutingNodes.RoutingNodesIterator nodes = allocation.routingNodes().nodes(); nodes.hasNext(); ) {
             nodes.next();
             for (RoutingNodes.RoutingNodeIterator it = nodes.nodeShards(); it.hasNext(); ) {
@@ -100,8 +100,8 @@ public abstract class ReplicaShardAllocator extends AbstractComponent {
                             && matchingNodes.isNodeMatchBySyncID(nodeWithHighestMatch) == true) {
                         // we found a better match that has a full sync id match, the existing allocation is not fully synced
                         // so we found a better one, cancel this one
-                        it.moveToUnassigned(new UnassignedInfo(UnassignedInfo.Reason.REALLOCATED_REPLICA,
-                                "existing allocation of replica to [" + currentNode + "] cancelled, sync id match found on node [" + nodeWithHighestMatch + "]"));
+                        it.moveToUnassigned(new UnassignedInfo(UnassignedInfo.Reason.REALLOCATED_REPLICA, "existing allocation of replica to [" + currentNode + "] cancelled, sync id match found on node [" + nodeWithHighestMatch + "]"));
+                        logger.info("===processExistingRecoveries===104===");
                         changed = true;
                     }
                 }
